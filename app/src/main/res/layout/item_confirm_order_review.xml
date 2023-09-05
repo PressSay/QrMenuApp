@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/itemConfirmOrderReview"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:orientation="horizontal"
+    android:layout_marginBottom="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:background="@drawable/shape_rounded_one_corner_border">
+
+    <ImageView
+        android:layout_width="68dp"
+        android:layout_height="47dp"
+        android:background="@drawable/shape_impression_rounded_border"
+        android:src="@drawable/img_image_4"
+        android:scaleType="fitXY" />
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="22dp"
+            android:gravity="center"
+            android:text="cafe"
+            android:textColor="#3C691B"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/green_primary"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="70dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/shape_normal_rounded"
+                android:backgroundTint="@color/green_primary"
+                android:gravity="center"
+                android:text="18,000"
+                android:textColor="#ffffff"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="48dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/shape_normal_rounded"
+                android:backgroundTint="@color/green_primary"
+                android:gravity="center"
+                android:text="xxx"
+                android:textColor="#ffffff"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginEnd="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="end">
+
+                <ImageView
+                    android:layout_width="44dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_star"
+                    android:scaleType="fitCenter" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <androidx.slidingpanelayout.widget.SlidingPaneLayout
+        android:id="@+id/sliding_pane_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+
+        <LinearLayout
+            android:layout_width="425dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="12dp"
+                        android:gravity="end"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="8dp"
+                                android:text="Account" />
+
+                            <ImageButton
+                                android:layout_width="64dp"
+                                android:layout_height="64dp"
+                                android:background="@drawable/shape_rounded_border"
+                                android:src="@drawable/ic_person" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="58dp"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="The star of the store:"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="1.45M"
+                                android:textSize="22sp"
+                                android:textStyle="bold" />
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/ic_star" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="532dp"
+                        android:background="@drawable/background_home_admin"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="130dp"
+                            android:layout_marginBottom="20dp"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="38dp"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="2dp"
+                                    android:text="Table Unclock"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+
+                                <androidx.appcompat.widget.AppCompatImageButton
+                                    android:id="@+id/btnTableUnlock"
+                                    android:layout_width="110dp"
+                                    android:layout_height="110dp"
+                                    android:src="@drawable/ic_table_bar" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="2dp"
+                                    android:text="Online List"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+
+                                <androidx.appcompat.widget.AppCompatImageButton
+                                    android:id="@+id/btnOnlineList"
+                                    android:layout_width="110dp"
+                                    android:layout_height="110dp"
+                                    android:src="@drawable/ic_inactive_order" />
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="130dp"
+                            android:layout_marginBottom="20dp"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="38dp"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="2dp"
+                                    android:text="Offline List"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+
+                                <androidx.appcompat.widget.AppCompatImageButton
+                                    android:id="@+id/btnOfflineList"
+                                    android:layout_width="110dp"
+                                    android:layout_height="110dp"
+                                    android:src="@drawable/ic_inactive_order" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/textViewStartOrder"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="2dp"
+                                    android:text="Start Order"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+
+                                <androidx.appcompat.widget.AppCompatImageButton
+                                    android:id="@+id/btnStartOrder"
+                                    android:layout_width="110dp"
+                                    android:layout_height="110dp"
+                                    android:src="@drawable/ic_shopping_bag" />
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="130dp"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="38dp"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="2dp"
+                                    android:text="Config Shop"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+
+                                <androidx.appcompat.widget.AppCompatImageButton
+                                    android:id="@+id/btnConfigShop"
+                                    android:layout_width="110dp"
+                                    android:layout_height="110dp"
+                                    android:src="@drawable/ic_settings" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="2dp"
+                                    android:text="Buy Take Away"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+
+                                <androidx.appcompat.widget.AppCompatImageButton
+                                    android:id="@+id/btnBuyTakeAway"
+                                    android:layout_width="110dp"
+                                    android:layout_height="110dp"
+                                    android:src="@drawable/ic_point_of_sale" />
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </LinearLayout>
+
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/nav_host_detail"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="425dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            app:defaultNavHost="true"
+            />
+
+
+    </androidx.slidingpanelayout.widget.SlidingPaneLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:orientation="horizontal"
+        android:id="@+id/searchView">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"/>
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:layout_width="52dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_search"
+            android:scaleType="fitCenter"/>
+
+    </LinearLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navBar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:itemIconSize="24dp"
+        app:labelVisibilityMode="unlabeled"
+        app:menu="@menu/bottom_nav_menu" />
+
+</LinearLayout>

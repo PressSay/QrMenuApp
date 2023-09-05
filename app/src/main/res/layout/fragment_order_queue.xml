@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".order.offline.queue.OrderQueueFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewItemConfirmOrderView"
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            tools:listitem="@layout/item_confirm_order_view" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="256dp"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/green_primary" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Tax(5%): 6,150$"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_margin="4dp"
+                android:gravity="center_vertical"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Total: 123,150$"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:layout_margin="4dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Id order: 129"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:layout_margin="4dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/green_primary" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/horizontalListOrderQueue"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_gravity="center"
+                android:layout_margin="16dp"
+                android:background="@drawable/shape_rounded_border"
+                android:orientation="horizontal"
+                tools:listitem="@layout/item_order_queue" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

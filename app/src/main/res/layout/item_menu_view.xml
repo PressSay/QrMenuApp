@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="156dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="156dp"
+        android:background="@drawable/shape_impression_rounded_border"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="153dp"
+                android:layout_height="123dp"
+                android:background="@drawable/shape_impression_rounded"
+                android:contentDescription="shape_image"
+                android:src="@drawable/img_image_6" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                tools:ignore="NestedWeights">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="70dp"
+                    android:layout_height="18dp"
+                    android:background="@drawable/shape_normal_rounded"
+                    android:backgroundTint="@color/green_primary"
+                    android:text="18,000 $"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="123dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="126dp"
+                    android:layout_height="43dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="end"
+                            android:text="Orange Juice"
+                            android:textColor="#3C691B"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="start">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Description:"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="something something something something something something something something something something something"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</FrameLayout>

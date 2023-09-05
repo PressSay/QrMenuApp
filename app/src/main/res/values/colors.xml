@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--List-->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="green_primary">#3c691b</color>
+    <color name="green_on_primary">#ffffff</color>
+    <color name="green_primary_container">#bcf293</color>
+    <color name="green_on_primary_container">#0b2000</color>
+    <color name="green_secondary">#56624b</color>
+    <color name="green_on_secondary">#ffffff</color>
+    <color name="green_secondary_container">#dae7ca</color>
+    <color name="green_on_secondary_container">#141e0c</color>
+    <color name="green_tertiary">#386665</color>
+    <color name="green_on_tertiary">#ffffff</color>
+    <color name="green_tertiary_container">#bbecea</color>
+    <color name="green_on_tertiary_container">#002020</color>
+    <color name="green_error">#ba1a1a</color>
+    <color name="green_on_error">#ffffff</color>
+    <color name="green_error_container">#ffdad6</color>
+    <color name="green_on_error_container">#410002</color>
+    <color name="green_background">#fdfdf5</color>
+    <color name="green_on_background">#1a1c18</color>
+    <color name="green_surface">#fdfdf5</color>
+    <color name="green_on_surface">#1a1c18</color>
+    <color name="green_outline">#74796d</color>
+    <color name="green_surface_variant">#e0e4d6</color>
+    <color name="green_on_surface_variant">#44483e</color>
+    <!--Dark-->
+    <color name="green_primary_dark">#a1d57a</color>
+    <color name="green_on_primary_dark">#173800</color>
+    <color name="green_primary_container_dark">#255102</color>
+    <color name="green_on_primary_container_dark">#bcf293</color>
+    <color name="green_secondary_dark">#becbaf</color>
+    <color name="green_on_secondary_dark">#293420</color>
+    <color name="green_secondary_container_dark">#3f4a35</color>
+    <color name="green_on_secondary_container_dark">#dae7ca</color>
+    <color name="green_tertiary_dark">#a0cfce</color>
+    <color name="green_on_tertiary_dark">#003737</color>
+    <color name="green_tertiary_container_dark">#1e4e4d</color>
+    <color name="green_on_tertiary_container_dark">#bbecea</color>
+    <color name="green_error_dark">#ffb4ab</color>
+    <color name="green_on_error_dark">#690005</color>
+    <color name="green_error_container_dark">#93000a</color>
+    <color name="green_on_error_container_dark">#ffdad6</color>
+    <color name="green_background_dark">#1a1c18</color>
+    <color name="green_on_background_dark">#e3e3dc</color>
+    <color name="green_surface_dark">#1a1c18</color>
+    <color name="green_on_surface_dark">#e3e3dc</color>
+    <color name="green_outline_dark">#8e9286</color>
+    <color name="green_surface_variant_dark">#44483e</color>
+    <color name="green_on_surface_variant_dark">#c4c8bb</color>
+
+</resources>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".order.online.EditOnlineOrderFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/editOnlineOrderRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            tools:listitem="@layout/item_order_prepare"
+            android:layout_margin="12dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="164dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:layout_width="82dp"
+                android:layout_height="82dp"
+                android:src="@drawable/ic_plus"
+                android:scaleType="fitCenter"/>
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:layout_width="82dp"
+                android:layout_height="82dp"
+                android:src="@drawable/ic_local_shipping"
+                android:scaleType="fitCenter"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"/>
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:layout_width="82dp"
+                android:layout_height="82dp"
+                android:src="@drawable/ic_check_fill"
+                android:scaleType="fitCenter"/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

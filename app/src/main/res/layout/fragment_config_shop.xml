@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".shop.ConfigShopFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:id="@+id/scrollViewOfConfig"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="4dp">
+
+                    <TextView
+                        android:layout_width="86dp"
+                        android:layout_height="wrap_content"
+                        android:text="Shop name:"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_rounded_border"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="4dp">
+
+                    <TextView
+                        android:layout_width="86dp"
+                        android:layout_height="wrap_content"
+                        android:text="Address Shop: "
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_rounded_border"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="4dp">
+
+                    <TextView
+                        android:layout_width="86dp"
+                        android:layout_height="wrap_content"
+                        android:text="Enable Star: "
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_rounded_border"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="4dp">
+
+                    <TextView
+                        android:layout_width="86dp"
+                        android:layout_height="wrap_content"
+                        android:text="Number Table: "
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_rounded_border"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="4dp">
+
+                    <TextView
+                        android:layout_width="86dp"
+                        android:layout_height="wrap_content"
+                        android:text="Promotion VIP: "
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_rounded_border"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="4dp">
+
+                    <TextView
+                        android:layout_width="86dp"
+                        android:layout_height="wrap_content"
+                        android:text="Promotion Bill: "
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_rounded_border"/>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    android:background="@drawable/shop_config"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="130dp"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginTop="30dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_marginRight="38dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Menu ?"
+                                android:textStyle="bold"
+                                android:textSize="14sp"
+                                android:layout_marginBottom="2dp"/>
+
+                            <androidx.appcompat.widget.AppCompatImageButton
+                                android:id="@+id/btnMenuConfigShop"
+                                android:layout_width="110dp"
+                                android:layout_height="110dp"
+                                android:src="@drawable/ic_menu"
+                                android:contentDescription="@string/for_test"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Review"
+                                android:textStyle="bold"
+                                android:textSize="14sp"
+                                android:layout_marginBottom="2dp"/>
+
+                            <androidx.appcompat.widget.AppCompatImageButton
+                                android:id="@+id/btnReviewConfigShop"
+                                android:layout_width="110dp"
+                                android:layout_height="110dp"
+                                android:src="@drawable/ic_reviews"
+                                android:contentDescription="@string/for_test"/>
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="130dp"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginBottom="30dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:layout_marginRight="38dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Overview ?"
+                                android:textStyle="bold"
+                                android:textSize="14sp"
+                                android:layout_marginBottom="2dp"/>
+
+                            <androidx.appcompat.widget.AppCompatImageButton
+                                android:id="@+id/btnOverviewConfigShop"
+                                android:layout_width="110dp"
+                                android:layout_height="110dp"
+                                android:src="@drawable/ic_overview"
+                                android:contentDescription="@string/for_test"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Staff"
+                                android:textStyle="bold"
+                                android:textSize="14sp"
+                                android:layout_marginBottom="2dp"/>
+
+                            <androidx.appcompat.widget.AppCompatImageButton
+                                android:id="@+id/btnStaffConfigShop"
+                                android:layout_width="110dp"
+                                android:layout_height="110dp"
+                                android:src="@drawable/ic_staff"
+                                android:contentDescription="@string/for_test"/>
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+
+
+
+
+
+</FrameLayout>
