@@ -8,8 +8,6 @@ import androidx.room.PrimaryKey
 data class InvestmentDb(
     @PrimaryKey(autoGenerate = true)
     val investmentId: Int,
-    @ColumnInfo(name = "name")
     val name: String,
-    @ColumnInfo(name = "cost")
     val cost: Int
 )

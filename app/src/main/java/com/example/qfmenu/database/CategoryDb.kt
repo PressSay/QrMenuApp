@@ -22,6 +22,15 @@ data class CategoryWithMenus(
         entityColumn = "menuId",
         associateBy = Junction(CategoryMenuCrossRef::class)
     )
-    val menus: List<menuDb>
+    val menusDb: List<MenuDb>
+)
+
+data class CategoryWidthDishes(
+    @Embedded val categoryDb: CategoryDb,
+    @Relation(
+        parentColumn = "categoryId",
+        entityColumn = "categoryCreatorId"
+    )
+    val dishesDb: List<DishDb>
 )
 

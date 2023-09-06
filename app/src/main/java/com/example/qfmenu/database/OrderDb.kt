@@ -8,7 +8,8 @@ import androidx.room.PrimaryKey
 data class OrderDb(
     @PrimaryKey(autoGenerate = true)
     val orderId: Long,
-    val customerId: Long,
+    val customerOwnerId: Long,
+    val tableCreatorId: Long,
     val status: String,
     val tableId: Int,
     val payments: String,

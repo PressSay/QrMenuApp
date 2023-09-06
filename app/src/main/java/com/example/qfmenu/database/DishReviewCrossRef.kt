@@ -1,10 +1,9 @@
 package com.example.qfmenu.database
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 
-@Entity(tableName = "dishReviewDb")
-data class DishReviewDb(
+@Entity(tableName = "dishReviewCrossRef", primaryKeys = ["reviewId", "dishId"])
+data class DishReviewCrossRef(
     val reviewId: Long,
     val dishId: Long
 )
