@@ -1,4 +1,4 @@
-package com.example.qfmenu.database.Dao
+package com.example.qfmenu.database.dao
 
 import androidx.room.Dao
 import androidx.room.Delete

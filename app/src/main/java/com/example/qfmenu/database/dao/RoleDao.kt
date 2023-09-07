@@ -1,4 +1,4 @@
-package com.example.qfmenu.database.Dao
+package com.example.qfmenu.database.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -7,7 +7,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.example.qfmenu.database.Entity.ReviewDb
 import com.example.qfmenu.database.Entity.RoleDb
 import com.example.qfmenu.database.Entity.RoleWithPermissions
 import kotlinx.coroutines.flow.Flow
