@@ -1,4 +1,4 @@
-package com.example.qfmenu.database
+package com.example.qfmenu.database.Entity
 
 import androidx.room.Embedded
 import androidx.room.Entity
@@ -6,7 +6,7 @@ import androidx.room.Junction
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 
-@Entity(tableName = "roleDb")
+@Entity
 data class RoleDb(
     @PrimaryKey(autoGenerate = true)
     val roleId: Long,
@@ -16,7 +16,7 @@ data class RoleDb(
     val description: String,
 )
 
-data class RoleAndPermissions(
+data class RoleWithPermissions(
     @Embedded val roleDb: RoleDb,
     @Relation(
         parentColumn = "roleId",

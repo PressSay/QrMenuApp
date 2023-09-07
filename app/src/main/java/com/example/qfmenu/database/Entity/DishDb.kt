@@ -1,14 +1,12 @@
-package com.example.qfmenu.database
+package com.example.qfmenu.database.Entity
 
-import androidx.annotation.Nullable
-import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Junction
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 
-@Entity(tableName = "dishDb")
+@Entity
 data class DishDb(
     @PrimaryKey(autoGenerate = true)
     val dishId: Int,
@@ -19,7 +17,7 @@ data class DishDb(
     val img: String
 )
 
-data class DishAndCustomers(
+data class DishWithCustomers(
     @Embedded val dishDb: DishDb,
     @Relation(
         parentColumn = "dishId",
@@ -29,12 +27,11 @@ data class DishAndCustomers(
     val customersDb: List<CustomerDb>
 )
 
-data class DishAndReviews(
+data class DishWithReviews(
     @Embedded val dishDb: DishDb,
     @Relation(
         parentColumn = "dishId",
-        entityColumn = "reviewId",
-        associateBy = Junction(ReviewDishCrossRef::class)
+        entityColumn = "dishCreatorId",
     )
     val reviewsDb: List<ReviewDb>
 )

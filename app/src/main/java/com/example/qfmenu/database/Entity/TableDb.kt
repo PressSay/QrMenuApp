@@ -1,18 +1,18 @@
-package com.example.qfmenu.database
+package com.example.qfmenu.database.Entity
 
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 
-@Entity(tableName = "tableDb")
+@Entity
 data class TableDb(
     @PrimaryKey
     val tableId: Long,
     val status: String
 )
 
-data class TableAndOrders(
+data class TableWithOrders(
     @Embedded val tableDb: TableDb,
     @Relation(
         parentColumn = "tableId",

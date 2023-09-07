@@ -1,12 +1,11 @@
-package com.example.qfmenu.database
+package com.example.qfmenu.database.Entity
 
 import androidx.room.Embedded
 import androidx.room.Entity
-import androidx.room.Junction
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 
-@Entity(tableName = "accountDb")
+@Entity
 data class AccountDb(
     @PrimaryKey(autoGenerate = true)
     val accountId: Long,
@@ -19,7 +18,7 @@ data class AccountDb(
     val avatar: String,
 )
 
-data class AccountAndRoles(
+data class AccountWithRoles(
     @Embedded val accountDb: AccountDb,
     @Relation(
         parentColumn = "accountId",
@@ -28,7 +27,7 @@ data class AccountAndRoles(
     val rolesDb: List<RoleDb>
 )
 
-data class AccountAndCustomers(
+data class AccountWithCustomers(
     @Embedded val accountDb: AccountDb,
     @Relation(
         parentColumn = "accountId",

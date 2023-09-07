@@ -1,10 +1,10 @@
-package com.example.qfmenu.database
+package com.example.qfmenu.database.Entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "orderDb",)
+@Entity
 data class OrderDb(
     @PrimaryKey(autoGenerate = true)
     val orderId: Long,

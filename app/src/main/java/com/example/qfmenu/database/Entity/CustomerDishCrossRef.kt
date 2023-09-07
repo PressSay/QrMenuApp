@@ -1,11 +1,11 @@
-package com.example.qfmenu.database
+package com.example.qfmenu.database.Entity
 
 import androidx.annotation.Nullable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "customerDishCrossRef", primaryKeys = ["customerId", "dishId"])
+@Entity(primaryKeys = ["customerId", "dishId"])
 data class CustomerDishCrossRef(
     val customerId: Long,
     val dishId: Long,
