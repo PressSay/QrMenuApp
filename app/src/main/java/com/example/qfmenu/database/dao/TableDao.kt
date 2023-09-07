@@ -7,8 +7,8 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.example.qfmenu.database.Entity.TableDb
-import com.example.qfmenu.database.Entity.TableWithOrders
+import com.example.qfmenu.database.entity.TableDb
+import com.example.qfmenu.database.entity.TableWithOrders
 import kotlinx.coroutines.flow.Flow
 
 @Dao

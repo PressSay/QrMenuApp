@@ -7,8 +7,8 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.example.qfmenu.database.Entity.RoleDb
-import com.example.qfmenu.database.Entity.RoleWithPermissions
+import com.example.qfmenu.database.entity.RoleDb
+import com.example.qfmenu.database.entity.RoleWithPermissions
 import kotlinx.coroutines.flow.Flow
 
 @Dao

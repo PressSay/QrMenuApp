@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Update
-import com.example.qfmenu.database.Entity.CategoryMenuCrossRef
+import com.example.qfmenu.database.entity.CategoryMenuCrossRef
 
 @Dao
 interface CategoryMenuCrossRefDao {

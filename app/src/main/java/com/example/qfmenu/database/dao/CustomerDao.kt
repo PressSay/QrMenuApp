@@ -7,11 +7,11 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.example.qfmenu.database.Entity.CustomerAndOrderDb
-import com.example.qfmenu.database.Entity.CustomerDb
-import com.example.qfmenu.database.Entity.CustomerDishCrossRef
-import com.example.qfmenu.database.Entity.CustomerWithDishes
-import com.example.qfmenu.database.Entity.ReviewCustomerCrossRef
+import com.example.qfmenu.database.entity.CustomerAndOrderDb
+import com.example.qfmenu.database.entity.CustomerDb
+import com.example.qfmenu.database.entity.CustomerDishCrossRef
+import com.example.qfmenu.database.entity.CustomerWithDishes
+import com.example.qfmenu.database.entity.ReviewCustomerCrossRef
 import kotlinx.coroutines.flow.Flow
 
 @Dao

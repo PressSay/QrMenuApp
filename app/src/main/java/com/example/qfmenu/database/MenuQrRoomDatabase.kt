@@ -19,22 +19,22 @@ import com.example.qfmenu.database.dao.ReviewCustomerCrossRefDao
 import com.example.qfmenu.database.dao.ReviewDao
 import com.example.qfmenu.database.dao.RoleDao
 import com.example.qfmenu.database.dao.TableDao
-import com.example.qfmenu.database.Entity.AccountDb
-import com.example.qfmenu.database.Entity.CategoryDb
-import com.example.qfmenu.database.Entity.CategoryMenuCrossRef
-import com.example.qfmenu.database.Entity.CustomerDb
-import com.example.qfmenu.database.Entity.CustomerDishCrossRef
-import com.example.qfmenu.database.Entity.DishDb
-import com.example.qfmenu.database.Entity.InvestmentDb
-import com.example.qfmenu.database.Entity.MenuDb
-import com.example.qfmenu.database.Entity.OrderDb
-import com.example.qfmenu.database.Entity.PermissionDb
-import com.example.qfmenu.database.Entity.PermissionRoleCrossRef
-import com.example.qfmenu.database.Entity.ReviewCustomerCrossRef
-import com.example.qfmenu.database.Entity.ReviewDb
-import com.example.qfmenu.database.Entity.ReviewDishCrossRef
-import com.example.qfmenu.database.Entity.RoleDb
-import com.example.qfmenu.database.Entity.TableDb
+import com.example.qfmenu.database.entity.AccountDb
+import com.example.qfmenu.database.entity.CategoryDb
+import com.example.qfmenu.database.entity.CategoryMenuCrossRef
+import com.example.qfmenu.database.entity.CustomerDb
+import com.example.qfmenu.database.entity.CustomerDishCrossRef
+import com.example.qfmenu.database.entity.DishDb
+import com.example.qfmenu.database.entity.InvestmentDb
+import com.example.qfmenu.database.entity.MenuDb
+import com.example.qfmenu.database.entity.OrderDb
+import com.example.qfmenu.database.entity.PermissionDb
+import com.example.qfmenu.database.entity.PermissionRoleCrossRef
+import com.example.qfmenu.database.entity.ReviewCustomerCrossRef
+import com.example.qfmenu.database.entity.ReviewDb
+import com.example.qfmenu.database.entity.ReviewDishCrossRef
+import com.example.qfmenu.database.entity.RoleDb
+import com.example.qfmenu.database.entity.TableDb
 
 @Database(
     entities = [

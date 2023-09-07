@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Update
-import com.example.qfmenu.database.Entity.PermissionRoleCrossRef
+import com.example.qfmenu.database.entity.PermissionRoleCrossRef
 
 @Dao
 interface PermissionRoleCrossRefDao {

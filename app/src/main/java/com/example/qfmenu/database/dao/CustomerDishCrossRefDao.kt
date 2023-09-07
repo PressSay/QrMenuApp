@@ -6,9 +6,9 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.example.qfmenu.database.Entity.CustomerDishCrossRef
-import com.example.qfmenu.database.Entity.DishDb
-import com.example.qfmenu.database.Entity.ReviewDb
+import com.example.qfmenu.database.entity.CustomerDishCrossRef
+import com.example.qfmenu.database.entity.DishDb
+import com.example.qfmenu.database.entity.ReviewDb
 import kotlinx.coroutines.flow.Flow
 @Dao
 interface CustomerDishCrossRefDao {

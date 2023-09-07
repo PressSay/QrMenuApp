@@ -7,9 +7,9 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.example.qfmenu.database.Entity.CategoryDb
-import com.example.qfmenu.database.Entity.CategoryWidthDishes
-import com.example.qfmenu.database.Entity.CategoryWithMenus
+import com.example.qfmenu.database.entity.CategoryDb
+import com.example.qfmenu.database.entity.CategoryWidthDishes
+import com.example.qfmenu.database.entity.CategoryWithMenus
 import kotlinx.coroutines.flow.Flow
 
 @Dao

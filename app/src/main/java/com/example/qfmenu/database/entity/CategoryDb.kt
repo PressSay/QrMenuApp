@@ -1,4 +1,4 @@
-package com.example.qfmenu.database.Entity
+package com.example.qfmenu.database.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded

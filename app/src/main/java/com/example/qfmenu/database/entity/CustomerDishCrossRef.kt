@@ -1,9 +1,6 @@
-package com.example.qfmenu.database.Entity
+package com.example.qfmenu.database.entity
 
-import androidx.annotation.Nullable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 
 @Entity(primaryKeys = ["customerId", "dishId"])
 data class CustomerDishCrossRef(

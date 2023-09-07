@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.example.qfmenu.database.Entity.ReviewCustomerCrossRef
+import com.example.qfmenu.database.entity.ReviewCustomerCrossRef
 import kotlinx.coroutines.flow.Flow
 
 @Dao
