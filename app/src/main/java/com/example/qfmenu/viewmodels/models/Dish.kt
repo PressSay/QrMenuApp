@@ -11,5 +11,4 @@ data class Dish(
     var selected: Boolean = false,
     val isReview: Boolean = false,
     val imgUrl: String = "empty",
-    val id: Int
 )

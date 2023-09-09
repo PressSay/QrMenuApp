@@ -107,7 +107,7 @@ class DishMenuFragment : Fragment() {
         recyclerView.adapter = dishMenuAdapter
 
         binding.itemMenuOrderBtn.setOnClickListener {
-            viewModel.setSelectedDishes(dishMenuAdapter.listSelected)
+
             findNavController().navigate(R.id.action_dishMenuFragment_to_editConfirmDishFragment)
         }
 
