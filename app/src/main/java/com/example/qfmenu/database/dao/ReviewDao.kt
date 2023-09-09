@@ -21,7 +21,7 @@ interface ReviewDao {
     fun getReviews(): Flow<List<ReviewDb>>
 
     @Query("SELECT * FROM ReviewDb WHERE reviewId = :reviewId")
-    fun getReview(reviewId: Int): Flow<ReviewDb>
+    fun getReview(reviewId: Long): Flow<ReviewDb>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(reviewDb: ReviewDb)

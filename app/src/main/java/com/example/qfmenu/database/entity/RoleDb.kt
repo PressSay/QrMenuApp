@@ -8,20 +8,17 @@ import androidx.room.Relation
 
 @Entity
 data class RoleDb(
-    @PrimaryKey(autoGenerate = true)
-    val roleId: Long,
-    val accountCreatorId: Long,
+    @PrimaryKey
+    val roleNameId: String,
     val expired: String,
-    val name: String,
     val description: String,
 )
 
-data class RoleWithPermissions(
+data class RoleWithAccounts(
     @Embedded val roleDb: RoleDb,
     @Relation(
-        parentColumn = "roleId",
-        entityColumn = "permissionId",
-        associateBy = Junction(PermissionRoleCrossRef::class)
+        parentColumn = "roleNameId",
+        entityColumn = "roleCreatorId"
     )
-    val permissionsDb: List<PermissionDb>
+    val accountsDb: List<AccountDb>
 )

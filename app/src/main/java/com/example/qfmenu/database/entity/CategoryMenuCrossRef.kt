@@ -2,8 +2,8 @@ package com.example.qfmenu.database.entity
 
 import androidx.room.Entity
 
-@Entity(primaryKeys = ["categoryId", "menuId"])
+@Entity(primaryKeys = ["categoryNameId", "menuNameId"])
 data class CategoryMenuCrossRef(
-    val categoryId: Long,
-    val menuId: Long
+    val categoryNameId: String,
+    val menuNameId: String
 )

@@ -12,8 +12,8 @@ import com.example.qfmenu.database.entity.ReviewDb
 import kotlinx.coroutines.flow.Flow
 @Dao
 interface CustomerDishCrossRefDao {
-    @Query("SELECT * FROM DishDb WHERE dishId = :dishCreatorId")
-    fun getDish(dishCreatorId: Int): Flow<DishDb>
+    @Query("SELECT * FROM DishDb WHERE dishNameId = :dishCreatorId")
+    fun getDish(dishCreatorId: String): Flow<DishDb>
 
     @Query("SELECT * FROM ReviewDb WHERE reviewId = :reviewCreatorId")
     fun getReview(reviewCreatorId: Int): Flow<ReviewDb>

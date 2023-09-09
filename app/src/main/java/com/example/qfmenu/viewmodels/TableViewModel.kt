@@ -3,37 +3,64 @@ package com.example.menumanager.models
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.menumanager.table.DatasourceTable
+import com.example.qfmenu.database.dao.CategoryDao
+import com.example.qfmenu.database.dao.CategoryMenuCrossRefDao
+import com.example.qfmenu.database.dao.DishDao
+import com.example.qfmenu.database.dao.MenuDao
+import com.example.qfmenu.database.dao.TableDao
+import com.example.qfmenu.database.entity.TableDb
 import com.example.qfmenu.viewmodels.models.Table
+import kotlinx.coroutines.launch
 
-class TableViewModel : ViewModel() {
-    
+class TableViewModel(
+    private val tableDao: TableDao
+) : ViewModel() {
+    val tables get(): LiveData<List<TableDb>> = tableDao.getTables().asLiveData()
+
     private var _isStartOrder : Boolean = false
     val isStartOrder get() = _isStartOrder
     fun setIsStartOrder(isStartOrder: Boolean) {
         _isStartOrder = isStartOrder
     }
 
-    private val _tables = MutableLiveData<List<Table>>()
-    val tables : LiveData<List<Table>> get() = _tables
 
-    private val _tableForCreate = MutableLiveData<Table>()
-    val tableForCreate : LiveData<Table> get() = _tableForCreate
-
-    init {
-        _tables.value = DatasourceTable().loadTableList()
+    fun createTables(tablesDb: List<TableDb>) {
+        viewModelScope.launch {
+            tablesDb.forEach {
+                tableDao.insert(it)
+            }
+        }
     }
 
-    fun createTable(table: Table) {
-        _tableForCreate.value = table
+    fun updateTable(tableDb: TableDb) {
+        viewModelScope.launch {
+            tableDao.update(tableDb)
+        }
     }
 
-    fun updateTable(id: Int, table: Table) {}
-
-    fun deleteTable(id: Int) {}
-
-    fun getAmountTable(): Int? {
-        return _tables.value?.size
+    fun deleteTables(tablesDb: List<TableDb>) {
+        viewModelScope.launch {
+            tablesDb.forEach {
+                tableDao.delete(it)
+            }
+        }
     }
 
+}
+
+
+class TableViewModelFactory(
+    private val tableDao: TableDao
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(TableViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return TableViewModel(tableDao) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
 }

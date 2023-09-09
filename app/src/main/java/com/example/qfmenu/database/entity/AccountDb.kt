@@ -9,6 +9,7 @@ import androidx.room.Relation
 data class AccountDb(
     @PrimaryKey(autoGenerate = true)
     val accountId: Long,
+    val roleCreatorId: String,
     val name: String,
     val phoneNumber: String,
     val level: Int,
@@ -16,15 +17,6 @@ data class AccountDb(
     val password: String,
     val address: String,
     val avatar: String,
-)
-
-data class AccountWithRoles(
-    @Embedded val accountDb: AccountDb,
-    @Relation(
-        parentColumn = "accountId",
-        entityColumn = "accountCreatorId"
-    )
-    val rolesDb: List<RoleDb>
 )
 
 data class AccountWithCustomers(

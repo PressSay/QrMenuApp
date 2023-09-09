@@ -37,7 +37,7 @@ class EditConfirmDishAdapter(
         val item = dataset[holder.adapterPosition]
         holder.image.setImageResource(item.imgResourceId)
         holder.title.text = item.title
-        holder.cost.text = item.cost
+        holder.cost.text = item.cost.toString()
         holder.amount.text = item.amount.toString()
         holder.btnTrash.setOnClickListener {
             dataset.removeAt(holder.adapterPosition)

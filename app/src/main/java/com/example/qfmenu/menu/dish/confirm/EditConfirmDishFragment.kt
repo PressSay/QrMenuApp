@@ -106,7 +106,7 @@ class EditConfirmDishFragment : Fragment() {
                     R.drawable.img_image_4,
                     "something",
                     "something",
-                    "123",
+                    12000,
                     1,
                     true
                 ),
@@ -114,7 +114,7 @@ class EditConfirmDishFragment : Fragment() {
                     R.drawable.img_image_4,
                     "something1",
                     "something1",
-                    "1231",
+                    12000,
                     1,
                     true
                 )

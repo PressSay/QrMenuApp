@@ -18,17 +18,23 @@ import kotlinx.coroutines.flow.Flow
 interface CustomerDao {
     @Transaction
     @Query("SELECT * FROM CustomerDb WHERE customerId = :customerId")
-    fun getCustomerAndOrder(customerId: Int): Flow<CustomerAndOrderDb>
+    fun getCustomerAndOrder(customerId: Long): Flow<CustomerAndOrderDb>
 
     @Transaction
     @Query("SELECT * FROM CustomerDb WHERE customerId = :customerId")
-    fun getCustomerWithDishes(customerId: Int): Flow<CustomerWithDishes>
+    fun getCustomerWithDishes(customerId: Long): Flow<CustomerWithDishes>
+
+    @Query("SELECT * FROM customerDb")
+    fun getCustomers(): Flow<List<CustomerDb>>
 
     @Query("SELECT * FROM CustomerDishCrossRef WHERE customerId = :customerId")
-    fun getCustomerDishCrossRefs(customerId: Int): Flow<List<CustomerDishCrossRef>>
+    fun getCustomerDishCrossRefs(customerId: Long): Flow<List<CustomerDishCrossRef>>
 
     @Query("SELECT * FROM ReviewCustomerCrossRef WHERE customerId = :customerId")
-    fun getReviewCustomerCrossRefs(customerId: Int): Flow<ReviewCustomerCrossRef>
+    fun getReviewCustomerCrossRefs(customerId: Long): Flow<ReviewCustomerCrossRef>
+
+    @Query("SELECT * FROM CustomerDb WHERE customerId = :customerId")
+    fun getCustomer(customerId: Long): Flow<CustomerDb>
 
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

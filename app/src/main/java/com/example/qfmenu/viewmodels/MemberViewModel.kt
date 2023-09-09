@@ -3,29 +3,64 @@ package com.example.menumanager.models
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.menumanager.member.DatasourceMember
+import com.example.qfmenu.database.dao.AccountDao
+import com.example.qfmenu.database.dao.CustomerDao
+import com.example.qfmenu.database.dao.RoleDao
+import com.example.qfmenu.database.entity.AccountDb
+import com.example.qfmenu.database.entity.RoleDb
 import com.example.qfmenu.viewmodels.models.Member
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import java.lang.IllegalArgumentException
 
-class MemberViewModel : ViewModel() {
+class MemberViewModel(
+    private val accountDao: AccountDao,
+) : ViewModel() {
 
-    private val _members = MutableLiveData<List<Member>>()
-    val members : LiveData<List<Member>> get() = _members
+    private val _members = accountDao.getAccountsWithNameRole("Member").map {
+        it.accountsDb
+    }.asLiveData()
 
-    private val _memberForCreate = MutableLiveData<Member>()
-    val memberForCreate : LiveData<Member> get() = _memberForCreate
+    private val _memberForCreate: AccountDb? = null
+    val memberForCreate get() = _memberForCreate
 
-    init {
-        _members.value = DatasourceMember().loadMemberList()
+    fun createMember(accountDb: AccountDb) {
+        viewModelScope.launch {
+            accountDao.insert(accountDb)
+        }
     }
 
-    fun createMember(member: Member) {
-        _memberForCreate.value = member
+    fun updateMember(accountDb: AccountDb) {
+        viewModelScope.launch {
+            accountDao.update(accountDb)
+        }
     }
 
-    fun updateMember(id: Int, member: Member) {}
+    fun deleteMember(accountDb: AccountDb) {
+        viewModelScope.launch {
+            accountDao.delete(accountDb)
+        }
+    }
 
-    fun deleteMember(id: Int) {}
+    fun getMember(accountId: Long): LiveData<AccountDb> {
+        return accountDao.getAccount(accountId).asLiveData()
+    }
 
-    fun getMember(id: Int) {}
+}
+
+class MemberViewModelFactory(
+    private val accountDao: AccountDao
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(MemberViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return MemberViewModel(accountDao) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
 
 }

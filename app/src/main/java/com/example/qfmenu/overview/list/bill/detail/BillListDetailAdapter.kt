@@ -40,7 +40,7 @@ class BillListDetailAdapter(
         val item = dataset[position]
         holder.imgView.setImageResource(R.drawable.img_image_4)
         holder.titleItem.text = item.title
-        holder.cost.text = item.cost
+        holder.cost.text = item.cost.toString()
         holder.amount.text = item.amount.toString()
         if (!item.isReview) {
             holder.starImg.visibility = View.GONE

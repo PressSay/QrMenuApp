@@ -15,15 +15,19 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CategoryDao {
     @Transaction
-    @Query("SELECT * FROM CategoryDb WHERE categoryId = :categoryId")
-    fun getCategoryWithMenus(categoryId: Int): Flow<CategoryWithMenus>
+    @Query("SELECT * FROM CategoryDb WHERE categoryNameId = :categoryNameId")
+    fun getCategoryWithMenus(categoryNameId: String): Flow<CategoryWithMenus>
 
     @Transaction
-    @Query("SELECT * FROM CategoryDb WHERE categoryId = :categoryId")
-    fun getCategoryWithDishes(categoryId: Int): Flow<CategoryWidthDishes>
+    @Query("SELECT * FROM CategoryDb")
+    fun getCategoriesWithDishes(): Flow<List<CategoryWidthDishes>>
 
-    @Query("SELECT * FROM CategoryDb WHERE categoryId = :categoryId")
-    fun getCategory(categoryId: Int): Flow<CategoryDb>
+    @Transaction
+    @Query("SELECT * FROM CategoryDb WHERE categoryNameId = :categoryNameId")
+    fun getCategoryWithDishes(categoryNameId: String): Flow<CategoryWidthDishes>
+
+    @Query("SELECT * FROM CategoryDb WHERE categoryNameId = :categoryNameId")
+    fun getCategory(categoryNameId: String): Flow<CategoryDb>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(categoryDb: CategoryDb)

@@ -42,7 +42,7 @@ class DishMenuAdapter(
 
         holder.img.setImageResource(item.imgResourceId)
         holder.title.text = item.title
-        holder.cost.text = item.cost
+        holder.cost.text = item.cost.toString()
         holder.amount.text = item.amount.toString()
 
         holder.btnPlus.setOnClickListener {

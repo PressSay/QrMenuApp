@@ -73,7 +73,7 @@ class OrderQueueFragment : Fragment() {
                     Table("Online", "None"),
                     Date(2022, 12, 1),
                     listOf(
-                        Dish(R.drawable.img_image_4, "title1", "something", "18,000$", 1),
+                        Dish(R.drawable.img_image_4, "title1", "something", 18000, 1),
                     ),
                     "joaisjdof",
                     "jaoisdjf",
@@ -89,8 +89,8 @@ class OrderQueueFragment : Fragment() {
                     Table("Online", "None"),
                     Date(2022, 12, 1),
                     listOf(
-                        Dish(R.drawable.img_image_4, "title4", "something", "18,000$", 1),
-                        Dish(R.drawable.img_image_4, "title3", "something", "18,000$", 1)
+                        Dish(R.drawable.img_image_4, "title4", "something", 18000, 1),
+                        Dish(R.drawable.img_image_4, "title3", "something", 18000, 1)
                     ),
                     "joaisjdof",
                     "jaoisdjf",
@@ -106,9 +106,9 @@ class OrderQueueFragment : Fragment() {
                     Table("Online", "None"),
                     Date(2022, 12, 1),
                     listOf(
-                        Dish(R.drawable.img_image_4, "title5", "something", "18,000$", 1),
-                        Dish(R.drawable.img_image_4, "title6", "something", "18,000$", 1),
-                                Dish(R.drawable.img_image_4, "title7", "something", "18,000$", 1)
+                        Dish(R.drawable.img_image_4, "title5", "something", 18000, 1),
+                        Dish(R.drawable.img_image_4, "title6", "something", 18000, 1),
+                                Dish(R.drawable.img_image_4, "title7", "something", 18000, 1)
                     ),
                     "joaisjdof",
                     "jaoisdjf",

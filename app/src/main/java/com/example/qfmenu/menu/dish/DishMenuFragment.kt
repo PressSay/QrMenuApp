@@ -10,6 +10,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.menumanager.models.DishViewModel
+import com.example.menumanager.models.DishViewModelFactory
+import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.databinding.FragmentDishMenuBinding
@@ -29,7 +31,12 @@ class DishMenuFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
-    private val viewModel: DishViewModel by viewModels()
+    private val viewModel: DishViewModel by viewModels {
+        DishViewModelFactory(
+            (activity?.application as QrMenuApplication).database.dishDao(),
+            (activity?.application as QrMenuApplication).database.categoryDao()
+        )
+    }
 
     private var _binding: FragmentDishMenuBinding? = null
     private val binding get() = _binding!!

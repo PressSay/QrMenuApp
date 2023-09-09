@@ -8,17 +8,16 @@ import androidx.room.Relation
 
 @Entity
 data class MenuDb(
-    @PrimaryKey(autoGenerate = true)
-    val menuId: Long,
-    val name: String,
+    @PrimaryKey
+    val menuNameId: String,
     val isUsed: Int,
 )
 
 data class MenuWithCategories(
     @Embedded val menuDb: MenuDb,
     @Relation(
-        parentColumn = "menuId",
-        entityColumn = "categoryId",
+        parentColumn = "menuNameId",
+        entityColumn = "categoryNameId",
         associateBy = Junction(CategoryMenuCrossRef::class)
     )
     val categoriesDb: List<CategoryDb>

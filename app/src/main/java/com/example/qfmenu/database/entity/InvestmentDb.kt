@@ -5,8 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class InvestmentDb(
-    @PrimaryKey(autoGenerate = true)
-    val investmentId: Int,
-    val name: String,
+    @PrimaryKey
+    val investmentName: String,
     val cost: Int
 )

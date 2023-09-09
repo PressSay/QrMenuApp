@@ -15,18 +15,18 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface DishDao {
     @Transaction
-    @Query("SELECT * FROM DishDb WHERE dishId = :dishId")
-    fun getDishWithCustomers(dishId: Int): Flow<DishWithCustomers>
+    @Query("SELECT * FROM DishDb WHERE dishNameId = :dishNameId")
+    fun getDishWithCustomers(dishNameId: String): Flow<DishWithCustomers>
 
     @Transaction
-    @Query("SELECT * FROM DishDb WHERE dishId = :dishId")
-    fun getDishWithReviews(dishId: Int): Flow<DishWithReviews>
+    @Query("SELECT * FROM DishDb WHERE dishNameId = :dishNameId")
+    fun getDishWithReviews(dishNameId: String): Flow<DishWithReviews>
 
     @Query("SELECT * FROM DishDb")
     fun getDishes(): Flow<List<DishDb>>
 
-    @Query("SELECT * FROM DishDb WHERE dishId = :dishId")
-    fun getDish(dishId: Int): Flow<DishDb>
+    @Query("SELECT * FROM DishDb WHERE dishNameId = :dishNameId")
+    fun getDish(dishNameId: String): Flow<DishDb>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(dishDb: DishDb)

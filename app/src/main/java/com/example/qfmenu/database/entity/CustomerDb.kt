@@ -32,7 +32,7 @@ data class CustomerWithDishes(
     @Embedded val customerDb: CustomerDb,
     @Relation(
         parentColumn = "customerId",
-        entityColumn = "dishId",
+        entityColumn = "dishNameId",
         associateBy = Junction(CustomerDishCrossRef::class)
     )
     val dishesDb: List<DishDb>

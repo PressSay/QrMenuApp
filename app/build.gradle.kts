@@ -43,6 +43,11 @@ android {
 }
 
 dependencies {
+    val lifecycle_version = "2.4.1"
+    implementation("androidx.fragment:fragment-ktx:1.1.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
+
     implementation("com.google.devtools.ksp:symbol-processing-api:1.9.0-1.0.11")
     val room_version = "2.5.0"
     implementation("androidx.room:room-runtime:$room_version")

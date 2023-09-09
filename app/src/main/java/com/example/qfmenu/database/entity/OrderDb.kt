@@ -10,7 +10,6 @@ data class OrderDb(
     val customerOwnerId: Long,
     val tableCreatorId: Long,
     val status: String,
-    val tableId: Int,
     val payments: String,
-    val promotion: Float,
+    val promotion: Byte,
 )

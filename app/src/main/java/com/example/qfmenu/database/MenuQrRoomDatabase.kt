@@ -13,8 +13,6 @@ import com.example.qfmenu.database.dao.DishDao
 import com.example.qfmenu.database.dao.InvestmentDao
 import com.example.qfmenu.database.dao.MenuDao
 import com.example.qfmenu.database.dao.OrderDao
-import com.example.qfmenu.database.dao.PermissionDao
-import com.example.qfmenu.database.dao.PermissionRoleCrossRefDao
 import com.example.qfmenu.database.dao.ReviewCustomerCrossRefDao
 import com.example.qfmenu.database.dao.ReviewDao
 import com.example.qfmenu.database.dao.RoleDao
@@ -28,8 +26,6 @@ import com.example.qfmenu.database.entity.DishDb
 import com.example.qfmenu.database.entity.InvestmentDb
 import com.example.qfmenu.database.entity.MenuDb
 import com.example.qfmenu.database.entity.OrderDb
-import com.example.qfmenu.database.entity.PermissionDb
-import com.example.qfmenu.database.entity.PermissionRoleCrossRef
 import com.example.qfmenu.database.entity.ReviewCustomerCrossRef
 import com.example.qfmenu.database.entity.ReviewDb
 import com.example.qfmenu.database.entity.ReviewDishCrossRef
@@ -45,8 +41,7 @@ import com.example.qfmenu.database.entity.TableDb
         CustomerDishCrossRef::class,
         DishDb::class,
         InvestmentDb::class, MenuDb::class,
-        OrderDb::class, PermissionDb::class,
-        PermissionRoleCrossRef::class,
+        OrderDb::class,
         ReviewCustomerCrossRef::class,
         ReviewDb::class,
         ReviewDishCrossRef::class,
@@ -75,10 +70,6 @@ abstract class MenuQrRoomDatabase : RoomDatabase() {
     abstract fun menuDao(): MenuDao
 
     abstract fun orderDao(): OrderDao
-
-    abstract fun permissionDao(): PermissionDao
-
-    abstract fun permissionRoleCrossRefDao(): PermissionRoleCrossRefDao
 
     abstract fun reviewCustomerCrossRefDao(): ReviewCustomerCrossRefDao
 

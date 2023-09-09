@@ -99,7 +99,7 @@ class EditCreateDishFragment : Fragment() {
                     R.drawable.img_image_4,
                     "title Dish-1",
                     "somehintg",
-                    "12,000",
+                    12000,
                     12,
                     true
                 ),
@@ -107,7 +107,7 @@ class EditCreateDishFragment : Fragment() {
                     R.drawable.img_image_4,
                     "title Dish-2",
                     "somehintg",
-                    "13,000",
+                    12000,
                     12,
                     true
                 ),
@@ -115,7 +115,7 @@ class EditCreateDishFragment : Fragment() {
                     R.drawable.img_image_4,
                     "title Dish-3",
                     "somehintg",
-                    "13,000",
+                    12000,
                     12,
                     true
                 ),
@@ -123,7 +123,7 @@ class EditCreateDishFragment : Fragment() {
                     R.drawable.img_image_4,
                     "title Dish-4",
                     "somehintg",
-                    "13,000",
+                    12000,
                     12,
                     true
                 ),

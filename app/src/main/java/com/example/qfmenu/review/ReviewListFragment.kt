@@ -102,7 +102,7 @@ class ReviewListFragment : Fragment() {
                     R.drawable.dish_menu_img,
                     "Example 1",
                     "Just a example description",
-                    "18,000$",
+                    18000,
                     1,
                     false
                 ),
@@ -110,7 +110,7 @@ class ReviewListFragment : Fragment() {
                     R.drawable.dish_menu_img,
                     "Example 2",
                     "Just a example description",
-                    "18,000$",
+                    18000,
                     1,
                     false
                 ),
@@ -118,7 +118,7 @@ class ReviewListFragment : Fragment() {
                     R.drawable.dish_menu_img,
                     "Example 3",
                     "Just a example description",
-                    "18,000$",
+                    18000,
                     1,
                     false
                 ),
@@ -126,7 +126,7 @@ class ReviewListFragment : Fragment() {
                     R.drawable.dish_menu_img,
                     "Example 4",
                     "Just a example description",
-                    "18,000$",
+                    18000,
                     1,
                     false
                 ),

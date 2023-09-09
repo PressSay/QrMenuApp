@@ -1,5 +1,6 @@
 package com.example.qfmenu.database.entity
 
+import androidx.annotation.Nullable
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -9,7 +10,7 @@ import androidx.room.Relation
 data class ReviewDb (
     @PrimaryKey(autoGenerate = true)
     val reviewId: Long,
-    val dishCreatorId: Long,
+    val dishCreatorId: String = "DishEmpty",
     val isThumbUp: Int,
     val description: String,
 )
