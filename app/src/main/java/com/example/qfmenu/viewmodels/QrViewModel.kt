@@ -1,4 +1,4 @@
-package com.example.menumanager.models
+package com.example.qfmenu.viewmodels
 
 import android.net.Uri
 import androidx.lifecycle.LiveData

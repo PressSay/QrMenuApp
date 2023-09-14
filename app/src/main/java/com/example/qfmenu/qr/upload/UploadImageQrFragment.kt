@@ -1,4 +1,4 @@
-package com.example.menumanager.qr.upload
+package com.example.qfmenu.qr.upload
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

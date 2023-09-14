@@ -1,4 +1,4 @@
-package com.example.menumanager.overview.list
+package com.example.qfmenu.overview.list
 
 import java.util.Calendar
 

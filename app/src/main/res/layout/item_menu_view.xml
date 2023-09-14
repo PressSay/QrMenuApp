@@ -33,16 +33,19 @@
                 android:orientation="vertical"
                 tools:ignore="NestedWeights">
 
-                <androidx.appcompat.widget.AppCompatButton
+                <TextView
                     android:layout_width="70dp"
                     android:layout_height="18dp"
                     android:background="@drawable/shape_normal_rounded"
                     android:backgroundTint="@color/green_primary"
                     android:text="18,000 $"
+                    android:textStyle="bold"
                     android:textColor="#FFFFFF"
+                    android:gravity="center"
                     android:textSize="12sp" />
 
             </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
@@ -76,6 +79,7 @@
                             android:textColor="#3C691B"
                             android:textSize="14sp"
                             android:textStyle="bold" />
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -90,7 +94,9 @@
                             android:text="Description:"
                             android:textSize="12sp"
                             android:textStyle="bold" />
+
                     </LinearLayout>
+
                 </LinearLayout>
 
                 <TextView
@@ -99,6 +105,7 @@
                     android:layout_weight="1"
                     android:text="something something something something something something something something something something something"
                     android:textSize="11sp" />
+
             </LinearLayout>
 
 

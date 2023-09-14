@@ -1,4 +1,4 @@
-package com.example.menumanager.models
+package com.example.qfmenu.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -6,19 +6,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.qfmenu.database.dao.CategoryDao
-import com.example.qfmenu.database.dao.CategoryMenuCrossRefDao
 import com.example.qfmenu.database.dao.DishDao
 import kotlinx.coroutines.launch
 import com.example.qfmenu.database.dao.MenuDao
-import com.example.qfmenu.database.entity.CategoryMenuCrossRef
 import com.example.qfmenu.database.entity.MenuDb
-import com.example.qfmenu.viewmodels.models.Menu
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.async
 
 class MenuViewModel(
     private val dishDao: DishDao,
     private val categoryDao: CategoryDao,
-    private val categoryMenuCrossRefDao: CategoryMenuCrossRefDao,
     private val menuDao: MenuDao
 ) : ViewModel() {
     private var _menuForCreate: MenuDb? = null
@@ -44,30 +40,26 @@ class MenuViewModel(
 
     fun deleteMenu(menuDb: MenuDb) {
         viewModelScope.launch {
-            menuDao.getMenuWithCategories(menuDb.menuNameId)
-                .collect { menuWithCategories ->
-                    menuWithCategories.categoriesDb.forEach { categoryDb ->
-                        categoryDao.getCategoryWithDishes(categoryDb.categoryNameId)
-                            .collect { categoryWithDishes ->
-                                categoryWithDishes.dishesDb.forEach {
-                                    dishDao.delete(it)
-                                }
-                            }
-                        categoryDao.delete(categoryDb)
-                        categoryMenuCrossRefDao.delete(
-                            CategoryMenuCrossRef(
-                                categoryDb.categoryNameId,
-                                menuDb.menuNameId
-                            )
-                        )
-                    }
-                }
             menuDao.delete(menuDb)
         }
     }
 
-    fun getMenu(menuNameId: String): LiveData<MenuDb> {
-        return menuDao.getMenu(menuNameId).asLiveData()
+    fun deleteMenuWithCategories(menuDb: MenuDb) {
+        viewModelScope.launch {
+            val menuWithCategories =
+                async { menuDao.getMenuWithCategories(menuDb.menuId) }.await()
+            menuWithCategories.categoriesDb.forEach { categoryDb ->
+                async { categoryDao.getCategoryWithDishes(categoryDb.categoryId) }.await().dishesDb.forEach {
+                    dishDao.delete(it)
+                }
+                categoryDao.delete(categoryDb)
+            }
+            menuDao.delete(menuDb)
+        }
+    }
+
+    suspend fun getMenuUsed(): MenuDb {
+        return menuDao.getMenuUsed()
     }
 
 }
@@ -75,13 +67,12 @@ class MenuViewModel(
 class MenuViewModelFactory(
     private val dishDao: DishDao,
     private val categoryDao: CategoryDao,
-    private val categoryMenuCrossRefDao: CategoryMenuCrossRefDao,
     private val menuDao: MenuDao
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MenuViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return MenuViewModel(dishDao, categoryDao, categoryMenuCrossRefDao, menuDao) as T
+            return MenuViewModel(dishDao, categoryDao, menuDao) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

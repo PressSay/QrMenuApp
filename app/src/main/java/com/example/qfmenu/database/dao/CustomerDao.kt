@@ -18,17 +18,24 @@ import kotlinx.coroutines.flow.Flow
 interface CustomerDao {
     @Transaction
     @Query("SELECT * FROM CustomerDb WHERE customerId = :customerId")
-    fun getCustomerAndOrder(customerId: Long): Flow<CustomerAndOrderDb>
+    suspend fun getCustomerAndOrder(customerId: Long): CustomerAndOrderDb
 
     @Transaction
     @Query("SELECT * FROM CustomerDb WHERE customerId = :customerId")
-    fun getCustomerWithDishes(customerId: Long): Flow<CustomerWithDishes>
+    suspend fun getCustomerWithDishes(customerId: Long): CustomerWithDishes
+
+    @Transaction
+    @Query("SELECT * FROM CustomerDb")
+    suspend fun getAllCustomerAndOrder(): List<CustomerAndOrderDb>
 
     @Query("SELECT * FROM customerDb")
     fun getCustomers(): Flow<List<CustomerDb>>
 
+    @Query("SELECT * FROM CustomerDb ORDER BY customerId DESC LIMIT 1")
+    fun getLastCustomer(): Flow<CustomerDb>
+
     @Query("SELECT * FROM CustomerDishCrossRef WHERE customerId = :customerId")
-    fun getCustomerDishCrossRefs(customerId: Long): Flow<List<CustomerDishCrossRef>>
+    suspend fun getCustomerDishCrossRefs(customerId: Long): List<CustomerDishCrossRef>
 
     @Query("SELECT * FROM ReviewCustomerCrossRef WHERE customerId = :customerId")
     fun getReviewCustomerCrossRefs(customerId: Long): Flow<ReviewCustomerCrossRef>
@@ -37,8 +44,8 @@ interface CustomerDao {
     fun getCustomer(customerId: Long): Flow<CustomerDb>
 
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(customerDb: CustomerDb)
+    @Insert(onConflict = OnConflictStrategy.IGNORE,)
+    suspend fun insert(customerDb: CustomerDb) : Long
 
     @Update
     suspend fun update(customerDb: CustomerDb)

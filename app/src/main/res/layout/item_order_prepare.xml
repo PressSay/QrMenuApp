@@ -53,6 +53,7 @@
 
     </RelativeLayout>
 
+
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/btnConfigOrderPrepare"
         android:layout_width="48dp"
@@ -69,5 +70,6 @@
         android:background="@color/green_error_container"
         android:src="@drawable/ic_trash"
         android:scaleType="fitCenter"
-        android:layout_margin="4dp"/>
+        android:layout_margin="4dp" />
+
 </LinearLayout>

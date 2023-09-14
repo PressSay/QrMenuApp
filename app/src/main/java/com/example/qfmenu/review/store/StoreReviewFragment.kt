@@ -1,4 +1,4 @@
-package com.example.menumanager.review.store
+package com.example.qfmenu.review.store
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

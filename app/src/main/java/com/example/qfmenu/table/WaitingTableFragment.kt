@@ -1,19 +1,25 @@
-package com.example.menumanager.table
+package com.example.qfmenu.table
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
+import com.example.qfmenu.viewmodels.CustomerViewModel
+import com.example.qfmenu.viewmodels.CustomerViewModelFactory
+import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
-import com.example.qfmenu.viewmodels.models.Table
+import com.example.qfmenu.database.entity.TableDb
 import com.example.qfmenu.databinding.FragmentWaitingTableBinding
+import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 // TODO: Rename parameter arguments, choose names that match
@@ -34,6 +40,18 @@ class WaitingTableFragment : Fragment() {
     private var _binding: FragmentWaitingTableBinding? = null
     private val binding get() = _binding!!
 
+    private val saveStateViewModel: SaveStateViewModel by activityViewModels()
+    private val customerViewModel: CustomerViewModel by viewModels() {
+        CustomerViewModelFactory(
+            (activity?.application as QrMenuApplication).database.customerDao(),
+            (activity?.application as QrMenuApplication).database.customerDishCrossRefDao(),
+            (activity?.application as QrMenuApplication).database.reviewDao(),
+            (activity?.application as QrMenuApplication).database.reviewCustomerCrossRefDao(),
+            (activity?.application as QrMenuApplication).database.orderDao(),
+            saveStateViewModel.stateDishes
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -47,7 +65,7 @@ class WaitingTableFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentWaitingTableBinding.inflate(inflater, container, false)
+        _binding = com.example.qfmenu.databinding.FragmentWaitingTableBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -86,6 +104,8 @@ class WaitingTableFragment : Fragment() {
 
         navBar.setOnItemSelectedListener {
             if (it.itemId == R.id.homeMenu) {
+                saveStateViewModel.setStateDishesDb(listOf())
+                saveStateViewModel.stateDishesByCategories = mutableListOf()
                 slidingPaneLayout.closePane()
                 navBar.visibility = View.GONE
             }
@@ -101,9 +121,12 @@ class WaitingTableFragment : Fragment() {
         recyclerView.layoutManager = gridLayoutManager
         recyclerView.adapter = WaitingTableAdapter(
             listOf(
-                Table("1", "Free"),
-                Table("2", "Free"),
-            )
+                TableDb(1, "Free"),
+                TableDb(2, "Free"),
+            ),
+            customerViewModel,
+            saveStateViewModel,
+            requireContext()
         )
 
     }

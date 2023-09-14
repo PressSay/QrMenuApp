@@ -1,19 +1,30 @@
-package com.example.menumanager.menu.category.config
+package com.example.qfmenu.menu.category.config
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
-import com.example.menumanager.menu.EditCategoryOrDishAdapter
-import com.example.qfmenu.viewmodels.models.Category
+import com.example.qfmenu.viewmodels.CategoryViewModel
+import com.example.qfmenu.viewmodels.CategoryViewModelFactory
+import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
+import com.example.qfmenu.database.entity.CategoryDb
+import com.example.qfmenu.database.entity.MenuDb
 import com.example.qfmenu.databinding.FragmentEditCreateCategoryBinding
+import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass.
@@ -33,6 +44,15 @@ class EditCreateCategoryFragment : Fragment() {
     private var _binding: FragmentEditCreateCategoryBinding? = null
     private val binding get() = _binding!!
 
+    private val saveStateViewModel: SaveStateViewModel by activityViewModels()
+    private val categoryViewModel: CategoryViewModel by viewModels {
+        CategoryViewModelFactory(
+            (activity?.application as QrMenuApplication).database.dishDao(),
+            (activity?.application as QrMenuApplication).database.categoryDao(),
+            (activity?.application as QrMenuApplication).database.menuDao(),
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -50,6 +70,7 @@ class EditCreateCategoryFragment : Fragment() {
         return binding.root
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
@@ -74,6 +95,48 @@ class EditCreateCategoryFragment : Fragment() {
         optionOne.setIcon(R.drawable.ic_search)
         optionTwo.setIcon(R.drawable.ic_plus)
 
+        val saveMenuEditCategory = binding.saveMenuEditCategory as ViewGroup
+        val linearTextField1 = saveMenuEditCategory.getChildAt(0) as ViewGroup
+        val menuEditTextView = linearTextField1.getChildAt(2) as TextInputEditText
+        val saveMenuBtn = linearTextField1.getChildAt(3) as ImageButton
+        val linearTextField2 = saveMenuEditCategory.getChildAt(1) as ViewGroup
+        val categoryEditTextView = linearTextField2.getChildAt(2) as TextInputEditText
+
+        val menuDao = (activity?.application as QrMenuApplication).database.menuDao()
+        var menuDb = saveStateViewModel.stateMenuDb
+
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
+
+        val editCategoryListAdapter = EditCategoryListAdapter(categoryViewModel, requireContext(), saveStateViewModel)
+
+
+
+
+        categoryViewModel.getCategoriesLiveData(saveStateViewModel.stateMenuDb.menuId).observe(this.viewLifecycleOwner) {
+            editCategoryListAdapter.submitList(it.categoriesDb)
+        }
+
+
+        recyclerView.adapter = editCategoryListAdapter
+
+        menuEditTextView.setText(menuDb.menuName)
+
+        saveMenuBtn.setOnClickListener {
+            if (menuEditTextView.text.toString() != menuDb.menuName) {
+                GlobalScope.launch {
+                    menuDb = MenuDb(
+                        menuDb.menuId,
+                        menuEditTextView.text.toString(),
+                        menuDb.isUsed
+                    )
+                    menuDao.update(
+                        menuDb
+                    )
+                }
+            }
+
+        }
+
         navBar.setOnItemSelectedListener {
             if (it.itemId == R.id.homeMenu) {
                 slidePaneLayout.closePane()
@@ -86,20 +149,27 @@ class EditCreateCategoryFragment : Fragment() {
 
             }
             if (it.itemId == R.id.optionTwo) {
-
+                GlobalScope.launch {
+                    categoryViewModel.insertCategory(
+                        CategoryDb(
+                            categoryName = categoryEditTextView.text.toString(),
+                            menuCreatorId = menuDb.menuId
+                        )
+                    )
+                }
             }
             true
         }
 
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
-        recyclerView.adapter = EditCategoryOrDishAdapter<Category>(
-            true,
-            requireContext(),
-            mutableListOf<Category>(
-                Category("Category-1"),
-                Category("Category-2"),
-            )
-        )
+
+//        recyclerView.adapter = EditCategoryOrDishAdapter<Category>(
+//            true,
+//            requireContext(),
+//            mutableListOf<Category>(
+//                Category("Category-1"),
+//                Category("Category-2"),
+//            )
+//        )
     }
 
     companion object {

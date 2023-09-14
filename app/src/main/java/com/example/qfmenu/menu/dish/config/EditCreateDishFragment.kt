@@ -1,20 +1,31 @@
-package com.example.menumanager.menu.dish.config
+package com.example.qfmenu.menu.dish.config
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
-import com.example.menumanager.menu.EditCategoryOrDishAdapter
-import com.example.menumanager.menu.dish.DatasourceDish
-import com.example.qfmenu.viewmodels.models.Dish
+import com.example.qfmenu.menu.dish.DatasourceDish
+import com.example.qfmenu.viewmodels.DishViewModel
+import com.example.qfmenu.viewmodels.DishViewModelFactory
+import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
+import com.example.qfmenu.database.entity.CategoryDb
+import com.example.qfmenu.database.entity.DishDb
 import com.example.qfmenu.databinding.FragmentEditCreateDishBinding
+import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass.
@@ -31,6 +42,16 @@ class EditCreateDishFragment : Fragment() {
 
     private var _binding: FragmentEditCreateDishBinding? = null
     private val binding get() = _binding!!
+
+    private val saveStateViewModel: SaveStateViewModel by activityViewModels()
+
+    private val dishViewModel: DishViewModel by viewModels {
+        DishViewModelFactory(
+            (activity?.application as QrMenuApplication).database.dishDao(),
+            (activity?.application as QrMenuApplication).database.categoryDao(),
+
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +95,43 @@ class EditCreateDishFragment : Fragment() {
         optionOne.setIcon(R.drawable.ic_search)
         optionTwo.setIcon(R.drawable.ic_check_fill)
 
+        val linearTextField0 = binding.linearEditTextEditCreateDish as ViewGroup
+        val linearTextField1 = linearTextField0.getChildAt(1) as ViewGroup
+        val categoryEditText = linearTextField1.getChildAt(2) as TextInputEditText
+        val categorySaveBtn = linearTextField1.getChildAt(3) as ImageButton
+        val linearTextField2 = linearTextField0.getChildAt(2) as ViewGroup
+        val titleDish = linearTextField2.getChildAt(2) as TextInputEditText
+        val costDish = linearTextField2.getChildAt(3) as TextInputEditText
+        val descriptionDish = linearTextField0.getChildAt(3) as TextInputEditText
+        var categoryDb = saveStateViewModel.stateCategoryDb
+        val categoryDao = (activity?.application as QrMenuApplication).database.categoryDao()
+        val listAdapter = EditDishListAdapter(dishViewModel, requireContext(), saveStateViewModel)
+
+        dishViewModel.getDishesLiveData(saveStateViewModel.stateCategoryDb.categoryId).observe(this.viewLifecycleOwner){
+            it.let {
+                listAdapter.submitList(it)
+            }
+        }
+
+
+        categoryEditText.setText(saveStateViewModel.stateCategoryDb.categoryName)
+
+        categorySaveBtn.setOnClickListener {
+            if (categoryEditText.text.toString() != categoryDb.categoryName) {
+                GlobalScope.launch {
+                    categoryDb = CategoryDb(
+                        categoryDb.categoryId,
+                        categoryEditText.text.toString(),
+                        categoryDb.menuCreatorId
+                    )
+                    categoryDao.update(categoryDb)
+                }
+            }
+        }
+
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
+        recyclerView.adapter = listAdapter
+
         navBar.setOnItemSelectedListener {
             if (it.itemId == R.id.backToHome) {
                 findNavController().popBackStack()
@@ -85,50 +143,16 @@ class EditCreateDishFragment : Fragment() {
             if (it.itemId == R.id.optionOne) {
             }
             if (it.itemId == R.id.optionTwo) {
-                findNavController().popBackStack()
+                val dishDb = DishDb(
+                    dishName = titleDish.text.toString(),
+                    categoryCreatorId = categoryDb.categoryId,
+                    description = descriptionDish.text.toString(),
+                    cost = costDish.text.toString().toInt()
+                )
+                dishViewModel.insertDish(dishDb)
             }
             true
         }
-
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
-        recyclerView.adapter = EditCategoryOrDishAdapter<Dish>(
-            false,
-            requireContext(),
-            mutableListOf(
-                Dish(
-                    R.drawable.img_image_4,
-                    "title Dish-1",
-                    "somehintg",
-                    12000,
-                    12,
-                    true
-                ),
-                Dish(
-                    R.drawable.img_image_4,
-                    "title Dish-2",
-                    "somehintg",
-                    12000,
-                    12,
-                    true
-                ),
-                Dish(
-                    R.drawable.img_image_4,
-                    "title Dish-3",
-                    "somehintg",
-                    12000,
-                    12,
-                    true
-                ),
-                Dish(
-                    R.drawable.img_image_4,
-                    "title Dish-4",
-                    "somehintg",
-                    12000,
-                    12,
-                    true
-                ),
-            )
-        )
     }
 
     companion object {

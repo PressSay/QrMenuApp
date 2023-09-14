@@ -1,4 +1,4 @@
-package com.example.menumanager.member
+package com.example.qfmenu.member
 
 import com.example.qfmenu.R
 import com.example.qfmenu.viewmodels.models.Member

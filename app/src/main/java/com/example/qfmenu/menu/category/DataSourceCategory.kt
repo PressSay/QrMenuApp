@@ -1,4 +1,4 @@
-package com.example.menumanager.menu.category
+package com.example.qfmenu.menu.category
 
 import com.example.qfmenu.viewmodels.models.Category
 

@@ -108,10 +108,17 @@
                         android:textStyle="bold"/>
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/numberOfTableTextField"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/shape_rounded_border"/>
+                        android:background="@drawable/shape_rounded_border" />
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_save"
+                        android:id="@+id/btnSaveNumberOfTable" />
 
                 </LinearLayout>
 

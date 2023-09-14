@@ -1,4 +1,4 @@
-package com.example.menumanager.user.forget
+package com.example.qfmenu.user.forget
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

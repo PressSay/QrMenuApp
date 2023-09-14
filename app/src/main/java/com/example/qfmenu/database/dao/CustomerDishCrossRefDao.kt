@@ -12,11 +12,13 @@ import com.example.qfmenu.database.entity.ReviewDb
 import kotlinx.coroutines.flow.Flow
 @Dao
 interface CustomerDishCrossRefDao {
-    @Query("SELECT * FROM DishDb WHERE dishNameId = :dishCreatorId")
-    fun getDish(dishCreatorId: String): Flow<DishDb>
+    @Query("SELECT * FROM CustomerDishCrossRef WHERE customerId = :customerId")
+   suspend fun getListByCustomerId(customerId: Long): List<CustomerDishCrossRef>
+    @Query("SELECT * FROM DishDb WHERE dishId = :dishCreatorId")
+    suspend fun getDish(dishCreatorId: Long): DishDb
 
     @Query("SELECT * FROM ReviewDb WHERE reviewId = :reviewCreatorId")
-    fun getReview(reviewCreatorId: Int): Flow<ReviewDb>
+    suspend fun getReview(reviewCreatorId: Int): ReviewDb
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(customerDishCrossRef: CustomerDishCrossRef)

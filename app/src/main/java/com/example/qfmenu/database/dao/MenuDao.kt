@@ -1,5 +1,6 @@
 package com.example.qfmenu.database.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -14,14 +15,21 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface MenuDao {
     @Transaction
-    @Query("SELECT * FROM MenuDb WHERE menuNameId = :menuNameId")
-    fun getMenuWithCategories(menuNameId: String): Flow<MenuWithCategories>
+    @Query("SELECT * FROM MenuDb WHERE menuId = :menuId")
+    suspend fun getMenuWithCategories(menuId: Long): MenuWithCategories
+
+    @Transaction
+    @Query("SELECT * FROM MenuDb WHERE menuId = :menuId")
+    fun getMenuWithCategoriesLiveData(menuId: Long): LiveData<MenuWithCategories>
 
     @Query("SELECT * FROM MenuDb")
     fun getMenus(): Flow<List<MenuDb>>
 
-    @Query("SELECT * FROM MenuDb WHERE menuNameId = :menuNameId")
-    fun getMenu(menuNameId: String): Flow<MenuDb>
+    @Query("SELECT * FROM MenuDb WHERE isUsed = :isUsed")
+    suspend fun getMenuUsed(isUsed: Boolean = true): MenuDb
+
+    @Query("SELECT * FROM MenuDb WHERE isUsed = :isUsed")
+    fun getMenuUsedLiveData(isUsed: Boolean = true): LiveData<MenuDb>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(menuDb: MenuDb)

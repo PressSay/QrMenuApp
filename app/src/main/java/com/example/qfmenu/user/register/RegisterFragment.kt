@@ -1,4 +1,4 @@
-package com.example.menumanager.user.register
+package com.example.qfmenu.user.register
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

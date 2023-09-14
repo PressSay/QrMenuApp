@@ -1,19 +1,26 @@
-package com.example.menumanager.menu.config
+package com.example.qfmenu.menu.config
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
-import com.example.qfmenu.viewmodels.models.Menu
-import com.example.menumanager.menu.MenuEditAdapter
+import com.example.qfmenu.viewmodels.MenuViewModel
+import com.example.qfmenu.viewmodels.MenuViewModelFactory
+import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
+import com.example.qfmenu.database.entity.MenuDb
 import com.example.qfmenu.databinding.FragmentEditCreateMenuBinding
+import com.example.qfmenu.menu.MenuEditListAdapter
+import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.textfield.TextInputEditText
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -34,6 +41,16 @@ class EditCreateMenuFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private val saveStateViewModel: SaveStateViewModel by activityViewModels()
+
+    private val menuViewModel: MenuViewModel by viewModels {
+        MenuViewModelFactory(
+            (activity?.application as QrMenuApplication).database.dishDao(),
+            (activity?.application as QrMenuApplication).database.categoryDao(),
+            (activity?.application as QrMenuApplication).database.menuDao()
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -53,6 +70,10 @@ class EditCreateMenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val menuSubmitParent = binding.menuSubmit as ViewGroup
+        val menuSubmitString =
+            (menuSubmitParent.getChildAt(0) as ViewGroup).getChildAt(2) as TextInputEditText
+
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
@@ -75,6 +96,23 @@ class EditCreateMenuFragment : Fragment() {
         optionOne.setIcon(R.drawable.ic_search)
         optionTwo.setIcon(R.drawable.ic_save)
 
+        val menus = menuViewModel.menus
+
+        val menuEditListAdapter = MenuEditListAdapter(
+            menuViewModel,
+            requireContext(),
+            saveStateViewModel,
+        )
+
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
+        recyclerView.adapter = menuEditListAdapter
+
+        menus.observe(this.viewLifecycleOwner) {
+            it.let {
+                menuEditListAdapter.submitList(it)
+            }
+        }
+
         navBar.setOnItemSelectedListener {
             if (it.itemId == R.id.homeMenu) {
                 slidePaneLayout.closePane()
@@ -87,20 +125,16 @@ class EditCreateMenuFragment : Fragment() {
 
             }
             if (it.itemId == R.id.optionTwo) {
-
+                val menuDb = if (menuEditListAdapter.currentList.size == 0) {
+                    MenuDb(menuName = menuSubmitString.text.toString(), isUsed = true)
+                } else {
+                    MenuDb(menuName = menuSubmitString.text.toString(), isUsed = false)
+                }
+                menuViewModel.insertMenu(menuDb)
             }
             true
         }
 
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
-        recyclerView.adapter = MenuEditAdapter(
-            requireContext(), mutableListOf(
-                Menu("menu-1", false),
-                Menu("menu-2", true),
-                Menu("menu-3", false),
-                Menu("menu-4", false),
-            )
-        )
 
     }
 

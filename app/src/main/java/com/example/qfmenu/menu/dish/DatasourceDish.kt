@@ -1,4 +1,4 @@
-package com.example.menumanager.menu.dish
+package com.example.qfmenu.menu.dish
 
 import com.example.qfmenu.R
 import com.example.qfmenu.viewmodels.models.Dish

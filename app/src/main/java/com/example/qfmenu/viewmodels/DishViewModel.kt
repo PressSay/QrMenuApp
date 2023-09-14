@@ -1,13 +1,11 @@
-package com.example.menumanager.models
+package com.example.qfmenu.viewmodels
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.qfmenu.database.dao.DishDao
-import com.example.qfmenu.viewmodels.models.Dish
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.liveData
+import androidx.lifecycle.map
 import com.example.qfmenu.database.dao.CategoryDao
 import com.example.qfmenu.database.entity.DishDb
 import kotlinx.coroutines.flow.map
@@ -21,24 +19,12 @@ class DishViewModel(
     private val dishDao: DishDao,
     private val categoryDao: CategoryDao,
 ) : ViewModel() {
-    
-    private var _categoryNameId: String = "Popular"
-    val categoryNameId: String get() = _categoryNameId
 
-    private var _dishForCreate: DishDb? = null
-    val dishForCreate: DishDb get() = _dishForCreate!!
-
-    val dishesWithCategories: LiveData<List<CategoryWidthDishes>> get() = categoryDao.getCategoriesWithDishes().asLiveData()
-
-    private var _selectedDishes: MutableList<DishAmountDb> =  mutableListOf()
+    private var _selectedDishes: MutableList<DishAmountDb> = mutableListOf()
     val selectedDishes: MutableList<DishAmountDb> = this._selectedDishes
 
     fun setSelectedDishes(selectedDishes: List<DishAmountDb>) {
         _selectedDishes.addAll(selectedDishes)
-    }
-
-    fun createDish(dishDb: DishDb) {
-        _dishForCreate = dishDb
     }
 
     fun insertDish(dishDb: DishDb) {
@@ -59,19 +45,34 @@ class DishViewModel(
         }
     }
 
-    fun getDish(dishNameId: String): LiveData<DishDb> {
-        return dishDao.getDish(dishNameId).asLiveData()
+    fun getDishesLiveData(categoryId: Long): LiveData<List<DishDb>> {
+        return categoryDao.getCategoryWithDishesLiveData(categoryId).map { it.dishesDb }
     }
 
-    fun setCategory(categoryNameId: String) {
-        _categoryNameId = categoryNameId
+
+    suspend fun getDishesAmountDb(categoryId: Long): List<DishAmountDb> {
+        return categoryDao.getCategoryWithDishes(categoryId).dishesDb.map {
+            DishAmountDb(
+                it,
+                0,
+                false
+            )
+        }
+    }
+
+
+    fun getDishesAmountDbLiveData(categoryId: Long): LiveData<List<DishAmountDb>> {
+        return categoryDao.getCategoryWithDishesLiveData(categoryId).map { dishes ->
+            dishes.dishesDb.map { DishAmountDb(it, 0, false) }
+        }
     }
 
 }
 
-data class DishAmountDb (
+data class DishAmountDb(
     val dishDb: DishDb,
-    val amount: Long,
+    var amount: Long,
+    var selected: Boolean = false
 )
 
 class DishViewModelFactory(

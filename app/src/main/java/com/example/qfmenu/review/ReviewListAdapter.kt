@@ -1,4 +1,4 @@
-package com.example.menumanager.review
+package com.example.qfmenu.review
 
 import android.content.Context
 import android.view.LayoutInflater

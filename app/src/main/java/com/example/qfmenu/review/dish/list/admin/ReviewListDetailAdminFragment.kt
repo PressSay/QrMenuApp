@@ -1,4 +1,4 @@
-package com.example.menumanager.review.dish.list.admin
+package com.example.qfmenu.review.dish.list.admin
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 
 import com.example.qfmenu.viewmodels.models.Review
-import com.example.menumanager.review.ReviewStoreOrDishAdapter
+import com.example.qfmenu.review.ReviewStoreOrDishAdapter
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.databinding.FragmentReviewListDetailAdminBinding

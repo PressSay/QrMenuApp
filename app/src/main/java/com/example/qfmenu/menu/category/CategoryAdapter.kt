@@ -1,20 +1,39 @@
-package com.example.menumanager.menu.category
+package com.example.qfmenu.menu.category
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
+import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qfmenu.R
+import com.example.qfmenu.database.entity.CategoryDb
+import com.example.qfmenu.database.entity.MenuDb
+import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.example.qfmenu.viewmodels.models.Category
 
 class CategoryAdapter(
     private val context: Context,
-    private val dataset: List<Category>
-): RecyclerView.Adapter<CategoryAdapter.ItemViewHolder>() {
+    private val saveStateViewModel: SaveStateViewModel
+): ListAdapter<CategoryDb, CategoryAdapter.ItemViewHolder>(DiffCallback) {
+    companion object {
+        private val DiffCallback = object : DiffUtil.ItemCallback<CategoryDb>() {
+            override fun areItemsTheSame(oldItem: CategoryDb, newItem: CategoryDb): Boolean {
+                return oldItem === newItem
+            }
+
+            override fun areContentsTheSame(oldItem: CategoryDb, newItem: CategoryDb): Boolean {
+                return oldItem.categoryId == newItem.categoryId
+            }
+        }
+    }
+
     class ItemViewHolder(val view: View): RecyclerView.ViewHolder(view) {
-        val btnCategory = view.findViewById<AppCompatButton>(R.id.btnCategory)
+        val btnCategory = view.findViewById<AppCompatButton>(R.id.btnCategory)!!
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -23,15 +42,24 @@ class CategoryAdapter(
         return ItemViewHolder(adapterView)
     }
 
-    override fun getItemCount(): Int {
-        return dataset.size
-    }
-
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val item = dataset[position]
-        holder.btnCategory.text = item.title
+        val item = currentList[position]
+        holder.btnCategory.text = item.categoryName
         holder.btnCategory.setOnClickListener {
+            saveStateViewModel.stateCategoryPositionMenu = holder.adapterPosition
+            val categoryPos = holder.adapterPosition
+            if (categoryPos < saveStateViewModel.stateDishesByCategories.size) {
 
+            } else {
+                for (i in (1..categoryPos)) {
+                    saveStateViewModel.stateDishesByCategories.add(
+                        mutableListOf()
+                    )
+                }
+                Log.d("ForEach", "true")
+            }
+
+            holder.view.findNavController().popBackStack()
         }
     }
 }

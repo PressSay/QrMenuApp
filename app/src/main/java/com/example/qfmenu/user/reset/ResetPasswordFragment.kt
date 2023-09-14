@@ -1,4 +1,4 @@
-package com.example.menumanager.user.reset
+package com.example.qfmenu.user.reset
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

@@ -1,4 +1,4 @@
-package com.example.menumanager.menu
+package com.example.qfmenu.menu
 
 import com.example.qfmenu.viewmodels.models.Menu
 

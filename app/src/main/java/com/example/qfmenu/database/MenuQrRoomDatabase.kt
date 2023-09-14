@@ -6,7 +6,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.qfmenu.database.dao.AccountDao
 import com.example.qfmenu.database.dao.CategoryDao
-import com.example.qfmenu.database.dao.CategoryMenuCrossRefDao
 import com.example.qfmenu.database.dao.CustomerDao
 import com.example.qfmenu.database.dao.CustomerDishCrossRefDao
 import com.example.qfmenu.database.dao.DishDao
@@ -56,8 +55,6 @@ abstract class MenuQrRoomDatabase : RoomDatabase() {
     abstract fun accountDao(): AccountDao
 
     abstract fun categoryDao(): CategoryDao
-
-    abstract fun categoryMenuCrossRefDao(): CategoryMenuCrossRefDao
 
     abstract fun customerDao(): CustomerDao
 

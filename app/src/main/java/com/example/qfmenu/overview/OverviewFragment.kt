@@ -1,4 +1,4 @@
-package com.example.menumanager.overview
+package com.example.qfmenu.overview
 
 import android.os.Build
 import android.os.Bundle

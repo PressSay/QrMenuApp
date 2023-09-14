@@ -8,19 +8,20 @@ import androidx.room.Relation
 
 @Entity
 data class DishDb(
-    @PrimaryKey
-    val dishNameId: String,
-    val categoryCreatorId: String,
+    @PrimaryKey(autoGenerate = true)
+    val dishId:Long = 0,
+    val dishName: String,
+    val categoryCreatorId: Long,
     val description: String,
     val cost: Int,
-    val countTimes: Int,
-    val img: String
+    val countTimes: Int = 0,
+    val img: String = "Empty"
 )
 
 data class DishWithCustomers(
     @Embedded val dishDb: DishDb,
     @Relation(
-        parentColumn = "dishNameId",
+        parentColumn = "dishId",
         entityColumn = "customerId",
         associateBy = Junction(CustomerDishCrossRef::class)
     )
@@ -30,7 +31,7 @@ data class DishWithCustomers(
 data class DishWithReviews(
     @Embedded val dishDb: DishDb,
     @Relation(
-        parentColumn = "dishNameId",
+        parentColumn = "dishId",
         entityColumn = "dishCreatorId",
     )
     val reviewsDb: List<ReviewDb>

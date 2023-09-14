@@ -1,19 +1,12 @@
-package com.example.menumanager.models
+package com.example.qfmenu.viewmodels
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.menumanager.table.DatasourceTable
-import com.example.qfmenu.database.dao.CategoryDao
-import com.example.qfmenu.database.dao.CategoryMenuCrossRefDao
-import com.example.qfmenu.database.dao.DishDao
-import com.example.qfmenu.database.dao.MenuDao
 import com.example.qfmenu.database.dao.TableDao
 import com.example.qfmenu.database.entity.TableDb
-import com.example.qfmenu.viewmodels.models.Table
 import kotlinx.coroutines.launch
 
 class TableViewModel(

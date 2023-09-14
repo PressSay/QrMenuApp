@@ -1,4 +1,4 @@
-package com.example.menumanager.order.offline.queue
+package com.example.qfmenu.order.offline.queue
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -10,13 +10,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qfmenu.viewmodels.models.Dish
 import com.example.qfmenu.R
+import com.example.qfmenu.viewmodels.DishAmountDb
 
 class OrderQueueBillAdapter(
     private val context: Context,
-    private var dataset: List<Dish>
+    private var dataset: List<DishAmountDb>
 ) : RecyclerView.Adapter<OrderQueueBillAdapter.ItemViewHolder>() {
-    fun getDataset(): List<Dish> = dataset
-    fun setDataset(dataset: List<Dish>) {
+    fun getDataset() = dataset
+    fun setDataset(dataset: List<DishAmountDb>) {
         this.dataset = dataset
     }
 
@@ -41,8 +42,8 @@ class OrderQueueBillAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = dataset[position]
         holder.img.setImageResource(R.drawable.img_image_4)
-        holder.titleItem.text = item.title
-        holder.cost.text = item.cost.toString()
+        holder.titleItem.text = item.dishDb.dishName
+        holder.cost.text = item.dishDb.cost.toString()
         holder.amount.text = item.amount.toString()
     }
 }

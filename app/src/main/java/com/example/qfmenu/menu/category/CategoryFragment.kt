@@ -1,19 +1,25 @@
-package com.example.menumanager.menu.category
+package com.example.qfmenu.menu.category
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
+import com.example.qfmenu.viewmodels.MenuViewModel
+import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.databinding.FragmentCategoryBinding
+import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.DelicateCoroutinesApi
 
 /**
  * A simple [Fragment] subclass.
@@ -27,7 +33,6 @@ private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
 
-
 class CategoryFragment : Fragment() {
     private var _binding: FragmentCategoryBinding? = null
     private val binding get() = _binding!!
@@ -35,6 +40,12 @@ class CategoryFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    private val menuViewModel: MenuViewModel by viewModels(
+        ownerProducer = { requireParentFragment() }
+    )
+
+    private val saveStateViewModel: SaveStateViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,14 +72,17 @@ class CategoryFragment : Fragment() {
         navController.navigate(startDestination, null, navOptions)
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val recycler = binding.recyclerViewCategory
-        val myDataset = DataSourceCategory().loadCategoryMenu()
+//        val myDataset = DataSourceCategory().loadCategoryMenu()
+
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val width: Float = resources.displayMetrics.widthPixels / resources.displayMetrics.density
         val spanCount = if (width < SCREEN_LARGE) 1 else 2
-        val slidePaneLayout = requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
+        val slidePaneLayout =
+            requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
 
         val backMenu = navBar.menu.findItem(R.id.backToHome)
         val homeMenu = navBar.menu.findItem(R.id.homeMenu)
@@ -103,9 +117,29 @@ class CategoryFragment : Fragment() {
 
 
         recycler.layoutManager = GridLayoutManager(requireContext(), spanCount)
-        recycler.adapter = CategoryAdapter(
-            requireContext(), myDataset
+        val categoryAdapter = CategoryAdapter(
+            requireContext(), saveStateViewModel
         )
+
+        val thisViewLifecycleOwner = this.viewLifecycleOwner
+
+        val menuDao = (activity?.application as QrMenuApplication).database.menuDao()
+
+        menuDao.getMenuUsedLiveData().observe(this.viewLifecycleOwner) { menuDb ->
+            if (menuDb != null) {
+                menuDao.getMenuWithCategoriesLiveData(menuId = menuDb.menuId)
+                    .observe(this.viewLifecycleOwner) { menuWithCategories ->
+                        if (menuWithCategories != null) {
+                            val categories = menuWithCategories.categoriesDb
+                            if (categories.isNotEmpty()) {
+                                categoryAdapter.submitList(categories)
+                                recycler.adapter = categoryAdapter
+                            }
+                        }
+                    }
+            }
+        }
+
 
     }
 

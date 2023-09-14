@@ -9,14 +9,14 @@ import androidx.room.Relation
 @Entity
 data class CustomerDb(
     @PrimaryKey(autoGenerate = true)
-    val customerId: Long,
+    val customerId: Long = 0,
     val accountCreatorId: Long,
     val expired: String,
     val name: String,
     val code: String,
     val phone: String,
     val address: String,
-    val isReviewStore: Int,
+    val isDelete: Boolean = false
 )
 
 data class CustomerAndOrderDb(
@@ -32,7 +32,7 @@ data class CustomerWithDishes(
     @Embedded val customerDb: CustomerDb,
     @Relation(
         parentColumn = "customerId",
-        entityColumn = "dishNameId",
+        entityColumn = "dishId",
         associateBy = Junction(CustomerDishCrossRef::class)
     )
     val dishesDb: List<DishDb>

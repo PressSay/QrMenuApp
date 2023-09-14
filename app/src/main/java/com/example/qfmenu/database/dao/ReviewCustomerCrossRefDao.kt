@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ReviewCustomerCrossRefDao {
     @Query("SELECT * FROM ReviewCustomerCrossRef WHERE customerId = :customerId")
-    fun getCustomerReview(customerId: Long): Flow<ReviewCustomerCrossRef>
+    suspend fun getCustomerReview(customerId: Long): ReviewCustomerCrossRef
 
     @Query("SELECT * FROM ReviewCustomerCrossRef")
     fun getReviewCustomerCrossRefs(): Flow<List<ReviewCustomerCrossRef>>

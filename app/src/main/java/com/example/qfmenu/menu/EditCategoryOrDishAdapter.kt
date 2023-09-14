@@ -1,4 +1,4 @@
-package com.example.menumanager.menu
+package com.example.qfmenu.menu
 
 import android.content.Context
 import android.view.LayoutInflater

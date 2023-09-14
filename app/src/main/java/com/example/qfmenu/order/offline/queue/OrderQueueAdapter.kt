@@ -1,4 +1,4 @@
-package com.example.menumanager.order.offline.queue
+package com.example.qfmenu.order.offline.queue
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,11 +8,12 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qfmenu.R
+import com.example.qfmenu.viewmodels.CustomerWithSelectDishesDb
 
 class OrderQueueAdapter(
     private val onCLick: (Array<Int>) -> Unit,
     private val context: Context,
-    private val dataset: List<OrderQueue>
+    private val dataset: List<CustomerWithSelectDishesDb>
 ) : RecyclerView.Adapter<OrderQueueAdapter.ItemViewHolder>() {
 
     class ItemViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
@@ -58,3 +59,7 @@ class OrderQueueAdapter(
         }
     }
 }
+
+data class OrderQueue(
+    var isSelected: Boolean = false
+)

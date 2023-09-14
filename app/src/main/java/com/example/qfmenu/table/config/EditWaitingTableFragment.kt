@@ -1,4 +1,4 @@
-package com.example.menumanager.table.config
+package com.example.qfmenu.table.config
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

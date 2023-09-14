@@ -1,18 +1,12 @@
-package com.example.menumanager.models
+package com.example.qfmenu.viewmodels
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.menumanager.member.DatasourceMember
 import com.example.qfmenu.database.dao.AccountDao
-import com.example.qfmenu.database.dao.CustomerDao
-import com.example.qfmenu.database.dao.RoleDao
 import com.example.qfmenu.database.entity.AccountDb
-import com.example.qfmenu.database.entity.RoleDb
-import com.example.qfmenu.viewmodels.models.Member
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
@@ -21,9 +15,7 @@ class MemberViewModel(
     private val accountDao: AccountDao,
 ) : ViewModel() {
 
-    private val _members = accountDao.getAccountsWithNameRole("Member").map {
-        it.accountsDb
-    }.asLiveData()
+//    private val _members = accountDao.getAccountsWithNameRole("Member")
 
     private val _memberForCreate: AccountDb? = null
     val memberForCreate get() = _memberForCreate
@@ -46,8 +38,8 @@ class MemberViewModel(
         }
     }
 
-    fun getMember(accountId: Long): LiveData<AccountDb> {
-        return accountDao.getAccount(accountId).asLiveData()
+    suspend fun getMember(accountId: Long): AccountDb {
+        return accountDao.getAccount(accountId)
     }
 
 }

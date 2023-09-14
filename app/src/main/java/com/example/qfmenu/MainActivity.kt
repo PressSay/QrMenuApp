@@ -3,11 +3,13 @@ package com.example.qfmenu
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.qfmenu.databinding.ActivityMainBinding
+import com.example.qfmenu.viewmodels.SaveStateViewModel
 
 val SCREEN_LARGE get() = 850
 
@@ -24,6 +26,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val saveStateViewModel: SaveStateViewModel by viewModels()
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val slidingPaneLayout = binding.slidingPaneLayout
@@ -42,7 +46,6 @@ class MainActivity : AppCompatActivity() {
 
         if (width < SCREEN_LARGE) {
             navBar.visibility = View.GONE
-
         } else {
             navBar.menu.findItem(R.id.homeMenu).isVisible = false
         }
@@ -50,7 +53,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnStartOrder.setOnClickListener {
             popToStartDestination(myNavHostFragment1.navController)
-
+            saveStateViewModel.stateIsStartOrder = true
+            saveStateViewModel.stateIsOfflineOrder = false
+            saveStateViewModel.setStateDishesDb(listOf())
+            saveStateViewModel.stateDishesByCategories = mutableListOf()
             if (width < SCREEN_LARGE) {
                 binding.slidingPaneLayout.openPane()
                 navBar.visibility = View.VISIBLE
@@ -59,8 +65,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnBuyTakeAway.setOnClickListener {
             popToStartDestination(myNavHostFragment1.navController)
-            myNavHostFragment1.navController.navigate(R.id.prepareBillFragment)
-
+            saveStateViewModel.stateIsStartOrder = false
+            saveStateViewModel.stateIsOfflineOrder = false
+            saveStateViewModel.setStateDishesDb(listOf())
+            saveStateViewModel.stateDishesByCategories = mutableListOf()
             if (width < SCREEN_LARGE) {
                 slidingPaneLayout.openPane()
                 navBar.visibility = View.VISIBLE
@@ -81,7 +89,9 @@ class MainActivity : AppCompatActivity() {
         binding.btnOfflineList.setOnClickListener {
             popToStartDestination(myNavHostFragment1.navController)
             myNavHostFragment1.navController.navigate(R.id.orderListUnconfirmedFragment)
-
+            saveStateViewModel.stateIsOfflineOrder = true
+            saveStateViewModel.setStateDishesDb(listOf())
+            saveStateViewModel.stateDishesByCategories = mutableListOf()
             if (width < SCREEN_LARGE) {
                 slidingPaneLayout.openPane()
                 navBar.visibility = View.VISIBLE
@@ -91,8 +101,8 @@ class MainActivity : AppCompatActivity() {
         binding.btnOnlineList.setOnClickListener {
             popToStartDestination(myNavHostFragment1.navController)
             myNavHostFragment1.navController.navigate(R.id.editOnlineOrderFragment)
-
-
+            saveStateViewModel.setStateDishesDb(listOf())
+            saveStateViewModel.stateDishesByCategories = mutableListOf()
             if (width < SCREEN_LARGE) {
                 slidingPaneLayout.openPane()
                 navBar.visibility = View.VISIBLE
@@ -100,6 +110,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnTableUnlock.setOnClickListener {
+            saveStateViewModel.stateIsTableUnClock = true
             popToStartDestination(myNavHostFragment1.navController)
             myNavHostFragment1.navController.navigate(R.id.waitingTableFragment)
 

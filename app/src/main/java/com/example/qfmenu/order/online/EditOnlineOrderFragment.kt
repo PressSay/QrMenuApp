@@ -1,4 +1,4 @@
-package com.example.menumanager.order.online
+package com.example.qfmenu.order.online
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.qfmenu.viewmodels.models.Dish
 import com.example.qfmenu.viewmodels.models.Customer
-import com.example.menumanager.order.OrderListAdapter
+import com.example.qfmenu.order.OrderListAdapter
 import com.example.qfmenu.viewmodels.models.Table
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
@@ -86,40 +86,40 @@ class EditOnlineOrderFragment : Fragment() {
         }
 
         recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
-        recyclerView.adapter = OrderListAdapter(
-            false,
-            requireContext(),
-            mutableListOf(
-                Customer(
-                    1,
-                    Table("Online", "None"),
-                    Date(2022, 12, 1),
-                    listOf(
-                        Dish(R.drawable.img_image_4, "title1", "something", 18000, 1),
-                        Dish(R.drawable.img_image_4, "title2", "something", 18000, 1)
-                    ),
-                    "joaisjdof",
-                    "jaoisdjf",
-                    "now",
-                    "0123456789",
-                    "address 1",
-                ),
-                Customer(
-                    1,
-                    Table("Online", "None"),
-                    Date(2022, 12, 1),
-                    listOf(
-                        Dish(R.drawable.img_image_4, "title1", "something", 18000, 1),
-                        Dish(R.drawable.img_image_4, "title2", "something", 18000, 1)
-                    ),
-                    "joaisjdof",
-                    "jaoisdjf",
-                    "now",
-                    "0123456789",
-                    "address 1",
-                ),
-            )
-        )
+//        recyclerView.adapter = OrderListAdapter(
+//            false,
+//            requireContext(),
+//            mutableListOf(
+//                Customer(
+//                    1,
+//                    Table("Online", "None"),
+//                    Date(2022, 12, 1),
+//                    listOf(
+//                        Dish(R.drawable.img_image_4, "title1", "something", 18000, 1),
+//                        Dish(R.drawable.img_image_4, "title2", "something", 18000, 1)
+//                    ),
+//                    "joaisjdof",
+//                    "jaoisdjf",
+//                    "now",
+//                    "0123456789",
+//                    "address 1",
+//                ),
+//                Customer(
+//                    1,
+//                    Table("Online", "None"),
+//                    Date(2022, 12, 1),
+//                    listOf(
+//                        Dish(R.drawable.img_image_4, "title1", "something", 18000, 1),
+//                        Dish(R.drawable.img_image_4, "title2", "something", 18000, 1)
+//                    ),
+//                    "joaisjdof",
+//                    "jaoisdjf",
+//                    "now",
+//                    "0123456789",
+//                    "address 1",
+//                ),
+//            )
+//        )
 
 
     }

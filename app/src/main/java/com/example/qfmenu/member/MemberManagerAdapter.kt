@@ -1,4 +1,4 @@
-package com.example.menumanager.member
+package com.example.qfmenu.member
 
 import android.content.Context
 import android.view.LayoutInflater

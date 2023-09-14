@@ -16,14 +16,14 @@ import kotlinx.coroutines.flow.Flow
 interface AccountDao {
     @Transaction
     @Query("SELECT * FROM AccountDb WHERE accountId = :accountId")
-    fun getAccountWithCustomers(accountId: Long): Flow<AccountWithCustomers>
+    suspend fun getAccountWithCustomers(accountId: Long): AccountWithCustomers
 
     @Query("SELECT * FROM AccountDb WHERE accountId = :accountId")
-    fun getAccount(accountId: Long): Flow<AccountDb>
+    suspend fun getAccount(accountId: Long): AccountDb
 
     @Transaction
     @Query("SELECT * FROM RoleDb WHERE roleNameId = :roleNameId")
-    fun getAccountsWithNameRole(roleNameId: String): Flow<RoleWithAccounts>
+    suspend fun getAccountsWithNameRole(roleNameId: String): RoleWithAccounts
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(accountDb: AccountDb)

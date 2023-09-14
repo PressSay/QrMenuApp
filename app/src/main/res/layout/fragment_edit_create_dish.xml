@@ -34,7 +34,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="394dp"
                 android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:id="@+id/linearEditTextEditCreateDish">
 
                 <LinearLayout
                     android:layout_width="match_parent"

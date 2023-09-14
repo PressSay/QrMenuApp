@@ -1,4 +1,4 @@
-package com.example.menumanager.overview.list.bill
+package com.example.qfmenu.overview.list.bill
 
 import android.annotation.SuppressLint
 import android.content.Context

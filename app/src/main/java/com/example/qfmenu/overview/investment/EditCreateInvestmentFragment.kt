@@ -1,4 +1,4 @@
-package com.example.menumanager.overview.investment
+package com.example.qfmenu.overview.investment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
-import com.example.qfmenu.viewmodels.models.Investment
 import com.example.qfmenu.databinding.FragmentEditCreateInvestmentBinding
+import com.example.qfmenu.viewmodels.models.Investment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 // TODO: Rename parameter arguments, choose names that match

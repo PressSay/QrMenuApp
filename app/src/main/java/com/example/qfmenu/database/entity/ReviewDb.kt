@@ -10,16 +10,7 @@ import androidx.room.Relation
 data class ReviewDb (
     @PrimaryKey(autoGenerate = true)
     val reviewId: Long,
-    val dishCreatorId: String = "DishEmpty",
+    val dishCreatorId: Long,
     val isThumbUp: Int,
     val description: String,
-)
-
-data class ReviewWithCustomerDishCrossRefs(
-    @Embedded val reviewDb: ReviewDb,
-    @Relation(
-        parentColumn = "reviewId",
-        entityColumn = "reviewCreatorId"
-    )
-    val customerDishCrossRefsDb: List<CustomerDishCrossRef>
 )

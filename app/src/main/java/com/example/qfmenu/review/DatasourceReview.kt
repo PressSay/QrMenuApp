@@ -1,4 +1,4 @@
-package com.example.menumanager.review
+package com.example.qfmenu.review
 
 import com.example.qfmenu.viewmodels.models.Review
 

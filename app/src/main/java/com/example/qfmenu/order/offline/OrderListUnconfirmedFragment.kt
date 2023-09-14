@@ -1,22 +1,24 @@
-package com.example.menumanager.order.offline
+package com.example.qfmenu.order.offline
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
-import com.example.qfmenu.viewmodels.models.Dish
-import com.example.qfmenu.viewmodels.models.Customer
-import com.example.menumanager.order.OrderListAdapter
-import com.example.qfmenu.viewmodels.models.Table
+import com.example.qfmenu.QrMenuApplication
+import com.example.qfmenu.order.OrderListAdapter
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.databinding.FragmentOrderListUnconfirmedBinding
+import com.example.qfmenu.viewmodels.CustomerViewModel
+import com.example.qfmenu.viewmodels.CustomerViewModelFactory
+import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.util.Date
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -35,6 +37,18 @@ class OrderListUnconfirmedFragment : Fragment() {
 
     private var _binding: FragmentOrderListUnconfirmedBinding? = null
     private val binding get() = _binding!!
+
+    private val saveStateViewModel: SaveStateViewModel by activityViewModels()
+    private val customerViewModel: CustomerViewModel by viewModels() {
+        CustomerViewModelFactory(
+            (activity?.application as QrMenuApplication).database.customerDao(),
+            (activity?.application as QrMenuApplication).database.customerDishCrossRefDao(),
+            (activity?.application as QrMenuApplication).database.reviewDao(),
+            (activity?.application as QrMenuApplication).database.reviewCustomerCrossRefDao(),
+            (activity?.application as QrMenuApplication).database.orderDao(),
+            saveStateViewModel.stateDishes
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,41 +92,63 @@ class OrderListUnconfirmedFragment : Fragment() {
         optionOne.setIcon(R.drawable.ic_search)
         optionTwo.setIcon(R.drawable.ic_approve_order)
 
-        navBar.setOnItemSelectedListener {
-            if (it.itemId == R.id.homeMenu) {
+//        val orderListAdapter = OrderListAdapter(true, requireContext(), saveStateViewModel, saveStateViewModel.stateCustomerWithSelectDishes, this.viewLifecycleOwner)
+
+        val orderListAdapter = OrderListAdapter(true, requireContext(), saveStateViewModel, customerViewModel, (activity?.application as QrMenuApplication).database.customerDishCrossRefDao())
+
+//        Not Use Ram
+        customerViewModel.customerList.observe(this.viewLifecycleOwner) {
+            it.apply {
+                orderListAdapter.submitList(it)
+            }
+        }
+
+        recyclerView.adapter = orderListAdapter
+
+        navBar.setOnItemSelectedListener { menuItem ->
+            if (menuItem.itemId == R.id.homeMenu) {
                 slidePaneLayout.closePane()
                 navBar.visibility = View.GONE
             }
-            if (it.itemId == R.id.optionOne) {
+            if (menuItem.itemId == R.id.optionOne) {
 
             }
-            if (it.itemId == R.id.optionTwo) {
+            if (menuItem.itemId == R.id.optionTwo) {
+//                orderListAdapter.stateCustomerWithSelectDishesToBillPos.forEach {
+//                    saveStateViewModel.stateCustomerWithSelectDishesToBill.add(saveStateViewModel.stateCustomerWithSelectDishes[it])
+//                }
+
+//                if (saveStateViewModel.stateCustomerWithSelectDishesToBill.isNotEmpty()) {
+//                }
                 findNavController().navigate(R.id.action_orderListUnconfirmedFragment_to_orderQueueFragment)
             }
             true
         }
 
         recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
-        recyclerView.adapter = OrderListAdapter(
-            true,
-            requireContext(),
-            mutableListOf(
-                Customer(
-                    1,
-                    Table("Online", "None"),
-                    Date(2022, 12, 1),
-                    listOf(
-                        Dish(R.drawable.img_image_4, "title1", "something", 18000, 1),
-                        Dish(R.drawable.img_image_4, "title2", "something", 18000, 1)
-                    ),
-                    "joaisjdof",
-                    "jaoisdjf",
-                    "now",
-                    "0123456789",
-                    "address 1",
-                ),
-            )
-        )
+
+
+
+//        recyclerView.adapter = OrderListAdapter(
+//            true,
+//            requireContext(),
+//            mutableListOf(
+//                Customer(
+//                    1,
+//                    Table("Online", "None"),
+//                    Date(2022, 12, 1),
+//                    listOf(
+//                        Dish(R.drawable.img_image_4, "title1", "something", 18000, 1),
+//                        Dish(R.drawable.img_image_4, "title2", "something", 18000, 1)
+//                    ),
+//                    "joaisjdof",
+//                    "jaoisdjf",
+//                    "now",
+//                    "0123456789",
+//                    "address 1",
+//                ),
+//            )
+//        )
 
 
     }

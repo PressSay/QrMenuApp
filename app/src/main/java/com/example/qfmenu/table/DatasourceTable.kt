@@ -1,4 +1,4 @@
-package com.example.menumanager.table
+package com.example.qfmenu.table
 
 import com.example.qfmenu.viewmodels.models.Table
 

@@ -1,18 +1,27 @@
-package com.example.menumanager.menu.dish.confirm
+package com.example.qfmenu.menu.dish.confirm
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
-import com.example.qfmenu.viewmodels.models.Dish
+import com.example.qfmenu.viewmodels.CustomerViewModel
+import com.example.qfmenu.viewmodels.CustomerViewModelFactory
+import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
+import com.example.qfmenu.database.entity.CustomerDb
+import com.example.qfmenu.database.entity.CustomerDishCrossRef
 import com.example.qfmenu.databinding.FragmentEditConfirmDishBinding
+import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.util.Calendar
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,6 +41,18 @@ class EditConfirmDishFragment : Fragment() {
     private var _binding: FragmentEditConfirmDishBinding? = null
     private val binding get() = _binding!!
 
+    private val saveStateViewModel: SaveStateViewModel by activityViewModels()
+    private val customerViewModel: CustomerViewModel by viewModels {
+        CustomerViewModelFactory(
+            (activity?.application as QrMenuApplication).database.customerDao(),
+            (activity?.application as QrMenuApplication).database.customerDishCrossRefDao(),
+            (activity?.application as QrMenuApplication).database.reviewDao(),
+            (activity?.application as QrMenuApplication).database.reviewCustomerCrossRefDao(),
+            (activity?.application as QrMenuApplication).database.orderDao(),
+            saveStateViewModel.stateDishes
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -49,8 +70,6 @@ class EditConfirmDishFragment : Fragment() {
         return binding.root
     }
 
-    private val isOrderList = false
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
@@ -64,9 +83,21 @@ class EditConfirmDishFragment : Fragment() {
         val optionOne = navBar.menu.findItem(R.id.optionOne)
         val optionTwo = navBar.menu.findItem(R.id.optionTwo)
 
+        val gridLayoutManager = GridLayoutManager(requireContext(), spanCount)
+        val recyclerView = binding.recyclerViewEditConfirmDish
+        val editConfirmDishAdapter =
+            EditConfirmDishAdapter(
+                saveStateViewModel,
+                (activity?.application as QrMenuApplication).database.customerDishCrossRefDao(),
+                saveStateViewModel.stateDishes.toMutableList()
+            )
 
-        optionOne.isVisible = !isOrderList
-        optionTwo.isVisible = !isOrderList
+
+        recyclerView.layoutManager = gridLayoutManager
+        recyclerView.adapter = editConfirmDishAdapter
+
+        optionOne.isVisible = !saveStateViewModel.stateIsOfflineOrder
+        optionTwo.isVisible = true
         backMenu.isVisible = true
         homeMenu.isVisible = width < SCREEN_LARGE
 
@@ -79,6 +110,8 @@ class EditConfirmDishFragment : Fragment() {
             navBar.menu.findItem(R.id.homeMenu).isVisible = false
         }
 
+
+
         navBar.setOnItemSelectedListener {
             if (it.itemId == R.id.homeMenu) {
                 if (width < SCREEN_LARGE) {
@@ -87,39 +120,64 @@ class EditConfirmDishFragment : Fragment() {
                 }
             }
             if (it.itemId == R.id.backToHome) {
+
+                if (!saveStateViewModel.stateIsOfflineOrder) {
+                    saveStateViewModel.setStateDishesDb(editConfirmDishAdapter.getDataset())
+                } else {
+                    saveStateViewModel.setStateDishesDb(listOf())
+                }
                 findNavController().popBackStack()
             }
 
             if (it.itemId == R.id.optionTwo) {
-                findNavController().navigate(R.id.action_editConfirmDishFragment_to_waittingTableFragment)
+                if (!saveStateViewModel.stateIsOfflineOrder) {
+                    val calendar = Calendar.getInstance()
+                    calendar.add(Calendar.DATE, 3)
+                    val expired = calendar.get(Calendar.DATE).toString() + "/" + calendar.get(
+                        Calendar.MONTH
+                    ) + "/" + calendar.get(Calendar.YEAR)
+                    val code = (0..1000).random()
+                    val customerDb = CustomerDb(
+                        accountCreatorId = 1,
+                        expired = expired,
+                        name = "now",
+                        code = code.toString(),
+                        phone = "0123456789",
+                        address = "empty"
+                    )
+                    saveStateViewModel.setStateCustomer(customerDb)
+
+                    val customerDishCrossRefs = mutableListOf<CustomerDishCrossRef>()
+
+                    editConfirmDishAdapter.getDataset().forEach { dishAmountDb ->
+                        val customerDishCrossRef = CustomerDishCrossRef(
+                            customerDb.customerId,
+                            dishAmountDb.dishDb.dishId,
+                            dishAmountDb.amount,
+                            0
+                        )
+                        customerDishCrossRefs.add(customerDishCrossRef)
+                    }
+
+                    saveStateViewModel.setStateDishesDb(editConfirmDishAdapter.getDataset())
+                    saveStateViewModel.setStateCustomer(customerDb)
+                    saveStateViewModel.setStateCustomerDishCrossRefs(customerDishCrossRefs)
+
+                    if (saveStateViewModel.stateIsStartOrder) {
+                        saveStateViewModel.stateIsTableUnClock = false
+                        findNavController().navigate(R.id.action_editConfirmDishFragment_to_waittingTableFragment)
+                    } else if (!saveStateViewModel.stateIsStartOrder) {
+                        findNavController().navigate(R.id.action_editConfirmDishFragment_to_prepareBillFragment)
+                    }
+                } else {
+                    saveStateViewModel.stateIsOfflineOrder = true
+                    saveStateViewModel.setStateDishesDb(editConfirmDishAdapter.getDataset())
+                    editConfirmDishAdapter.setDataset(saveStateViewModel.stateDishes.toMutableList())
+                    findNavController().navigate(R.id.action_editConfirmDishFragment_to_dishMenuFragment)
+                }
             }
             true
         }
-
-
-        val gridLayoutManager = GridLayoutManager(requireContext(), spanCount)
-        val recyclerView = binding.recyclerViewEditConfirmDish
-        recyclerView.layoutManager = gridLayoutManager
-        recyclerView.adapter = EditConfirmDishAdapter(
-            mutableListOf(
-                Dish(
-                    R.drawable.img_image_4,
-                    "something",
-                    "something",
-                    12000,
-                    1,
-                    true
-                ),
-                Dish(
-                    R.drawable.img_image_4,
-                    "something1",
-                    "something1",
-                    12000,
-                    1,
-                    true
-                )
-            )
-        )
 
 
     }

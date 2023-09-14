@@ -12,6 +12,15 @@
         android:orientation="vertical"
         android:id="@+id/layoutDishMenu">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:text="Start Order"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:id="@+id/titleMenuOrder"/>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -30,9 +39,7 @@
                 android:layout_marginEnd="18dp"
                 android:layout_marginBottom="18dp"
                 android:clipToPadding="false"
-
-                tools:listitem="@layout/item_menu"
-                />
+                tools:listitem="@layout/item_menu" />
 
             <LinearLayout
                 android:layout_width="338dp"

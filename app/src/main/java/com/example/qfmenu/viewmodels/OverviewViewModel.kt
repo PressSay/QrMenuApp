@@ -1,4 +1,4 @@
-package com.example.menumanager.models
+package com.example.qfmenu.viewmodels
 
 class OverviewViewModel {
 }

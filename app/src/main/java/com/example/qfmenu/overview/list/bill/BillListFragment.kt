@@ -1,4 +1,4 @@
-package com.example.menumanager.overview.list.bill
+package com.example.qfmenu.overview.list.bill
 
 import android.os.Bundle
 import android.view.LayoutInflater

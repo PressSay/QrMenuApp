@@ -1,4 +1,4 @@
-package com.example.menumanager.overview.list.bill.code
+package com.example.qfmenu.overview.list.bill.code
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

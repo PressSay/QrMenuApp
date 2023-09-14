@@ -1,4 +1,4 @@
-package com.example.menumanager.member.profile
+package com.example.qfmenu.member.profile
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
