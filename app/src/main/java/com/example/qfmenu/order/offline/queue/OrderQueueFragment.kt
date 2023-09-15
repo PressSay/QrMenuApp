@@ -2,7 +2,6 @@ package com.example.qfmenu.order.offline.queue
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,7 +56,6 @@ class OrderQueueFragment : Fragment() {
     }
 
 
-
     @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -72,83 +70,85 @@ class OrderQueueFragment : Fragment() {
         val orderQueueList: MutableList<CustomerOrderQueue> =
             saveStateViewModel.stateCustomerOrderQueues
 
-        if (orderQueueList.size > 0) {
+        if (orderQueueList.size <= 0) {
+            findNavController().popBackStack()
+        } else {
 
-        }
+            orderQueueList[0].isSelected = true
+            val adapterOrderQueueBill = OrderQueueBillAdapter(
+                requireContext(),
+                orderQueueList[0].dishesAmountDb
+            )
+            var position = 0
 
-        orderQueueList[0].isSelected = true
-        val adapterOrderQueueBill = OrderQueueBillAdapter(
-            requireContext(),
-            orderQueueList[0].dishesAmountDb
-        )
-        var position = 0
+            val adapterOrderQueue = OrderQueueAdapter(
+                {
+                    position = it[0]
+                    adapterOrderQueueBill.setDataset(
+                        orderQueueList[it[0]].dishesAmountDb
+                    )
+                    adapterOrderQueueBill.notifyDataSetChanged()
+                },
+                requireContext(),
+                orderQueueList
+            )
 
-        val adapterOrderQueue = OrderQueueAdapter(
-            {
-                position = it[0]
-                adapterOrderQueueBill.setDataset(
-                    orderQueueList[it[0]].dishesAmountDb
-                )
-                adapterOrderQueueBill.notifyDataSetChanged()
-            },
-            requireContext(),
-            orderQueueList
-        )
+            recyclerViewQueue.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            recyclerViewDish.layoutManager = GridLayoutManager(requireContext(), spanCount)
 
-        recyclerViewQueue.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        recyclerViewDish.layoutManager = GridLayoutManager(requireContext(), spanCount)
-
-        recyclerViewQueue.adapter = adapterOrderQueue
-        recyclerViewDish.adapter = adapterOrderQueueBill
+            recyclerViewQueue.adapter = adapterOrderQueue
+            recyclerViewDish.adapter = adapterOrderQueueBill
 
 
-        navBar.setOnItemSelectedListener { menuItem ->
-            if (menuItem.itemId == R.id.homeMenu) {
-                slidingPaneLayout.closePane()
-                navBar.visibility = View.GONE
-                saveStateViewModel.stateCustomerOrderQueues = mutableListOf()
-            }
-            if (menuItem.itemId == R.id.backToHome) {
+            navBar.setOnItemSelectedListener { menuItem ->
+                if (menuItem.itemId == R.id.homeMenu) {
+                    slidingPaneLayout.closePane()
+                    navBar.visibility = View.GONE
+                    saveStateViewModel.stateCustomerOrderQueues = mutableListOf()
+                }
+                if (menuItem.itemId == R.id.backToHome) {
 //                saveStateViewModel.stateCustomerWithSelectDishesToBill = mutableListOf()
-                findNavController().popBackStack()
-                saveStateViewModel.stateCustomerOrderQueues = mutableListOf()
+                    findNavController().popBackStack()
+                    saveStateViewModel.stateCustomerOrderQueues = mutableListOf()
+                }
+                if (menuItem.itemId == R.id.optionOne) {
+                    val pNext = (position + 1) % adapterOrderQueue.getDataset.size
+                    adapterOrderQueue.getDataset[pNext].isSelected = true
+                    adapterOrderQueue.getDataset[position].isSelected = false
+                    adapterOrderQueue.notifyItemChanged(pNext)
+                    adapterOrderQueue.notifyItemChanged(position)
+                    adapterOrderQueueBill.setDataset(
+                        orderQueueList[pNext].dishesAmountDb
+                    )
+                    adapterOrderQueueBill.notifyDataSetChanged()
+                    position = pNext
+                }
+                if (menuItem.itemId == R.id.optionTwo) {
+                    saveStateViewModel.setStateCustomer(adapterOrderQueue.getDataset[position].customerDb)
+                    saveStateViewModel.posCusCurrentQueue = position
+                    findNavController().navigate(R.id.action_orderQueueFragment_to_prepareBillFragment)
+                }
+                true
             }
-            if (menuItem.itemId == R.id.optionOne) {
-                val pNext = (position + 1) % adapterOrderQueue.getDataset.size
-                adapterOrderQueue.getDataset[pNext].isSelected = true
-                adapterOrderQueue.getDataset[position].isSelected = false
-                adapterOrderQueue.notifyItemChanged(pNext)
-                adapterOrderQueue.notifyItemChanged(position)
-                adapterOrderQueueBill.setDataset(
-                    orderQueueList[pNext].dishesAmountDb
-                )
-                adapterOrderQueueBill.notifyDataSetChanged()
-                Log.d("ClickChange", "position: " + pNext)
-                position = pNext
-            }
-            if (menuItem.itemId == R.id.optionTwo) {
-                findNavController().navigate(R.id.action_orderQueueFragment_to_prepareBillFragment)
-            }
-            true
+
+
+            val homeMenu = navBar.menu.findItem(R.id.homeMenu)
+            val backMenu = navBar.menu.findItem(R.id.backToHome)
+            val optionOne = navBar.menu.findItem(R.id.optionOne)
+            val optionTwo = navBar.menu.findItem(R.id.optionTwo)
+
+            homeMenu.isVisible = width < SCREEN_LARGE
+            backMenu.isVisible = true
+            optionOne.isVisible = true
+            optionTwo.isVisible = true
+
+            homeMenu.setIcon(R.drawable.ic_home)
+            backMenu.setIcon(R.drawable.ic_arrow_back)
+            optionOne.setIcon(R.drawable.ic_skip_next)
+            optionTwo.setIcon(R.drawable.ic_approve_order)
+
         }
-
-
-        val homeMenu = navBar.menu.findItem(R.id.homeMenu)
-        val backMenu = navBar.menu.findItem(R.id.backToHome)
-        val optionOne = navBar.menu.findItem(R.id.optionOne)
-        val optionTwo = navBar.menu.findItem(R.id.optionTwo)
-
-        homeMenu.isVisible = width < SCREEN_LARGE
-        backMenu.isVisible = true
-        optionOne.isVisible = true
-        optionTwo.isVisible = true
-
-        homeMenu.setIcon(R.drawable.ic_home)
-        backMenu.setIcon(R.drawable.ic_arrow_back)
-        optionOne.setIcon(R.drawable.ic_skip_next)
-        optionTwo.setIcon(R.drawable.ic_approve_order)
-
     }
 
     companion object {

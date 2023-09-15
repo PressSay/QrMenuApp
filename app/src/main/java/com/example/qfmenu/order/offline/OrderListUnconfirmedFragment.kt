@@ -107,9 +107,13 @@ class OrderListUnconfirmedFragment : Fragment() {
             it.apply {
                 orderListUnconfirmedAdapter.submitList(it)
             }
+            if (it.isEmpty())
+                saveStateViewModel.stateCustomerOrderQueuesPos = mutableListOf()
         }
 
         recyclerView.adapter = orderListUnconfirmedAdapter
+
+
 
         navBar.setOnItemSelectedListener { menuItem ->
             if (menuItem.itemId == R.id.homeMenu) {

@@ -104,7 +104,7 @@
     </fragment>
     <fragment
         android:id="@+id/prepareBillFragment"
-        android:name="com.example.qfmenu.shop.pay.PrepareBillFragment"
+        android:name="com.example.qfmenu.order.PrepareBillFragment"
         android:label="fragment_prepare_bill"
         tools:layout="@layout/fragment_prepare_bill">
         <action

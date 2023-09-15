@@ -10,7 +10,9 @@ import com.example.qfmenu.database.entity.TableDb
 
 class SaveStateViewModel : ViewModel() {
 
-    var stateIsOfflineOrder: Boolean = false
+
+
+    var stateIsOffOnOrder: Boolean = false
     var stateCategoryPositionMenu: Int = 0
     var stateIsTableUnClock: Boolean = true
     var stateIsStartOrder: Boolean = true
@@ -36,10 +38,9 @@ class SaveStateViewModel : ViewModel() {
 
 //    var stateCustomerWithSelectDishes: MutableList<CustomerWithSelectDishes> = mutableListOf()
 //    var stateCustomerWithSelectDishesToBill: MutableList<CustomerWithSelectDishes> = mutableListOf()
-
+    var posCusCurrentQueue: Int = -1
     var stateCustomerOrderQueues: MutableList<CustomerOrderQueue> = mutableListOf()
     var stateCustomerOrderQueuesPos: MutableList<Int> = mutableListOf()
-
     val stateDishes get() = _stateDishes
     val stateCategories get() = _stateCategories
     val stateMenus get() = _stateMenus

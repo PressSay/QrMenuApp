@@ -16,11 +16,8 @@ import com.example.qfmenu.database.entity.CustomerDishCrossRef
 import com.example.qfmenu.database.entity.OrderDb
 import com.example.qfmenu.database.entity.ReviewCustomerCrossRef
 import com.example.qfmenu.database.entity.ReviewDb
-import com.example.qfmenu.database.entity.TableDb
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
@@ -41,7 +38,7 @@ class CustomerViewModel(
     private var _customerForCreate: CustomerDb? = null
     val customerForCreate get() = _customerForCreate!!
 
-    val customerList get() = customerDao.getCustomers().asLiveData()
+    val customerList get() = customerDao.getCustomersUnConfirmed().asLiveData()
 
     suspend fun getOrder(customerId: Long): OrderDb {
         return orderDao.getOrderCustomerOwner(customerId)
@@ -99,6 +96,7 @@ class CustomerViewModel(
         status: String,
         promotion: Byte,
         tableId: Long
+
     ) {
 
         viewModelScope.launch {

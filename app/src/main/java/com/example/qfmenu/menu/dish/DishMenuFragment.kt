@@ -1,14 +1,12 @@
 package com.example.qfmenu.menu.dish
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
@@ -22,9 +20,11 @@ import com.example.qfmenu.viewmodels.DishViewModel
 import com.example.qfmenu.viewmodels.DishViewModelFactory
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 
 /**
@@ -71,6 +71,7 @@ class DishMenuFragment : Fragment() {
         return binding.root
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val myDataset = DatasourceDish().loadDishMenu()
@@ -96,7 +97,7 @@ class DishMenuFragment : Fragment() {
         val optionTwo = navBar.menu.findItem(R.id.optionTwo)
 
         homeMenu.isVisible = width < SCREEN_LARGE
-        backMenu.isVisible = saveStateViewModel.stateIsOfflineOrder
+        backMenu.isVisible = saveStateViewModel.stateIsOffOnOrder
         optionOne.isVisible = true
         optionTwo.isVisible = true
 
@@ -120,24 +121,25 @@ class DishMenuFragment : Fragment() {
         val categoryPos = saveStateViewModel.stateCategoryPositionMenu
 
         btnBuy.setOnClickListener {
-            if (saveStateViewModel.stateDishesByCategories.size == 0) {
-                saveStateViewModel.stateDishesByCategories.add(
-                    mutableListOf()
-                )
-            }
+            GlobalScope.async {
+                if (saveStateViewModel.stateDishesByCategories.size == 0) {
+                    saveStateViewModel.stateDishesByCategories.add(
+                        mutableListOf()
+                    )
+                }
 
-            saveStateViewModel.stateDishesByCategories[categoryPos] =
-                dishMenuAdapter.listSelected
+                saveStateViewModel.stateDishesByCategories[categoryPos] =
+                    dishMenuAdapter.listSelected
 
-            val dishesDb = mutableListOf<DishAmountDb>()
-            saveStateViewModel.stateDishesByCategories.forEach {
-                dishesDb.addAll(it)
-            }
+                val dishesDb = mutableListOf<DishAmountDb>()
+                saveStateViewModel.stateDishesByCategories.forEach {
+                    dishesDb.addAll(it)
+                }
 
-            if (!saveStateViewModel.stateIsOfflineOrder) {
-                findNavController().navigate(R.id.action_dishMenuFragment_to_editConfirmDishFragment)
-            } else {
-                GlobalScope.async {
+                if (!saveStateViewModel.stateIsOffOnOrder) {
+                    findNavController().navigate(R.id.action_dishMenuFragment_to_editConfirmDishFragment)
+                } else {
+
                     val customerDishCrossRefDao =
                         (activity?.application as QrMenuApplication).database.customerDishCrossRefDao()
 
@@ -148,6 +150,7 @@ class DishMenuFragment : Fragment() {
                             dishAmountDb.amount,
                             0
                         )
+
                         async(Dispatchers.IO) {
                             customerDishCrossRefDao.getListByCustomerId(
                                 saveStateViewModel.stateCustomerDb.customerId
@@ -170,11 +173,8 @@ class DishMenuFragment : Fragment() {
                     }
                     findNavController().popBackStack()
                 }
+                saveStateViewModel.setStateDishesDb(dishesDb)
             }
-
-            saveStateViewModel.setStateDishesDb(dishesDb)
-
-
         }
 
         menuUsed.observe(this.viewLifecycleOwner) { menuDb ->

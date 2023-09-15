@@ -1,7 +1,6 @@
 package com.example.qfmenu.menu.dish.confirm
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -96,7 +95,7 @@ class EditConfirmDishFragment : Fragment() {
         recyclerView.layoutManager = gridLayoutManager
         recyclerView.adapter = editConfirmDishAdapter
 
-        optionOne.isVisible = !saveStateViewModel.stateIsOfflineOrder
+        optionOne.isVisible = !saveStateViewModel.stateIsOffOnOrder
         optionTwo.isVisible = true
         backMenu.isVisible = true
         homeMenu.isVisible = width < SCREEN_LARGE
@@ -121,7 +120,7 @@ class EditConfirmDishFragment : Fragment() {
             }
             if (it.itemId == R.id.backToHome) {
 
-                if (!saveStateViewModel.stateIsOfflineOrder) {
+                if (!saveStateViewModel.stateIsOffOnOrder) {
                     saveStateViewModel.setStateDishesDb(editConfirmDishAdapter.getDataset())
                 } else {
                     saveStateViewModel.setStateDishesDb(listOf())
@@ -130,7 +129,7 @@ class EditConfirmDishFragment : Fragment() {
             }
 
             if (it.itemId == R.id.optionTwo) {
-                if (!saveStateViewModel.stateIsOfflineOrder) {
+                if (!saveStateViewModel.stateIsOffOnOrder) {
                     val calendar = Calendar.getInstance()
                     calendar.add(Calendar.DATE, 3)
                     val expired = calendar.get(Calendar.DATE).toString() + "/" + calendar.get(
@@ -170,9 +169,10 @@ class EditConfirmDishFragment : Fragment() {
                         findNavController().navigate(R.id.action_editConfirmDishFragment_to_prepareBillFragment)
                     }
                 } else {
-                    saveStateViewModel.stateIsOfflineOrder = true
+                    saveStateViewModel.stateIsOffOnOrder = true
                     saveStateViewModel.setStateDishesDb(editConfirmDishAdapter.getDataset())
                     editConfirmDishAdapter.setDataset(saveStateViewModel.stateDishes.toMutableList())
+                    saveStateViewModel.stateDishesByCategories = mutableListOf()
                     findNavController().navigate(R.id.action_editConfirmDishFragment_to_dishMenuFragment)
                 }
             }

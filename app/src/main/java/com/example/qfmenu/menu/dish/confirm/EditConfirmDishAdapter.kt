@@ -54,7 +54,7 @@ class EditConfirmDishAdapter(
         holder.cost.text = item.dishDb.cost.toString()
         holder.amount.text = item.amount.toString()
         holder.btnTrash.setOnClickListener {
-            if (saveStateViewModel.stateIsOfflineOrder) {
+            if (saveStateViewModel.stateIsOffOnOrder) {
                 GlobalScope.async {
                     val customerDishCrossRef = CustomerDishCrossRef(
                         saveStateViewModel.stateCustomerDb.customerId,

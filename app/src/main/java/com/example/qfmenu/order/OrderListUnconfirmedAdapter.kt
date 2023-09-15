@@ -2,7 +2,6 @@ package com.example.qfmenu.order
 
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -74,7 +73,6 @@ class OrderListUnconfirmedAdapter(
                 }
             }
             saveStateViewModel.stateCustomerOrderQueuesPos[position] = position
-
 
 
             val customerDbCurrent =
@@ -182,27 +180,23 @@ class OrderListUnconfirmedAdapter(
         }
 
         holder.btnConfig.setOnClickListener {
-            if (isOffline) {
-                GlobalScope.async {
-                    saveStateViewModel.setStateCustomer(currentList[position])
-                    val dishesAmountDb = async(Dispatchers.IO) {
-                        customerViewModel.getCustomerDishes(currentList[position].customerId)
-                    }.await().map {
-                        DishAmountDb(
-                            dishDb = async(Dispatchers.IO) { customerCrossRefDao.getDish(it.dishId) }.await(),
-                            amount = it.amount,
-                        )
-                    }
-                    saveStateViewModel.setStateDishesDb(
-                        dishesAmountDb
+            GlobalScope.async {
+                saveStateViewModel.stateCustomerOrderQueues = mutableListOf()
+                saveStateViewModel.setStateCustomer(currentList[position])
+                val dishesAmountDb = async(Dispatchers.IO) {
+                    customerViewModel.getCustomerDishes(currentList[position].customerId)
+                }.await().map {
+                    DishAmountDb(
+                        dishDb = async(Dispatchers.IO) { customerCrossRefDao.getDish(it.dishId) }.await(),
+                        amount = it.amount,
                     )
-                    saveStateViewModel.stateIsOfflineOrder = true
-                    holder.view.findNavController()
-                        .navigate(R.id.action_orderListUnconfirmedFragment_to_editConfirmDishFragment)
                 }
-            } else if (!this.isOffline) {
+                saveStateViewModel.setStateDishesDb(
+                    dishesAmountDb
+                )
+                saveStateViewModel.stateIsOffOnOrder = true
                 holder.view.findNavController()
-                    .navigate(R.id.action_editOnlineOrderFragment_to_editConfirmDishFragment)
+                    .navigate(R.id.action_orderListUnconfirmedFragment_to_editConfirmDishFragment)
             }
         }
 

@@ -54,8 +54,9 @@ class MainActivity : AppCompatActivity() {
         binding.btnStartOrder.setOnClickListener {
             popToStartDestination(myNavHostFragment1.navController)
             saveStateViewModel.stateIsStartOrder = true
-            saveStateViewModel.stateIsOfflineOrder = false
+            saveStateViewModel.stateIsOffOnOrder = false
             saveStateViewModel.setStateDishesDb(listOf())
+            saveStateViewModel.stateCategoryPositionMenu = 0
             saveStateViewModel.stateDishesByCategories = mutableListOf()
             if (width < SCREEN_LARGE) {
                 binding.slidingPaneLayout.openPane()
@@ -66,8 +67,9 @@ class MainActivity : AppCompatActivity() {
         binding.btnBuyTakeAway.setOnClickListener {
             popToStartDestination(myNavHostFragment1.navController)
             saveStateViewModel.stateIsStartOrder = false
-            saveStateViewModel.stateIsOfflineOrder = false
+            saveStateViewModel.stateIsOffOnOrder = false
             saveStateViewModel.setStateDishesDb(listOf())
+            saveStateViewModel.stateCategoryPositionMenu = 0
             saveStateViewModel.stateDishesByCategories = mutableListOf()
             if (width < SCREEN_LARGE) {
                 slidingPaneLayout.openPane()
@@ -78,7 +80,6 @@ class MainActivity : AppCompatActivity() {
         binding.btnConfigShop.setOnClickListener {
             popToStartDestination(myNavHostFragment1.navController)
             myNavHostFragment1.navController.navigate(R.id.configShopFragment)
-//            myNavHostFragment1.navController.popBackStack()
 
             if (width < SCREEN_LARGE) {
                 slidingPaneLayout.openPane()
@@ -89,7 +90,7 @@ class MainActivity : AppCompatActivity() {
         binding.btnOfflineList.setOnClickListener {
             popToStartDestination(myNavHostFragment1.navController)
             myNavHostFragment1.navController.navigate(R.id.orderListUnconfirmedFragment)
-            saveStateViewModel.stateIsOfflineOrder = true
+            saveStateViewModel.stateIsOffOnOrder = true
             saveStateViewModel.setStateDishesDb(listOf())
             saveStateViewModel.stateDishesByCategories = mutableListOf()
             if (width < SCREEN_LARGE) {
