@@ -11,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.qfmenu.QrMenuApplication
-import com.example.qfmenu.order.OrderListAdapter
+import com.example.qfmenu.order.OrderListUnconfirmedAdapter
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.databinding.FragmentOrderListUnconfirmedBinding
@@ -39,7 +39,7 @@ class OrderListUnconfirmedFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val saveStateViewModel: SaveStateViewModel by activityViewModels()
-    private val customerViewModel: CustomerViewModel by viewModels() {
+    private val customerViewModel: CustomerViewModel by viewModels {
         CustomerViewModelFactory(
             (activity?.application as QrMenuApplication).database.customerDao(),
             (activity?.application as QrMenuApplication).database.customerDishCrossRefDao(),
@@ -92,63 +92,46 @@ class OrderListUnconfirmedFragment : Fragment() {
         optionOne.setIcon(R.drawable.ic_search)
         optionTwo.setIcon(R.drawable.ic_approve_order)
 
-//        val orderListAdapter = OrderListAdapter(true, requireContext(), saveStateViewModel, saveStateViewModel.stateCustomerWithSelectDishes, this.viewLifecycleOwner)
+//        val orderListAdapter = OrderListUnconfirmedAdapter(true, requireContext(), saveStateViewModel, saveStateViewModel.stateCustomerWithSelectDishes, this.viewLifecycleOwner)
 
-        val orderListAdapter = OrderListAdapter(true, requireContext(), saveStateViewModel, customerViewModel, (activity?.application as QrMenuApplication).database.customerDishCrossRefDao())
+        val orderListUnconfirmedAdapter = OrderListUnconfirmedAdapter(
+            true,
+            requireContext(),
+            saveStateViewModel,
+            customerViewModel,
+            (activity?.application as QrMenuApplication).database.customerDishCrossRefDao()
+        )
 
 //        Not Use Ram
         customerViewModel.customerList.observe(this.viewLifecycleOwner) {
             it.apply {
-                orderListAdapter.submitList(it)
+                orderListUnconfirmedAdapter.submitList(it)
             }
         }
 
-        recyclerView.adapter = orderListAdapter
+        recyclerView.adapter = orderListUnconfirmedAdapter
 
         navBar.setOnItemSelectedListener { menuItem ->
             if (menuItem.itemId == R.id.homeMenu) {
                 slidePaneLayout.closePane()
                 navBar.visibility = View.GONE
+                saveStateViewModel.stateCustomerOrderQueues = mutableListOf()
             }
             if (menuItem.itemId == R.id.optionOne) {
 
             }
             if (menuItem.itemId == R.id.optionTwo) {
-//                orderListAdapter.stateCustomerWithSelectDishesToBillPos.forEach {
-//                    saveStateViewModel.stateCustomerWithSelectDishesToBill.add(saveStateViewModel.stateCustomerWithSelectDishes[it])
-//                }
-
-//                if (saveStateViewModel.stateCustomerWithSelectDishesToBill.isNotEmpty()) {
-//                }
-                findNavController().navigate(R.id.action_orderListUnconfirmedFragment_to_orderQueueFragment)
+                if (saveStateViewModel.stateCustomerOrderQueues.isNotEmpty()) {
+                    findNavController().navigate(R.id.action_orderListUnconfirmedFragment_to_orderQueueFragment)
+                }
             }
+
             true
         }
 
+
         recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
 
-
-
-//        recyclerView.adapter = OrderListAdapter(
-//            true,
-//            requireContext(),
-//            mutableListOf(
-//                Customer(
-//                    1,
-//                    Table("Online", "None"),
-//                    Date(2022, 12, 1),
-//                    listOf(
-//                        Dish(R.drawable.img_image_4, "title1", "something", 18000, 1),
-//                        Dish(R.drawable.img_image_4, "title2", "something", 18000, 1)
-//                    ),
-//                    "joaisjdof",
-//                    "jaoisdjf",
-//                    "now",
-//                    "0123456789",
-//                    "address 1",
-//                ),
-//            )
-//        )
 
 
     }

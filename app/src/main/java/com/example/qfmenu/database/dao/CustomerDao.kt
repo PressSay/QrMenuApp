@@ -41,7 +41,7 @@ interface CustomerDao {
     fun getReviewCustomerCrossRefs(customerId: Long): Flow<ReviewCustomerCrossRef>
 
     @Query("SELECT * FROM CustomerDb WHERE customerId = :customerId")
-    fun getCustomer(customerId: Long): Flow<CustomerDb>
+    suspend fun getCustomer(customerId: Long): CustomerDb
 
 
     @Insert(onConflict = OnConflictStrategy.IGNORE,)

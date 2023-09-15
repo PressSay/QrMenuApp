@@ -176,7 +176,7 @@ class CustomerViewModel(
         }
     }
 
-    fun getCustomer(customerId: Long): Flow<CustomerDb> {
+    suspend fun getCustomer(customerId: Long): CustomerDb {
         return customerDao.getCustomer(customerId)
     }
 

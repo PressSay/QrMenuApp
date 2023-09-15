@@ -8,12 +8,12 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qfmenu.R
-import com.example.qfmenu.viewmodels.CustomerWithSelectDishesDb
+import com.example.qfmenu.viewmodels.CustomerOrderQueue
 
 class OrderQueueAdapter(
     private val onCLick: (Array<Int>) -> Unit,
     private val context: Context,
-    private val dataset: List<CustomerWithSelectDishesDb>
+    private val dataset: List<CustomerOrderQueue>
 ) : RecyclerView.Adapter<OrderQueueAdapter.ItemViewHolder>() {
 
     class ItemViewHolder(val view: View) : RecyclerView.ViewHolder(view) {

@@ -7,15 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
-import com.example.qfmenu.viewmodels.models.Dish
-import com.example.qfmenu.viewmodels.models.Customer
-import com.example.qfmenu.order.OrderListAdapter
-import com.example.qfmenu.viewmodels.models.Table
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.databinding.FragmentEditOnlineOrderBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.util.Date
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -86,7 +81,7 @@ class EditOnlineOrderFragment : Fragment() {
         }
 
         recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
-//        recyclerView.adapter = OrderListAdapter(
+//        recyclerView.adapter = OrderListUnconfirmedAdapter(
 //            false,
 //            requireContext(),
 //            mutableListOf(

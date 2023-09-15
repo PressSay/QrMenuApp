@@ -12,11 +12,8 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qfmenu.viewmodels.CustomerViewModel
 import com.example.qfmenu.R
-import com.example.qfmenu.database.entity.CustomerDb
 import com.example.qfmenu.database.entity.TableDb
-import com.example.qfmenu.viewmodels.DishAmountDb
 import com.example.qfmenu.viewmodels.SaveStateViewModel
-import com.example.qfmenu.viewmodels.models.Customer
 
 
 class WaitingTableAdapter(

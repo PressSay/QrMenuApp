@@ -37,7 +37,8 @@ class SaveStateViewModel : ViewModel() {
 //    var stateCustomerWithSelectDishes: MutableList<CustomerWithSelectDishes> = mutableListOf()
 //    var stateCustomerWithSelectDishesToBill: MutableList<CustomerWithSelectDishes> = mutableListOf()
 
-    var stateCustomerWithSelectDishesDb: MutableList<CustomerWithSelectDishesDb> = mutableListOf()
+    var stateCustomerOrderQueues: MutableList<CustomerOrderQueue> = mutableListOf()
+    var stateCustomerOrderQueuesPos: MutableList<Int> = mutableListOf()
 
     val stateDishes get() = _stateDishes
     val stateCategories get() = _stateCategories
@@ -78,8 +79,18 @@ class SaveStateViewModel : ViewModel() {
 }
 
 
-data class CustomerWithSelectDishesDb (
-    val customerDb: CustomerDb,
-    val tableDb: TableDb,
+
+data class CustomerOrderQueue (
+    val customerDb: CustomerDb = CustomerDb(
+        -1,
+        -1,
+        "",
+        "",
+        "",
+        "",
+        ""
+    ),
+    val dishesAmountDb: List<DishAmountDb> = listOf(),
+    val tableDb: TableDb = TableDb(-1, ""),
     var isSelected: Boolean = false,
 )

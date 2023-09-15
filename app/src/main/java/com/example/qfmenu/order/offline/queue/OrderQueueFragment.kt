@@ -2,6 +2,7 @@ package com.example.qfmenu.order.offline.queue
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,18 +12,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
-import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.databinding.FragmentOrderQueueBinding
-import com.example.qfmenu.viewmodels.CustomerWithSelectDishesDb
-import com.example.qfmenu.viewmodels.DishAmountDb
+import com.example.qfmenu.viewmodels.CustomerOrderQueue
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,7 +57,7 @@ class OrderQueueFragment : Fragment() {
     }
 
 
-    @OptIn(DelicateCoroutinesApi::class)
+
     @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -74,91 +69,68 @@ class OrderQueueFragment : Fragment() {
         val recyclerViewQueue = binding.horizontalListOrderQueue
         val recyclerViewDish = binding.recyclerViewItemConfirmOrderView
 
-        val orderQueueList: MutableList<CustomerWithSelectDishesDb> =
-            saveStateViewModel.stateCustomerWithSelectDishesDb
+        val orderQueueList: MutableList<CustomerOrderQueue> =
+            saveStateViewModel.stateCustomerOrderQueues
 
-        val customerDao = (activity?.application as QrMenuApplication).database.customerDao()
-        val customerDishCrossRefDao =
-            (activity?.application as QrMenuApplication).database.customerDishCrossRefDao()
+        if (orderQueueList.size > 0) {
 
-        GlobalScope.async {
-            orderQueueList[0].isSelected = true
-            val adapterOrderQueueBill = OrderQueueBillAdapter(
-                requireContext(),
-                async { customerDao.getCustomerDishCrossRefs(orderQueueList[0].customerDb.customerId) }.await()
-                    .map {
-                        DishAmountDb(
-                            async(Dispatchers.IO) { customerDishCrossRefDao.getDish(it.dishId) }.await(),
-                            it.amount
-                        )
-                    }
-            )
-            var position = 0
+        }
 
-            val adapterOrderQueue = OrderQueueAdapter(
-                {
-                    GlobalScope.async {
-                        position = it[0]
-                        adapterOrderQueueBill.setDataset(
-                            async { customerDao.getCustomerDishCrossRefs(orderQueueList[it[0]].customerDb.customerId) }.await()
-                                .map {
-                                    DishAmountDb(
-                                        async(Dispatchers.IO) { customerDishCrossRefDao.getDish(it.dishId) }.await(),
-                                        it.amount
-                                    )
-                                }
-                        )
-                        adapterOrderQueueBill.notifyDataSetChanged()
-                    }
-                },
-                requireContext(),
-                orderQueueList
-            )
+        orderQueueList[0].isSelected = true
+        val adapterOrderQueueBill = OrderQueueBillAdapter(
+            requireContext(),
+            orderQueueList[0].dishesAmountDb
+        )
+        var position = 0
 
-            recyclerViewQueue.layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            recyclerViewDish.layoutManager = GridLayoutManager(requireContext(), spanCount)
+        val adapterOrderQueue = OrderQueueAdapter(
+            {
+                position = it[0]
+                adapterOrderQueueBill.setDataset(
+                    orderQueueList[it[0]].dishesAmountDb
+                )
+                adapterOrderQueueBill.notifyDataSetChanged()
+            },
+            requireContext(),
+            orderQueueList
+        )
 
-            recyclerViewQueue.adapter = adapterOrderQueue
-            recyclerViewDish.adapter = adapterOrderQueueBill
+        recyclerViewQueue.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        recyclerViewDish.layoutManager = GridLayoutManager(requireContext(), spanCount)
+
+        recyclerViewQueue.adapter = adapterOrderQueue
+        recyclerViewDish.adapter = adapterOrderQueueBill
 
 
-            navBar.setOnItemSelectedListener { menuItem ->
-                if (menuItem.itemId == R.id.homeMenu) {
-                    slidingPaneLayout.closePane()
-                    navBar.visibility = View.GONE
-                }
-                if (menuItem.itemId == R.id.backToHome) {
-//                saveStateViewModel.stateCustomerWithSelectDishesToBill = mutableListOf()
-                    findNavController().popBackStack()
-                }
-                if (menuItem.itemId == R.id.optionOne) {
-                    GlobalScope.async {
-                        val pNext = (position + 1) % adapterOrderQueue.getDataset.size
-                        adapterOrderQueue.getDataset[pNext].isSelected = true
-                        adapterOrderQueue.getDataset[position].isSelected = false
-                        adapterOrderQueue.notifyItemChanged(pNext)
-                        adapterOrderQueue.notifyItemChanged(position)
-
-                        adapterOrderQueueBill.setDataset(
-                            async { customerDao.getCustomerDishCrossRefs(orderQueueList[pNext].customerDb.customerId) }.await()
-                                .map {
-                                    DishAmountDb(
-                                        async(Dispatchers.IO) { customerDishCrossRefDao.getDish(it.dishId) }.await(),
-                                        it.amount
-                                    )
-                                }
-                        )
-                        adapterOrderQueueBill.notifyDataSetChanged()
-                        position = pNext
-                    }
-                }
-                if (menuItem.itemId == R.id.optionTwo) {
-                    findNavController().navigate(R.id.action_orderQueueFragment_to_prepareBillFragment)
-                }
-                true
+        navBar.setOnItemSelectedListener { menuItem ->
+            if (menuItem.itemId == R.id.homeMenu) {
+                slidingPaneLayout.closePane()
+                navBar.visibility = View.GONE
+                saveStateViewModel.stateCustomerOrderQueues = mutableListOf()
             }
-
+            if (menuItem.itemId == R.id.backToHome) {
+//                saveStateViewModel.stateCustomerWithSelectDishesToBill = mutableListOf()
+                findNavController().popBackStack()
+                saveStateViewModel.stateCustomerOrderQueues = mutableListOf()
+            }
+            if (menuItem.itemId == R.id.optionOne) {
+                val pNext = (position + 1) % adapterOrderQueue.getDataset.size
+                adapterOrderQueue.getDataset[pNext].isSelected = true
+                adapterOrderQueue.getDataset[position].isSelected = false
+                adapterOrderQueue.notifyItemChanged(pNext)
+                adapterOrderQueue.notifyItemChanged(position)
+                adapterOrderQueueBill.setDataset(
+                    orderQueueList[pNext].dishesAmountDb
+                )
+                adapterOrderQueueBill.notifyDataSetChanged()
+                Log.d("ClickChange", "position: " + pNext)
+                position = pNext
+            }
+            if (menuItem.itemId == R.id.optionTwo) {
+                findNavController().navigate(R.id.action_orderQueueFragment_to_prepareBillFragment)
+            }
+            true
         }
 
 
