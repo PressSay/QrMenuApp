@@ -9,16 +9,41 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qfmenu.R
+import com.example.qfmenu.database.dao.ReviewDao
+import com.example.qfmenu.database.entity.DishDb
+import com.example.qfmenu.database.entity.ReviewCustomerCrossRef
+import com.example.qfmenu.database.entity.ReviewDb
+import com.example.qfmenu.database.entity.ReviewDishCrossRef
+import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.example.qfmenu.viewmodels.models.Review
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class ReviewStoreOrDishAdapter(
     private val isStore: Boolean,
+    private val reviewDao: ReviewDao,
+    private val saveStateViewModel: SaveStateViewModel,
     private val context: Context,
-    private val dataset: MutableList<Review>
-) : RecyclerView.Adapter<ReviewStoreOrDishAdapter.ItemViewHolder>() {
+) : ListAdapter<ReviewDb, ReviewStoreOrDishAdapter.ItemViewHolder>(DiffCallback) {
+
+    companion object {
+        private val DiffCallback = object : DiffUtil.ItemCallback<ReviewDb>() {
+            override fun areItemsTheSame(oldItem: ReviewDb, newItem: ReviewDb): Boolean {
+                return oldItem === newItem
+            }
+
+            override fun areContentsTheSame(oldItem: ReviewDb, newItem: ReviewDb): Boolean {
+                return oldItem.reviewId == newItem.reviewId
+            }
+        }
+    }
+
     class ItemViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val items = view.findViewById<LinearLayout>(R.id.itemReviewPersonAdmin) as ViewGroup
         val description = items.getChildAt(2) as TextView
@@ -33,26 +58,35 @@ class ReviewStoreOrDishAdapter(
         return ItemViewHolder(adapter)
     }
 
-    fun getDatset(): MutableList<Review> = dataset
 
-    override fun getItemCount(): Int {
-        return dataset.size
-    }
-
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val item = dataset[holder.adapterPosition]
+        val item = currentList[holder.adapterPosition]
         holder.items.setOnClickListener {
-            if (isStore) {
-                holder.view.findNavController()
-                    .navigate(R.id.action_reviewStoreListFragment_to_storeReivewCommentFragment)
-            } else {
-                holder.view.findNavController()
-                    .navigate(R.id.action_reviewListDetailAdminFragment_to_dishReviewFragment)
-            }
+
         }
         holder.btnTrash.setOnClickListener {
-            dataset.removeAt(holder.adapterPosition)
-            notifyItemRemoved(holder.adapterPosition)
+            GlobalScope.launch {
+                val reviewDb = currentList[position]
+                if (!isStore) {
+                    val dishDb = saveStateViewModel.stateDishDb
+                    val reviewDishCrossRef = ReviewDishCrossRef(
+                        dishId = dishDb.dishId,
+                        reviewId = reviewDb.reviewId
+                    )
+                    reviewDao.deleteReviewDishCrossRef(reviewDishCrossRef)
+                } else {
+                    val customerDb = saveStateViewModel.stateCustomerDb
+                    val reviewCustomerCrossRef = ReviewCustomerCrossRef(
+                        reviewDb.reviewId,
+                        customerDb.customerId
+                    )
+                    reviewDao.deleteReviewCustomerCrossRef(reviewCustomerCrossRef)
+                }
+                reviewDao.delete(reviewDb)
+            }
+//            dataset.removeAt(holder.adapterPosition)
+//            notifyItemRemoved(holder.adapterPosition)
         }
         holder.description.text = item.description
     }

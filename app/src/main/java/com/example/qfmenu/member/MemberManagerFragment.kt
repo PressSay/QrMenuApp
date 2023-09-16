@@ -1,18 +1,28 @@
 package com.example.qfmenu.member
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
+import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
+import com.example.qfmenu.database.entity.AccountDb
 import com.example.qfmenu.databinding.FragmentMemberManagerBinding
+import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.example.qfmenu.viewmodels.models.Member
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,6 +42,8 @@ class MemberManagerFragment : Fragment() {
     private var _binding: FragmentMemberManagerBinding? = null
     private val binding get() = _binding!!
 
+    private val saveStateViewModel: SaveStateViewModel by activityViewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -49,6 +61,7 @@ class MemberManagerFragment : Fragment() {
         return binding.root
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = binding.recyclerViewMemberManager
@@ -57,6 +70,16 @@ class MemberManagerFragment : Fragment() {
         val spanCount = if (width < SCREEN_LARGE) 2 else 4
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
+
+        val layoutInputMemberManager = binding.itemsEditMemberManager as ViewGroup
+        val layoutInputName = layoutInputMemberManager.getChildAt(0) as ViewGroup
+        val layoutInputPass = layoutInputMemberManager.getChildAt(1) as ViewGroup
+
+        val editInputName = layoutInputName.getChildAt(2) as TextInputEditText
+        val editInputPass = layoutInputPass.getChildAt(2) as TextInputEditText
+
+//        1 admin 2 staff
+
 
         val backMenu = navBar.menu.findItem(R.id.backToHome)
         val homeMenu = navBar.menu.findItem(R.id.homeMenu)
@@ -71,7 +94,9 @@ class MemberManagerFragment : Fragment() {
         homeMenu.setIcon(R.drawable.ic_home)
         backMenu.setIcon(R.drawable.ic_arrow_back)
         optionOne.setIcon(R.drawable.ic_search)
-        optionTwo.setIcon(R.drawable.ic_check_fill)
+        optionTwo.setIcon(R.drawable.ic_plus)
+
+        val accountDao = (activity?.application as QrMenuApplication).database.accountDao()
 
         navBar.setOnItemSelectedListener {
             if (it.itemId == R.id.backToHome) {
@@ -84,53 +109,44 @@ class MemberManagerFragment : Fragment() {
             if (it.itemId == R.id.optionOne) {
             }
             if (it.itemId == R.id.optionTwo) {
-                findNavController().popBackStack()
+                if (!(editInputName.text.isNullOrBlank() && editInputPass.text.isNullOrBlank())) {
+                    GlobalScope.async {
+                        val accountDb = AccountDb(
+                            roleCreatorId = "staff",
+                            name = "default",
+                            phoneNumber = "default",
+                            level = 0,
+                            email = editInputName.text.toString(),
+                            password = editInputPass.text.toString(),
+                            address = "default",
+                            avatar = "default"
+                        )
+                        accountDao.insert(accountDb)
+                    }
+                } else {
+                    AlertDialog.Builder(context)
+                        .setTitle("Input Invalid")
+                        .setMessage("Try Again")
+                        .setPositiveButton(android.R.string.ok,
+                            DialogInterface.OnClickListener { _, _ ->
+                            }).show()
+                }
             }
             true
         }
 
         recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
-        recyclerView.adapter = MemberManagerAdapter(
-            requireContext(),
-            listOf<Member>(
-                Member(
-                    "member 1",
-                    "0123456789",
-                    "viplanhts@gmail.com",
-                    "password",
-                    "address 1",
-                    "employee 1",
-                    R.drawable.img_image_4
-                ),
-                Member(
-                    "member 2",
-                    "0123456789",
-                    "viplanhts@gmail.com",
-                    "password",
-                    "address 2",
-                    "employee 2",
-                    R.drawable.img_image_4
-                ),
-                Member(
-                    "member 3",
-                    "0123456789",
-                    "viplanhts@gmail.com",
-                    "password",
-                    "address 3",
-                    "employee 3",
-                    R.drawable.img_image_4
-                ),
-                Member(
-                    "member 4",
-                    "0123456789",
-                    "viplanhts@gmail.com",
-                    "password",
-                    "address 4",
-                    "employee 4",
-                    R.drawable.img_image_4
-                ),
-            )
+        val memberManagerAdapter =  MemberManagerAdapter(
+        requireContext(),
+        saveStateViewModel
         )
+        recyclerView.adapter = memberManagerAdapter
+
+        accountDao.getAccountsWithNameRole("staff").observe(this.viewLifecycleOwner) {
+            it?.let {
+                memberManagerAdapter.submitList(it.accountsDb)
+            }
+        }
     }
 
     companion object {

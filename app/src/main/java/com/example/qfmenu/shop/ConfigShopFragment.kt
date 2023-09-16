@@ -64,6 +64,7 @@ class ConfigShopFragment : Fragment() {
             findNavController().navigate(R.id.action_configShopFragment_to_editCreateMenuFragment)
         }
         btnReview.setOnClickListener {
+
             findNavController().navigate(R.id.action_configShopFragment_to_reviewListFragment)
         }
         btnOverView.setOnClickListener {

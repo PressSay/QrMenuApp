@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.Junction
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import java.util.Calendar
 
 @Entity
 data class CustomerDb(
@@ -16,7 +17,12 @@ data class CustomerDb(
     val code: String,
     val phone: String,
     val address: String,
-    val isDelete: Boolean = false
+    val calendar: String = String.format(
+        "%02d/%02d/%04d", Calendar.getInstance()
+            .get(Calendar.DATE), Calendar.getInstance()
+            .get(Calendar.MONTH), Calendar.getInstance()
+            .get(Calendar.YEAR)
+    )
 )
 
 data class CustomerAndOrderDb(

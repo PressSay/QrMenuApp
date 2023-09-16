@@ -8,11 +8,16 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
+import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
+import com.example.qfmenu.database.entity.InvestmentDb
 import com.example.qfmenu.databinding.FragmentEditCreateInvestmentBinding
 import com.example.qfmenu.viewmodels.models.Investment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -73,6 +78,14 @@ class EditCreateInvestmentFragment : Fragment() {
         optionOne.setIcon(R.drawable.ic_search)
         optionTwo.setIcon(R.drawable.ic_plus)
 
+        val layoutFieldInvestment = binding.layoutFieldInvestment as ViewGroup
+        val layout1FieldInvestment = layoutFieldInvestment.getChildAt(0) as ViewGroup
+        val layout2FieldInvestment = layoutFieldInvestment.getChildAt(1) as ViewGroup
+
+        val nameInvestment = layout1FieldInvestment.getChildAt(2)!! as TextInputEditText
+        val costInvestment = layout2FieldInvestment.getChildAt(2)!! as TextInputEditText
+        val investmentDao = (activity?.application as QrMenuApplication).database.investmentDao()
+
         navBar.setOnItemSelectedListener {
             if (it.itemId == R.id.backToHome) {
                 findNavController().popBackStack()
@@ -84,20 +97,34 @@ class EditCreateInvestmentFragment : Fragment() {
             if (it.itemId == R.id.optionOne) {
             }
             if (it.itemId == R.id.optionTwo) {
+                GlobalScope.async {
+                    if (!(nameInvestment.text.isNullOrBlank() || costInvestment.text.isNullOrBlank())) {
 
+                        val investmentDb = InvestmentDb(
+                            nameInvestment.text.toString(),
+                            costInvestment.text.toString().toInt()
+                        )
+                        investmentDao.insert(investmentDb)
+                    }
+                }
             }
             true
         }
 
         recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
-        recyclerView.adapter = EditCreateInvestmentAdapter(
+        val editCreateInvestmentAdapter = EditCreateInvestmentAdapter(
             requireContext(),
-            mutableListOf(
-                Investment("cafe", 12000, true),
-                Investment("ice", 13500, true),
-                Investment("cookie", 14400, true),
-            )
+            investmentDao
         )
+        recyclerView.adapter = editCreateInvestmentAdapter
+
+        investmentDao.getInvestments().observe(this.viewLifecycleOwner) {
+            it.let {
+                editCreateInvestmentAdapter.submitList(it)
+            }
+        }
+
+
 
     }
 

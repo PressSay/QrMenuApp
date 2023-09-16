@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.qfmenu.database.dao.CustomerDao
 import com.example.qfmenu.database.dao.CustomerDishCrossRefDao
 import com.example.qfmenu.database.dao.OrderDao
-import com.example.qfmenu.database.dao.ReviewCustomerCrossRefDao
 import com.example.qfmenu.database.dao.ReviewDao
 import com.example.qfmenu.database.entity.CustomerAndOrderDb
 import com.example.qfmenu.database.entity.CustomerDb
@@ -25,7 +24,6 @@ class CustomerViewModel(
     private val customerDao: CustomerDao,
     private val customerDishCrossRefDao: CustomerDishCrossRefDao,
     private val reviewDao: ReviewDao,
-    private val reviewCustomerCrossRefDao: ReviewCustomerCrossRefDao,
     private val orderDao: OrderDao,
     private val selectedDishes: List<DishAmountDb>,
 ) : ViewModel() {
@@ -34,6 +32,9 @@ class CustomerViewModel(
         return reviewDao.getReview(reviewId).asLiveData()
     }
 
+    fun getCustomerDishCrossRefDao(): CustomerDishCrossRefDao {
+        return customerDishCrossRefDao
+    }
 
     private var _customerForCreate: CustomerDb? = null
     val customerForCreate get() = _customerForCreate!!
@@ -46,6 +47,10 @@ class CustomerViewModel(
 
     suspend fun getCustomerDishes(customerId: Long): List<CustomerDishCrossRef> {
         return customerDao.getCustomerDishCrossRefs(customerId)
+    }
+
+    fun getCustomersByCalendar(calendarPaid: String): LiveData<List<CustomerDb>> {
+        return customerDao.getCustomersByCalendar(calendarPaid)
     }
 
     fun createCustomer(customerDb: CustomerDb) {
@@ -80,7 +85,7 @@ class CustomerViewModel(
 
     fun insertReviewCustomer(customerDb: CustomerDb, reviewDb: ReviewDb) {
         viewModelScope.launch {
-            reviewCustomerCrossRefDao.insert(
+            reviewDao.insertReviewCustomerCrossRef(
                 ReviewCustomerCrossRef(
                     reviewDb.reviewId,
                     customerDb.customerId
@@ -161,15 +166,13 @@ class CustomerViewModel(
             customerDao.delete(customerDb)
 
             val reviewCustomerCrossRef =
-                async(Dispatchers.IO) { reviewCustomerCrossRefDao.getCustomerReview(customerDb.customerId) }.await()
-            if (reviewCustomerCrossRef != null) {
-                reviewCustomerCrossRefDao.update(
-                    ReviewCustomerCrossRef(
-                        reviewCustomerCrossRef.reviewId,
-                        -1
-                    )
+                async(Dispatchers.IO) { reviewDao.getCustomerReview(customerDb.customerId) }.await()
+            reviewDao.updateReviewCustomerCrossRef(
+                ReviewCustomerCrossRef(
+                    reviewCustomerCrossRef.reviewId,
+                    -1
                 )
-            }
+            )
 
         }
     }
@@ -188,7 +191,6 @@ class CustomerViewModelFactory(
     private val customerDao: CustomerDao,
     private val customerDishCrossRefDao: CustomerDishCrossRefDao,
     private val reviewDao: ReviewDao,
-    private val reviewCustomerCrossRefDao: ReviewCustomerCrossRefDao,
     private val orderDao: OrderDao,
     private val selectedDishes: List<DishAmountDb>,
 ) : ViewModelProvider.Factory {
@@ -199,7 +201,6 @@ class CustomerViewModelFactory(
                 customerDao,
                 customerDishCrossRefDao,
                 reviewDao,
-                reviewCustomerCrossRefDao,
                 orderDao,
                 selectedDishes
             ) as T

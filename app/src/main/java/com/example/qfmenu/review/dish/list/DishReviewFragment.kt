@@ -1,17 +1,36 @@
 package com.example.qfmenu.review.dish.list
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.core.content.ContextCompat
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
+import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
+import com.example.qfmenu.database.entity.DishDb
+import com.example.qfmenu.database.entity.ReviewCustomerCrossRef
+import com.example.qfmenu.database.entity.ReviewDb
+import com.example.qfmenu.database.entity.ReviewDishCrossRef
 import com.example.qfmenu.databinding.FragmentDishReviewBinding
+import com.example.qfmenu.viewmodels.SaveStateViewModel
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,6 +49,7 @@ class DishReviewFragment : Fragment() {
 
     private var _binding: FragmentDishReviewBinding? = null
     private val binding get() = _binding!!
+    private val saveStateViewModel: SaveStateViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,18 +62,84 @@ class DishReviewFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentDishReviewBinding.inflate(inflater, container, false)
         return binding.root
     }
 
+    private fun setProDishDbReview(layout: ViewGroup, dishDb: DishDb) {
+        val linear1 = layout.getChildAt(0) as ViewGroup
+        val linear1_1 = linear1.getChildAt(0) as ViewGroup
+        val linear1_1_1 = linear1_1.getChildAt(1) as ViewGroup
+        val linear1_2 = linear1.getChildAt(1) as ViewGroup
+        val linear1_2_1 = linear1_2.getChildAt(0) as ViewGroup
+        val linear1_2_1_1 = linear1_2_1.getChildAt(0) as ViewGroup
+        val linear1_2_1_1_1 = linear1_2_1_1.getChildAt(0) as ViewGroup
+
+        val titleDish = linear1_2_1_1_1.getChildAt(0) as TextView
+        val img = linear1_1.getChildAt(0) as ImageView
+        val costDish = linear1_1_1.getChildAt(0) as TextView
+        val descriptionDish = linear1_2_1.getChildAt(1) as TextView
+
+        titleDish.text = dishDb.dishName
+        costDish.text = dishDb.cost.toString()
+        descriptionDish.text = dishDb.description
+
+
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val width: Float = resources.displayMetrics.widthPixels / resources.displayMetrics.density
         val spanCount = if (width < SCREEN_LARGE) 1 else 2
-        val slidePaneLayout = requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
+        val slidePaneLayout =
+            requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
+        val editInputDishReview = binding.editInputDishReview
+        val layoutIsThumpUp = binding.layoutIsThumbUp as ViewGroup
+
+        var stateThumpUp = -1
+        val btnThumbUp = layoutIsThumpUp.getChildAt(1) as AppCompatImageButton
+        val btnThumbDown = layoutIsThumpUp.getChildAt(0) as AppCompatImageButton
+
+        val layoutDishDb = binding.layoutDishDbReviewEdit.root
+
+        setProDishDbReview(layoutDishDb, saveStateViewModel.stateDishDb)
+
+        btnThumbUp.setOnClickListener {
+            stateThumpUp = 1
+            btnThumbUp.setColorFilter(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.green_tertiary
+                )
+            )
+            btnThumbDown.setColorFilter(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.green_surface_variant
+                )
+            )
+        }
+
+        btnThumbDown.setOnClickListener {
+            stateThumpUp = 0
+            btnThumbDown.setColorFilter(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.green_error
+                )
+            )
+            btnThumbUp.setColorFilter(
+                ContextCompat.getColor(
+                    requireContext(),
+
+                    R.color.green_surface_variant
+                )
+            )
+        }
 
         val backMenu = navBar.menu.findItem(R.id.backToHome)
         val homeMenu = navBar.menu.findItem(R.id.homeMenu)
@@ -80,6 +166,33 @@ class DishReviewFragment : Fragment() {
             }
 
             if (it.itemId == R.id.optionTwo) {
+
+                Log.d("DishReview", "True")
+                if (editInputDishReview.text?.isNotBlank() == true) {
+                    GlobalScope.async {
+                        val reviewDao =
+                            (activity?.application as QrMenuApplication).database.reviewDao()
+                        val reviewDb = ReviewDb(
+                            isThumbUp = stateThumpUp,
+                            description = editInputDishReview.text.toString()
+                        )
+                        val reviewId = reviewDao.insert(reviewDb)
+                        reviewDao.insertReviewDishCrossRef(
+                            ReviewDishCrossRef(
+                                dishId = saveStateViewModel.stateDishDb.dishId,
+                                reviewId= reviewId
+                            )
+                        )
+                        findNavController().popBackStack()
+                    }
+                } else {
+                    AlertDialog.Builder(context)
+                        .setTitle("Input Invalid")
+                        .setMessage("Try Again")
+                        .setPositiveButton(android.R.string.ok,
+                            DialogInterface.OnClickListener { _, _ ->
+                            }).show()
+                }
 
             }
             true

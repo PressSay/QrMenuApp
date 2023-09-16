@@ -5,7 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatButton
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.qfmenu.R
+import com.example.qfmenu.database.entity.ReviewDb
+import com.example.qfmenu.databinding.FragmentStoreReviewBinding
+import com.example.qfmenu.viewmodels.SaveStateViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -22,6 +28,11 @@ class StoreReviewFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private var _binding: FragmentStoreReviewBinding? = null
+    private val binding get() = _binding!!
+
+    private val saveStateViewModel: SaveStateViewModel by activityViewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -35,7 +46,32 @@ class StoreReviewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_store_review, container, false)
+        _binding = FragmentStoreReviewBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val layout1 = binding.layoutStoreReviewYN as ViewGroup
+        val btnYes = layout1.getChildAt(1) as AppCompatButton
+        val btnNo = layout1.getChildAt(2) as AppCompatButton
+        val btnIdk = layout1.getChildAt(3) as AppCompatButton
+
+        btnYes.setOnClickListener {
+            saveStateViewModel.stateReviewDb = 1
+            findNavController().navigate(R.id.action_storeReviewFragment_to_storeReivewCommentFragment)
+        }
+
+        btnNo.setOnClickListener {
+            saveStateViewModel.stateReviewDb = 0
+            findNavController().navigate(R.id.action_storeReviewFragment_to_storeReivewCommentFragment)
+        }
+
+        btnIdk.setOnClickListener {
+            saveStateViewModel.stateReviewDb = -1
+            findNavController().navigate(R.id.action_storeReviewFragment_to_storeReivewCommentFragment)
+        }
+
     }
 
     companion object {

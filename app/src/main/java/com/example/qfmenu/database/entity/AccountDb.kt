@@ -8,7 +8,7 @@ import androidx.room.Relation
 @Entity
 data class AccountDb(
     @PrimaryKey(autoGenerate = true)
-    val accountId: Long,
+    val accountId: Long = 0,
     val roleCreatorId: String,
     val name: String,
     val phoneNumber: String,

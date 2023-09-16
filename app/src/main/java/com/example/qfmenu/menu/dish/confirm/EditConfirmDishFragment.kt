@@ -6,12 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
-import com.example.qfmenu.viewmodels.CustomerViewModel
-import com.example.qfmenu.viewmodels.CustomerViewModelFactory
 import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
@@ -41,16 +38,7 @@ class EditConfirmDishFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val saveStateViewModel: SaveStateViewModel by activityViewModels()
-    private val customerViewModel: CustomerViewModel by viewModels {
-        CustomerViewModelFactory(
-            (activity?.application as QrMenuApplication).database.customerDao(),
-            (activity?.application as QrMenuApplication).database.customerDishCrossRefDao(),
-            (activity?.application as QrMenuApplication).database.reviewDao(),
-            (activity?.application as QrMenuApplication).database.reviewCustomerCrossRefDao(),
-            (activity?.application as QrMenuApplication).database.orderDao(),
-            saveStateViewModel.stateDishes
-        )
-    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 data class InvestmentDb(
     @PrimaryKey
     val investmentName: String,
-    val cost: Int
+    val cost: Int,
+    var isDropdown: Boolean = true
 )

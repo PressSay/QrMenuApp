@@ -5,13 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
+import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.viewmodels.models.Dish
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
+import com.example.qfmenu.database.entity.MenuWithCategories
 import com.example.qfmenu.databinding.FragmentReviewListBinding
+import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 // TODO: Rename parameter arguments, choose names that match
@@ -31,6 +36,9 @@ class ReviewListFragment : Fragment() {
 
     private var _binding: FragmentReviewListBinding? = null
     private val binding get() = _binding!!
+
+
+    private val saveStateViewModel: SaveStateViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,43 +103,62 @@ class ReviewListFragment : Fragment() {
             findNavController().navigate(R.id.action_reviewListFragment_to_reviewStoreListFragment)
         }
 
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
-        recyclerView.adapter = ReviewListAdapter(
-            requireContext(), listOf(
-                Dish(
-                    R.drawable.dish_menu_img,
-                    "Example 1",
-                    "Just a example description",
-                    18000,
-                    1,
-                    false
-                ),
-                Dish(
-                    R.drawable.dish_menu_img,
-                    "Example 2",
-                    "Just a example description",
-                    18000,
-                    1,
-                    false
-                ),
-                Dish(
-                    R.drawable.dish_menu_img,
-                    "Example 3",
-                    "Just a example description",
-                    18000,
-                    1,
-                    false
-                ),
-                Dish(
-                    R.drawable.dish_menu_img,
-                    "Example 4",
-                    "Just a example description",
-                    18000,
-                    1,
-                    false
-                ),
-            )
+        val reviewListAdapter = ReviewListAdapter(
+            requireContext(),
+            saveStateViewModel
         )
+
+//        val customerDishCrossRefDao =
+//            (activity?.application as QrMenuApplication).database.customerDishCrossRefDao()
+        val menuDao = (activity?.application as QrMenuApplication).database.menuDao()
+        val categoryDao = (activity?.application as QrMenuApplication).database.categoryDao()
+
+
+        recyclerView.adapter = reviewListAdapter
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
+
+//        menuDao.getMenuUsedLiveData().observe(this.viewLifecycleOwner) {
+//            if (it != null) {
+//                menuDao.getMenuWithCategoriesLiveData(it.menuId)
+//                    .observe(this.viewLifecycleOwner) { menuWithCategories ->
+//                        if (menuWithCategories != null) {
+//                            if (menuWithCategories.categoriesDb.isNotEmpty()) {
+//                                val posCategory = saveStateViewModel.stateCategoryPositionMenu
+//                                customerDishCrossRefDao.getDishReviewByCategoryId(menuWithCategories.categoriesDb[posCategory].categoryId)
+//                                    .observe(this.viewLifecycleOwner) { dishesDb ->
+//                                        dishesDb.let {
+//                                            reviewListAdapter.submitList(dishesDb)
+//                                        }
+//                                    }
+//                            }
+//                        }
+//                    }
+//            }
+//        }
+
+        menuDao.getMenuUsedLiveData().observe(this.viewLifecycleOwner) { menuDb ->
+            if (menuDb != null) {
+                menuDao.getMenuWithCategoriesLiveData(menuId = menuDb.menuId)
+                    .observe(this.viewLifecycleOwner) { menuWithCategories ->
+                        if (menuWithCategories != null) {
+                            val categories = menuWithCategories.categoriesDb
+                            if (categories.isNotEmpty()) {
+                                val categoryDb =
+                                    categories[saveStateViewModel.stateCategoryPositionMenu]
+                                categoryDao.getCategoryWithDishesLiveData(categoryDb.categoryId)
+                                    .observe(this.viewLifecycleOwner) {
+                                        it.let {
+                                            if (it.dishesDb.isNotEmpty())
+                                                reviewListAdapter.submitList(it.dishesDb)
+                                        }
+                                    }
+                            }
+                        }
+
+                    }
+            }
+        }
+
 
     }
 

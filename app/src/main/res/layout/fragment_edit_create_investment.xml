@@ -26,6 +26,7 @@
             android:background="@color/green_primary"/>
 
         <LinearLayout
+            android:id="@+id/layoutFieldInvestment"
             android:layout_width="match_parent"
             android:layout_height="240dp"
             android:orientation="vertical"

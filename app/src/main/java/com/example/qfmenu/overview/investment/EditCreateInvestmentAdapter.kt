@@ -9,14 +9,35 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qfmenu.R
+import com.example.qfmenu.database.dao.InvestmentDao
+import com.example.qfmenu.database.entity.CustomerDb
+import com.example.qfmenu.database.entity.InvestmentDb
 import com.example.qfmenu.viewmodels.models.Investment
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+
 
 class EditCreateInvestmentAdapter(
-    val context: Context,
-    val dataset: MutableList<Investment>
-) : RecyclerView.Adapter<EditCreateInvestmentAdapter.ItemViewHolder>() {
+    private val context: Context,
+    private val investmentDao: InvestmentDao
+) : ListAdapter<InvestmentDb,EditCreateInvestmentAdapter.ItemViewHolder>(DiffCallback) {
+
+    companion object {
+        private val DiffCallback = object : DiffUtil.ItemCallback<InvestmentDb>() {
+            override fun areItemsTheSame(oldItem: InvestmentDb, newItem: InvestmentDb): Boolean {
+                return oldItem === newItem
+            }
+
+            override fun areContentsTheSame(oldItem: InvestmentDb, newItem: InvestmentDb): Boolean {
+                return oldItem.investmentName == newItem.investmentName
+            }
+        }
+    }
+
     class ItemViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         private val itemsOfTitle = view.findViewById<LinearLayout>(R.id.itemsOfTitleInvestment) as ViewGroup
         private val relativeItemsOfTitle = itemsOfTitle.getChildAt(0) as ViewGroup
@@ -37,14 +58,10 @@ class EditCreateInvestmentAdapter(
         return ItemViewHolder(adapter)
     }
 
-    override fun getItemCount(): Int {
-        return dataset.size
-    }
-
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val item = dataset[holder.adapterPosition]
+        val item = currentList[holder.adapterPosition]
         holder.cost.text = item.cost.toString()
-        holder.titleItem.text = item.name
+        holder.titleItem.text = item.investmentName
 
         if (item.isDropdown) {
             holder.imgShowCosts.setImageResource(R.drawable.ic_expand_less)
@@ -54,12 +71,15 @@ class EditCreateInvestmentAdapter(
             holder.itemsOfCost.visibility = View.GONE
         }
         holder.btnShowCost.setOnClickListener {
-            dataset[holder.adapterPosition].isDropdown = !item.isDropdown
+            currentList[holder.adapterPosition].isDropdown = !item.isDropdown
             notifyItemChanged(holder.adapterPosition)
         }
         holder.btnTrash.setOnClickListener {
-            dataset.removeAt(holder.adapterPosition)
-            notifyItemRemoved(holder.adapterPosition)
+            GlobalScope.async {
+                investmentDao.delete(item)
+            }
+//            currentList.removeAt(holder.adapterPosition)
+//            notifyItemRemoved(holder.adapterPosition)
         }
     }
 }

@@ -9,8 +9,7 @@ import androidx.room.Relation
 @Entity
 data class ReviewDb (
     @PrimaryKey(autoGenerate = true)
-    val reviewId: Long,
-    val dishCreatorId: Long,
+    val reviewId: Long = 0,
     val isThumbUp: Int,
     val description: String,
 )

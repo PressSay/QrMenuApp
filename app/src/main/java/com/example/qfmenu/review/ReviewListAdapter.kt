@@ -8,15 +8,35 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.example.qfmenu.viewmodels.models.Dish
 import com.example.qfmenu.R
+import com.example.qfmenu.database.entity.CategoryDb
+import com.example.qfmenu.database.entity.DishDb
+import com.example.qfmenu.viewmodels.SaveStateViewModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 
 class ReviewListAdapter(
     private val context: Context,
-    private val dataset: List<Dish>
-) : RecyclerView.Adapter<ReviewListAdapter.ItemViewHolder>() {
+    private val saveStateViewModel: SaveStateViewModel
+) : ListAdapter<DishDb, ReviewListAdapter.ItemViewHolder>(DiffCallback) {
+
+    companion object {
+        private val DiffCallback = object : DiffUtil.ItemCallback<DishDb>() {
+            override fun areItemsTheSame(oldItem: DishDb, newItem: DishDb): Boolean {
+                return oldItem === newItem
+            }
+
+            override fun areContentsTheSame(oldItem: DishDb, newItem: DishDb): Boolean {
+                return oldItem.dishId == newItem.dishId
+            }
+        }
+    }
+
     class ItemViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val parentView = view.findViewById<LinearLayout>(R.id.itemConfirmOrderReview) as ViewGroup
         val imgView = parentView.getChildAt(0) as ImageView
@@ -30,22 +50,21 @@ class ReviewListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        val adapter = LayoutInflater.from(parent.context).inflate(R.layout.item_confirm_order_review, parent, false)
+        val adapter = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_confirm_order_review, parent, false)
         return ItemViewHolder(adapter)
     }
 
-    override fun getItemCount(): Int {
-        return dataset.size
-    }
-
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val item = dataset[position]
+        val item = currentList[position]
         holder.imgView.setImageResource(R.drawable.img_image_4)
-        holder.titleItem.text = item.title
+        holder.titleItem.text = item.dishName
         holder.cost.text = item.cost.toString()
         holder.amount.visibility = View.GONE
         holder.parentView.setOnClickListener {
-            holder.view.findNavController().navigate(R.id.action_reviewListFragment_to_reviewListDetailAdminFragment)
+            saveStateViewModel.setStateDish(currentList[position])
+            holder.view.findNavController()
+                .navigate(R.id.action_reviewListFragment_to_reviewListDetailAdminFragment)
         }
     }
 }

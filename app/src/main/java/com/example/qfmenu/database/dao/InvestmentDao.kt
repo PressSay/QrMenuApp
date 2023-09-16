@@ -1,5 +1,6 @@
 package com.example.qfmenu.database.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -12,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface InvestmentDao {
     @Query("SELECT * FROM InvestmentDb")
-    fun getInvestments(): Flow<List<InvestmentDb>>
+    fun getInvestments(): LiveData<List<InvestmentDb>>
 
     @Query("SELECT * FROM InvestmentDb WHERE investmentName = :investmentNameId")
     fun getInvestments(investmentNameId: String): Flow<InvestmentDb>

@@ -5,15 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
+import com.example.qfmenu.QrMenuApplication
 
 import com.example.qfmenu.viewmodels.models.Review
 import com.example.qfmenu.review.ReviewStoreOrDishAdapter
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.databinding.FragmentReviewStoreListBinding
+import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 // TODO: Rename parameter arguments, choose names that match
@@ -33,6 +36,7 @@ class ReviewStoreListFragment : Fragment() {
 
     private var _binding: FragmentReviewStoreListBinding? = null
     private val binding get() = _binding!!
+    private val saveStateViewModel: SaveStateViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,19 +90,26 @@ class ReviewStoreListFragment : Fragment() {
             if (it.itemId == R.id.optionOne) {
             }
             if (it.itemId == R.id.optionTwo) {
-                findNavController().navigate(R.id.action_reviewStoreListFragment_to_storeReivewCommentFragment)
+                findNavController().navigate(R.id.action_reviewStoreListFragment_to_storeReviewFragment)
             }
             true
         }
 
-        recyclerViewReviewStoreList.layoutManager = GridLayoutManager(requireContext(), spanCount)
-        recyclerViewReviewStoreList.adapter = ReviewStoreOrDishAdapter(
-            true, requireContext(), mutableListOf(
-                Review(true, "something thing IDK1", true),
-                Review(true, "something thing IDK2", true),
-                Review(true, "something thing IDK3", true),
-            )
+        val reviewDao = (activity?.application as QrMenuApplication).database.reviewDao()
+
+        val reviewStoreOrDishAdapter = ReviewStoreOrDishAdapter(
+        true, reviewDao, saveStateViewModel, requireContext()
         )
+
+
+        recyclerViewReviewStoreList.layoutManager = GridLayoutManager(requireContext(), spanCount)
+        recyclerViewReviewStoreList.adapter = reviewStoreOrDishAdapter
+
+        reviewDao.getReviewCustomerCrossRefs().observe(this.viewLifecycleOwner) {
+            it.let {
+                reviewStoreOrDishAdapter.submitList(it)
+            }
+        }
     }
 
     companion object {

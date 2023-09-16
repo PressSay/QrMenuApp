@@ -4,16 +4,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
+import com.example.qfmenu.QrMenuApplication
 
 import com.example.qfmenu.viewmodels.models.Review
 import com.example.qfmenu.review.ReviewStoreOrDishAdapter
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
+import com.example.qfmenu.database.entity.DishDb
 import com.example.qfmenu.databinding.FragmentReviewListDetailAdminBinding
+import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 // TODO: Rename parameter arguments, choose names that match
@@ -33,6 +39,7 @@ class ReviewListDetailAdminFragment : Fragment() {
 
     private var _binding: FragmentReviewListDetailAdminBinding? = null
     private val binding get() = _binding!!
+    private val saveStateViewModel: SaveStateViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,10 +52,31 @@ class ReviewListDetailAdminFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentReviewListDetailAdminBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    private fun setProDishDbReview(layout: ViewGroup, dishDb: DishDb) {
+        val linear1 = layout.getChildAt(0) as ViewGroup
+        val linear1_1 = linear1.getChildAt(0) as ViewGroup
+        val linear1_1_1 = linear1_1.getChildAt(1) as ViewGroup
+        val linear1_2 = linear1.getChildAt(1) as ViewGroup
+        val linear1_2_1 = linear1_2.getChildAt(0) as ViewGroup
+        val linear1_2_1_1 = linear1_2_1.getChildAt(0) as ViewGroup
+        val linear1_2_1_1_1 = linear1_2_1_1.getChildAt(0) as ViewGroup
+
+        val titleDish = linear1_2_1_1_1.getChildAt(0) as TextView
+        val img = linear1_1.getChildAt(0) as ImageView
+        val costDish = linear1_1_1.getChildAt(0) as TextView
+        val descriptionDish = linear1_2_1.getChildAt(1) as TextView
+
+        titleDish.text = dishDb.dishName
+        costDish.text = dishDb.cost.toString()
+        descriptionDish.text = dishDb.description
+
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -57,7 +85,11 @@ class ReviewListDetailAdminFragment : Fragment() {
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val width: Float = resources.displayMetrics.widthPixels / resources.displayMetrics.density
         val spanCount = if (width < SCREEN_LARGE) 1 else 2
-        val slidePaneLayout = requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
+        val slidePaneLayout =
+            requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
+
+        val layoutDishDbReview = binding.layoutDishDbReview.root
+        setProDishDbReview(layoutDishDbReview, saveStateViewModel.stateDishDb)
 
         val backMenu = navBar.menu.findItem(R.id.backToHome)
         val homeMenu = navBar.menu.findItem(R.id.homeMenu)
@@ -87,17 +119,30 @@ class ReviewListDetailAdminFragment : Fragment() {
             if (it.itemId == R.id.optionTwo) {
                 findNavController().navigate(R.id.action_reviewListDetailAdminFragment_to_dishReviewFragment)
             }
+
             true
         }
 
-        recyclerViewReviewListDetail.layoutManager = GridLayoutManager(requireContext(), spanCount)
-        recyclerViewReviewListDetail.adapter = ReviewStoreOrDishAdapter(
-            false, requireContext(), mutableListOf(
-                Review(true, "something thing IDK1", true),
-                Review(true, "something thing IDK2", true),
-                Review(true, "something thing IDK3", true),
-            )
+        val reviewDao = (activity?.application as QrMenuApplication).database.reviewDao()
+
+        val reviewStoreOrDishAdapter = ReviewStoreOrDishAdapter(
+            false,
+            reviewDao,
+            saveStateViewModel,
+            requireContext()
         )
+
+        recyclerViewReviewListDetail.layoutManager = GridLayoutManager(requireContext(), spanCount)
+
+        recyclerViewReviewListDetail.adapter = reviewStoreOrDishAdapter
+
+        reviewDao.getReviewsByDishId(saveStateViewModel.stateDishDb.dishId).observe(this.viewLifecycleOwner) {
+            it.apply {
+                reviewStoreOrDishAdapter.submitList(it)
+            }
+        }
+
+
     }
 
     companion object {

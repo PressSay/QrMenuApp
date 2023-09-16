@@ -12,13 +12,11 @@ import com.example.qfmenu.database.dao.DishDao
 import com.example.qfmenu.database.dao.InvestmentDao
 import com.example.qfmenu.database.dao.MenuDao
 import com.example.qfmenu.database.dao.OrderDao
-import com.example.qfmenu.database.dao.ReviewCustomerCrossRefDao
 import com.example.qfmenu.database.dao.ReviewDao
 import com.example.qfmenu.database.dao.RoleDao
 import com.example.qfmenu.database.dao.TableDao
 import com.example.qfmenu.database.entity.AccountDb
 import com.example.qfmenu.database.entity.CategoryDb
-import com.example.qfmenu.database.entity.CategoryMenuCrossRef
 import com.example.qfmenu.database.entity.CustomerDb
 import com.example.qfmenu.database.entity.CustomerDishCrossRef
 import com.example.qfmenu.database.entity.DishDb
@@ -35,7 +33,6 @@ import com.example.qfmenu.database.entity.TableDb
     entities = [
         AccountDb::class,
         CategoryDb::class,
-        CategoryMenuCrossRef::class,
         CustomerDb::class,
         CustomerDishCrossRef::class,
         DishDb::class,
@@ -47,7 +44,7 @@ import com.example.qfmenu.database.entity.TableDb
         RoleDb::class,
         TableDb::class
     ],
-    version = 1,
+    version = 4,
     exportSchema = true
 )
 abstract class MenuQrRoomDatabase : RoomDatabase() {
@@ -67,8 +64,6 @@ abstract class MenuQrRoomDatabase : RoomDatabase() {
     abstract fun menuDao(): MenuDao
 
     abstract fun orderDao(): OrderDao
-
-    abstract fun reviewCustomerCrossRefDao(): ReviewCustomerCrossRefDao
 
     abstract fun reviewDao(): ReviewDao
 

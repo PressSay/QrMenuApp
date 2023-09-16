@@ -1,6 +1,7 @@
 package com.example.qfmenu.viewmodels
 
 import androidx.lifecycle.ViewModel
+import com.example.qfmenu.database.entity.AccountDb
 import com.example.qfmenu.database.entity.CategoryDb
 import com.example.qfmenu.database.entity.CustomerDb
 import com.example.qfmenu.database.entity.CustomerDishCrossRef
@@ -11,11 +12,22 @@ import com.example.qfmenu.database.entity.TableDb
 class SaveStateViewModel : ViewModel() {
 
 
+    var stateTableDb: TableDb? = null
+    var stateReviewDb: Int = -1
+    var stateCalendar: String = String.format(
+        "%02d/%02d/%04d", java.util.Calendar.getInstance()
+            .get(java.util.Calendar.DATE), java.util.Calendar.getInstance()
+            .get(java.util.Calendar.MONTH), java.util.Calendar.getInstance()
+            .get(java.util.Calendar.YEAR)
+    )
+    var stateCustomerOrderQueue: CustomerOrderQueue? = null
 
     var stateIsOffOnOrder: Boolean = false
     var stateCategoryPositionMenu: Int = 0
     var stateIsTableUnClock: Boolean = true
     var stateIsStartOrder: Boolean = true
+    var stateAccountDb: AccountDb? = null
+
     private var _stateDishDb : DishDb? = null
     private var _stateCategoryDb : CategoryDb? = null
     private var _stateMenuDb: MenuDb? = null
@@ -78,7 +90,6 @@ class SaveStateViewModel : ViewModel() {
     }
 
 }
-
 
 
 data class CustomerOrderQueue (

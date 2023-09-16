@@ -1,5 +1,6 @@
 package com.example.qfmenu.database.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -23,7 +24,7 @@ interface AccountDao {
 
     @Transaction
     @Query("SELECT * FROM RoleDb WHERE roleNameId = :roleNameId")
-    suspend fun getAccountsWithNameRole(roleNameId: String): RoleWithAccounts
+    fun getAccountsWithNameRole(roleNameId: String): LiveData<RoleWithAccounts>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(accountDb: AccountDb)

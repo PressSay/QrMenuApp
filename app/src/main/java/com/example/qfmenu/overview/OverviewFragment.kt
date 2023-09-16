@@ -1,22 +1,30 @@
 package com.example.qfmenu.overview
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.databinding.FragmentOverviewBinding
+import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.Calendar
+import java.util.regex.Pattern
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -35,6 +43,7 @@ class OverviewFragment : Fragment() {
     private var param2: String? = null
 
     private var _binding: FragmentOverviewBinding? = null
+    private val saveStateViewModel: SaveStateViewModel by activityViewModels()
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +57,7 @@ class OverviewFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentOverviewBinding.inflate(inflater, container, false)
         return binding.root
@@ -59,7 +68,8 @@ class OverviewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val width: Float = resources.displayMetrics.widthPixels / resources.displayMetrics.density
-        val slidePaneLayout = requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
+        val slidePaneLayout =
+            requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
 
         val backMenu = navBar.menu.findItem(R.id.backToHome)
         val homeMenu = navBar.menu.findItem(R.id.homeMenu)
@@ -85,8 +95,6 @@ class OverviewFragment : Fragment() {
             true
         }
 
-
-        val spinnerOverView = binding.spinnerOverView
         val editTextChooseDate = binding.editTextChooseDateOverview
 
         val buttonsOverView = binding.buttonsOverview
@@ -110,29 +118,34 @@ class OverviewFragment : Fragment() {
         val oneDayAgo = Calendar.getInstance()
         oneDayAgo.add(Calendar.DAY_OF_YEAR, -1)
 
-        val arrayDayOfWeek = arrayOf<String>(
-            sevenDayAgo.time.toString().trim(),
-            threeDayAgo.time.toString().trim(),
-            oneDayAgo.time.toString().trim()
-        )
-
-        val ad = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            arrayDayOfWeek
-        )
-
-        ad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerOverView.adapter = ad
-
 
         btnOverViewList.setOnClickListener {
-            findNavController().navigate(R.id.action_overviewFragment_to_overviewListFragment)
+            findNavController().navigate(R.id.action_overviewFragment_to_billListFragment)
         }
         btnInvestment.setOnClickListener {
             findNavController().navigate(R.id.action_overviewFragment_to_editCreateInvestmentFragment)
         }
         btnChooseDate.setOnClickListener {
+            if (editTextChooseDate.text.isBlank() || !Pattern.matches(
+                    "(^(((0[1-9]|1[0-9]|2[0-8])/(0[1-9]|1[012]))|((29|30|31)/(0[13578]|1[02]))|((29|30)/(0[4,6,9]|11)))/(19|[2-9][0-9])\\d\\d\$)|(^29/02/(19|[2-9][0-9])(00|04|08|12|16|20|24|28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96)\$)",
+                    editTextChooseDate.text.toString()
+                )
+            ) {
+                AlertDialog.Builder(context)
+                    .setTitle("Add Bill")
+                    .setMessage("Your selection is blank!!")
+                    .setPositiveButton(android.R.string.ok,
+                        DialogInterface.OnClickListener { _, _ ->
+                        }).show()
+            } else {
+                saveStateViewModel.stateCalendar = editTextChooseDate.text.toString()
+                AlertDialog.Builder(context)
+                    .setTitle("Add Bill")
+                    .setMessage("Your selection has been saved " + saveStateViewModel.stateCalendar)
+                    .setPositiveButton(android.R.string.ok,
+                        DialogInterface.OnClickListener { _, _ ->
+                        }).show()
+            }
 
         }
 

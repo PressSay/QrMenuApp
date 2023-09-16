@@ -39,6 +39,7 @@
                         android:textStyle="bold"/>
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/nameAccount"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
@@ -62,6 +63,7 @@
                         android:textStyle="bold"/>
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/phoneAccount"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
@@ -85,6 +87,7 @@
                         android:textStyle="bold"/>
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/emailAccount"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
@@ -108,6 +111,31 @@
                         android:textStyle="bold"/>
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/addressAccount"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_rounded_border"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Password"
+                        android:textSize="14sp"
+                        android:textStyle="bold"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/passwordAccount"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
@@ -131,6 +159,7 @@
                         android:textStyle="bold"/>
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/roleAccount"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
@@ -142,7 +171,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:id="@+id/layoutUploadAccount">
 
                     <ImageView
                         android:layout_width="94dp"

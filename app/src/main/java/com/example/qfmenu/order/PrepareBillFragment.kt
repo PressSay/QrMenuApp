@@ -12,18 +12,13 @@ import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
-import com.example.qfmenu.database.dao.CustomerDishCrossRefDao
-import com.example.qfmenu.database.dao.OrderDao
-import com.example.qfmenu.database.dao.ReviewCustomerCrossRefDao
-import com.example.qfmenu.database.dao.ReviewDao
-import com.example.qfmenu.database.entity.CustomerDb
 import com.example.qfmenu.database.entity.OrderDb
 import com.example.qfmenu.databinding.FragmentPrepareBillBinding
 import com.example.qfmenu.viewmodels.CustomerViewModel
 import com.example.qfmenu.viewmodels.CustomerViewModelFactory
-import com.example.qfmenu.viewmodels.DishAmountDb
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -57,28 +52,28 @@ class PrepareBillFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentPrepareBillBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    private val saveStateViewModel : SaveStateViewModel by activityViewModels()
-    private val customerViewModel : CustomerViewModel by viewModels {
+    private val saveStateViewModel: SaveStateViewModel by activityViewModels()
+    private val customerViewModel: CustomerViewModel by viewModels {
         CustomerViewModelFactory(
             (activity?.application as QrMenuApplication).database.customerDao(),
             (activity?.application as QrMenuApplication).database.customerDishCrossRefDao(),
             (activity?.application as QrMenuApplication).database.reviewDao(),
-            (activity?.application as QrMenuApplication).database.reviewCustomerCrossRefDao(),
-                (activity?.application as QrMenuApplication).database.orderDao(),
+            (activity?.application as QrMenuApplication).database.orderDao(),
             saveStateViewModel.stateDishes
         )
     }
-    private val isOrderList: Boolean = false
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val slidingPaneLayout = requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
+        val slidingPaneLayout =
+            requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val width = resources.displayMetrics.widthPixels / resources.displayMetrics.density
 

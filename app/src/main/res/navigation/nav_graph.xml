@@ -117,15 +117,6 @@
         android:label="fragment_export_bill"
         tools:layout="@layout/fragment_export_bill" />
     <fragment
-        android:id="@+id/overviewListFragment"
-        android:name="com.example.qfmenu.overview.list.OverviewListFragment"
-        android:label="fragment_overview_list"
-        tools:layout="@layout/fragment_overview_list">
-        <action
-            android:id="@+id/action_overviewListFragment_to_billListFragment"
-            app:destination="@id/billListFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/editCreateMenuFragment"
         android:name="com.example.qfmenu.menu.config.EditCreateMenuFragment"
         android:label="fragment_edit_create_menu"
@@ -156,7 +147,7 @@
         tools:layout="@layout/fragment_edit_create_detail_dish"/>
     <fragment
         android:id="@+id/billListFragment"
-        android:name="com.example.qfmenu.overview.list.bill.BillListFragment"
+        android:name="com.example.qfmenu.overview.bill.BillListFragment"
         android:label="fragment_bill_list"
         tools:layout="@layout/fragment_bill_list">
         <action
@@ -196,11 +187,11 @@
         android:label="fragment_overview"
         tools:layout="@layout/fragment_overview">
         <action
-            android:id="@+id/action_overviewFragment_to_overviewListFragment"
-            app:destination="@id/overviewListFragment" />
-        <action
             android:id="@+id/action_overviewFragment_to_editCreateInvestmentFragment"
             app:destination="@id/editCreateInvestmentFragment" />
+        <action
+            android:id="@+id/action_overviewFragment_to_billListFragment"
+            app:destination="@id/billListFragment" />
     </fragment>
     <fragment
         android:id="@+id/dishReviewFragment"
@@ -218,7 +209,7 @@
     </fragment>
     <fragment
         android:id="@+id/billListCodeFragment"
-        android:name="com.example.qfmenu.overview.list.bill.code.BillListCodeFragment"
+        android:name="com.example.qfmenu.overview.bill.code.BillListCodeFragment"
         android:label="fragment_bill_list_code"
         tools:layout="@layout/fragment_bill_list_code"/>
     <fragment
@@ -236,12 +227,12 @@
         android:label="fragment_review_store_list"
         tools:layout="@layout/fragment_review_store_list">
         <action
-            android:id="@+id/action_reviewStoreListFragment_to_storeReivewCommentFragment"
-            app:destination="@id/storeReivewCommentFragment" />
+            android:id="@+id/action_reviewStoreListFragment_to_storeReviewFragment"
+            app:destination="@id/storeReviewFragment" />
     </fragment>
     <fragment
         android:id="@+id/billListDetailFragment"
-        android:name="com.example.qfmenu.overview.list.bill.detail.BillListDetailFragment"
+        android:name="com.example.qfmenu.overview.bill.detail.BillListDetailFragment"
         android:label="fragment_bill_list_detail"
         tools:layout="@layout/fragment_bill_list_detail">
         <action
@@ -271,5 +262,14 @@
         <action
             android:id="@+id/action_editCreateDishFragment_to_editCreateDetailDishFragment"
             app:destination="@id/editCreateDetailDishFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/storeReviewFragment"
+        android:name="com.example.qfmenu.review.store.StoreReviewFragment"
+        android:label="fragment_store_review"
+        tools:layout="@layout/fragment_store_review" >
+        <action
+            android:id="@+id/action_storeReviewFragment_to_storeReivewCommentFragment"
+            app:destination="@id/storeReivewCommentFragment" />
     </fragment>
 </navigation>

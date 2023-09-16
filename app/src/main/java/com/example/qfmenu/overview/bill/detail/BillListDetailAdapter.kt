@@ -1,4 +1,4 @@
-package com.example.qfmenu.overview.list.bill.detail
+package com.example.qfmenu.overview.bill.detail
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,12 +8,12 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.qfmenu.viewmodels.models.Dish
 import com.example.qfmenu.R
+import com.example.qfmenu.viewmodels.DishAmountDb
 
 class BillListDetailAdapter(
     private val context: Context,
-    private val dataset: List<Dish>
+    private val dataset: List<DishAmountDb>
 ) : RecyclerView.Adapter<BillListDetailAdapter.ItemViewHolder>() {
     class ItemViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         private val parentView = view.findViewById<LinearLayout>(R.id.itemConfirmOrderReview) as ViewGroup
@@ -39,12 +39,12 @@ class BillListDetailAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = dataset[position]
         holder.imgView.setImageResource(R.drawable.img_image_4)
-        holder.titleItem.text = item.title
-        holder.cost.text = item.cost.toString()
+        holder.titleItem.text = item.dishDb.dishName
+        holder.cost.text = item.dishDb.cost.toString()
         holder.amount.text = item.amount.toString()
-        if (!item.isReview) {
-            holder.starImg.visibility = View.GONE
-        }
+//        if (!item.isReview) {
+//            holder.starImg.visibility = View.GONE
+//        }
     }
 
 }

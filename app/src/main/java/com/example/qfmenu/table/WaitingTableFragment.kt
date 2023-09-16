@@ -46,7 +46,6 @@ class WaitingTableFragment : Fragment() {
             (activity?.application as QrMenuApplication).database.customerDao(),
             (activity?.application as QrMenuApplication).database.customerDishCrossRefDao(),
             (activity?.application as QrMenuApplication).database.reviewDao(),
-            (activity?.application as QrMenuApplication).database.reviewCustomerCrossRefDao(),
             (activity?.application as QrMenuApplication).database.orderDao(),
             saveStateViewModel.stateDishes
         )
@@ -120,10 +119,6 @@ class WaitingTableFragment : Fragment() {
         val gridLayoutManager = GridLayoutManager(requireContext(), spanCount)
         recyclerView.layoutManager = gridLayoutManager
         recyclerView.adapter = WaitingTableAdapter(
-            listOf(
-                TableDb(1, "Free"),
-                TableDb(2, "Free"),
-            ),
             customerViewModel,
             saveStateViewModel,
             requireContext()

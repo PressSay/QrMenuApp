@@ -1,21 +1,23 @@
-package com.example.qfmenu.overview.list.bill
+package com.example.qfmenu.overview.bill.detail
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
-import com.example.qfmenu.viewmodels.models.Dish
-import com.example.qfmenu.viewmodels.models.Customer
-import com.example.qfmenu.viewmodels.models.Table
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
-import com.example.qfmenu.databinding.FragmentBillListBinding
+import com.example.qfmenu.databinding.FragmentBillListDetailBinding
+import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.util.Date
+import kotlinx.coroutines.DelicateCoroutinesApi
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,16 +26,18 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [BillListFragment.newInstance] factory method to
+ * Use the [BillListDetailFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class BillListFragment : Fragment() {
+class BillListDetailFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
-    private var _binding: FragmentBillListBinding? = null
+    private var _binding: FragmentBillListDetailBinding? = null
     private val binding get() = _binding!!
+
+    private val saveStateViewModel: SaveStateViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,18 +52,34 @@ class BillListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentBillListBinding.inflate(inflater, container, false)
+        _binding = FragmentBillListDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
-        val width: Float = resources.displayMetrics.widthPixels / resources.displayMetrics.density
-        val recyclerView = binding.recyclerViewBillList
-        val spanCount = if (width < SCREEN_LARGE) 1 else 2
+        val width: Float =
+            resources.displayMetrics.widthPixels / resources.displayMetrics.density
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
+
+        val spanCount = if (width < SCREEN_LARGE) 1 else 2
+        val buttonsBillListDetail = binding.buttonsBillListDetail as ViewGroup
+        val descriptionBillListDetail = binding.descriptionBillListDetail as ViewGroup
+
+        val btnBillListDetail = buttonsBillListDetail.getChildAt(0) as AppCompatImageButton
+        val imgBtnBillListDetail = buttonsBillListDetail.getChildAt(1) as ImageView
+
+        val discount = descriptionBillListDetail.getChildAt(0) as TextView
+        val tax = descriptionBillListDetail.getChildAt(1) as TextView
+        val total = descriptionBillListDetail.getChildAt(2) as TextView
+
+        btnBillListDetail.setOnClickListener {
+            findNavController().navigate(R.id.action_billListDetailFragment_to_billListCodeFragment)
+        }
 
         val backMenu = navBar.menu.findItem(R.id.backToHome)
         val homeMenu = navBar.menu.findItem(R.id.homeMenu)
@@ -84,44 +104,22 @@ class BillListFragment : Fragment() {
                 navBar.visibility = View.GONE
             }
             if (it.itemId == R.id.optionTwo) {
+
             }
             true
         }
+        val recyclerView = binding.recyclerViewBillListDetail
 
         recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
-        recyclerView.adapter = BillListAdapter(
+
+        val billAdapter = BillListDetailAdapter(
             requireContext(),
-            mutableListOf<Customer>(
-                Customer(
-                    1,
-                    Table("Online", "None"),
-                    Date(2022, 12, 1),
-                    listOf(
-                        Dish(R.drawable.img_image_4, "title1", "something", 18000, 1),
-                        Dish(R.drawable.img_image_4, "title2", "something", 18000, 1)
-                    ),
-                    "joaisjdof",
-                    "jaoisdjf",
-                    "now",
-                    "0123456789",
-                    "address 1",
-                ),
-                Customer(
-                    2,
-                    Table("Online", "None"),
-                    Date(2022, 12, 1),
-                    listOf(
-                        Dish(R.drawable.img_image_4, "title1", "something", 18000, 1),
-                        Dish(R.drawable.img_image_4, "title2", "something", 18000, 1)
-                    ),
-                    "joaisjdof",
-                    "jaoisdjf",
-                    "now",
-                    "0123456789",
-                    "address 1",
-                )
-            )
+            saveStateViewModel.stateCustomerOrderQueue?.dishesAmountDb ?: listOf()
         )
+
+        recyclerView.adapter = billAdapter
+
+
     }
 
     companion object {
@@ -131,12 +129,12 @@ class BillListFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment BillListFragment.
+         * @return A new instance of fragment BillListDetailFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            BillListFragment().apply {
+            BillListDetailFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

@@ -44,7 +44,6 @@ class OrderListUnconfirmedFragment : Fragment() {
             (activity?.application as QrMenuApplication).database.customerDao(),
             (activity?.application as QrMenuApplication).database.customerDishCrossRefDao(),
             (activity?.application as QrMenuApplication).database.reviewDao(),
-            (activity?.application as QrMenuApplication).database.reviewCustomerCrossRefDao(),
             (activity?.application as QrMenuApplication).database.orderDao(),
             saveStateViewModel.stateDishes
         )
