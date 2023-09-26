@@ -1,16 +1,17 @@
 package com.example.qfmenu
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil.setContentView
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.qfmenu.databinding.ActivityMainBinding
 import com.example.qfmenu.viewmodels.SaveStateViewModel
+
 
 val SCREEN_LARGE get() = 850
 

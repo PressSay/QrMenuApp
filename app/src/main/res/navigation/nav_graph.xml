@@ -6,7 +6,7 @@
     app:startDestination="@id/dishMenuFragment">
     <fragment
         android:id="@+id/dishMenuFragment"
-        android:name="com.example.qfmenu.menu.dish.DishMenuFragment"
+        android:name="com.example.qfmenu.ui.menu.dish.DishMenuFragment"
         android:label="fragment_dish_menu"
         tools:layout="@layout/fragment_dish_menu">
         <action
@@ -18,7 +18,7 @@
     </fragment>
     <fragment
         android:id="@+id/qrOldFragment"
-        android:name="com.example.qfmenu.qr.QrOldFragment"
+        android:name="com.example.qfmenu.ui.qr.QrOldFragment"
         android:label="QrOldFragment"
         tools:layout="@layout/fragment_qr_old">
         <action
@@ -27,17 +27,17 @@
     </fragment>
     <fragment
         android:id="@+id/categoryFragment"
-        android:name="com.example.qfmenu.menu.category.CategoryFragment"
+        android:name="com.example.qfmenu.ui.menu.category.CategoryFragment"
         android:label="fragment_category"
         tools:layout="@layout/fragment_category" />
     <fragment
         android:id="@+id/uploadImageQrFragment"
-        android:name="com.example.qfmenu.qr.upload.UploadImageQrFragment"
+        android:name="com.example.qfmenu.ui.qr.upload.UploadImageQrFragment"
         android:label="UploadImageQrFragment"
         tools:layout="@layout/fragment_upload_image_qr" />
     <fragment
         android:id="@+id/editWaitingTableFragment"
-        android:name="com.example.qfmenu.table.config.EditWaitingTableFragment"
+        android:name="com.example.qfmenu.ui.table.config.EditWaitingTableFragment"
         android:label="fragment_edit_watting_table"
         tools:layout="@layout/fragment_edit_waiting_table">
         <action
@@ -46,7 +46,7 @@
     </fragment>
     <fragment
         android:id="@+id/waitingTableFragment"
-        android:name="com.example.qfmenu.table.WaitingTableFragment"
+        android:name="com.example.qfmenu.ui.table.WaitingTableFragment"
         android:label="fragment_waiting_table"
         tools:layout="@layout/fragment_waiting_table">
         <action
@@ -56,7 +56,7 @@
 
     <fragment
         android:id="@+id/editConfirmDishFragment"
-        android:name="com.example.qfmenu.menu.dish.confirm.EditConfirmDishFragment"
+        android:name="com.example.qfmenu.ui.menu.dish.confirm.EditConfirmDishFragment"
         android:label="fragment_edit_confirm_dish"
         tools:layout="@layout/fragment_edit_confirm_dish" >
         <action
@@ -74,7 +74,7 @@
     </fragment>
     <fragment
         android:id="@+id/editOnlineOrderFragment"
-        android:name="com.example.qfmenu.order.online.EditOnlineOrderFragment"
+        android:name="com.example.qfmenu.ui.order.online.EditOnlineOrderFragment"
         android:label="fragment_edit_online_order"
         tools:layout="@layout/fragment_edit_online_order">
         <action
@@ -83,7 +83,7 @@
     </fragment>
     <fragment
         android:id="@+id/orderListUnconfirmedFragment"
-        android:name="com.example.qfmenu.order.offline.OrderListUnconfirmedFragment"
+        android:name="com.example.qfmenu.ui.order.offline.OrderListUnconfirmedFragment"
         android:label="fragment_order_list_unconfirmed"
         tools:layout="@layout/fragment_order_list_unconfirmed">
         <action
@@ -95,7 +95,7 @@
     </fragment>
     <fragment
         android:id="@+id/orderQueueFragment"
-        android:name="com.example.qfmenu.order.offline.queue.OrderQueueFragment"
+        android:name="com.example.qfmenu.ui.order.offline.queue.OrderQueueFragment"
         android:label="fragment_order_queue"
         tools:layout="@layout/fragment_order_queue">
         <action
@@ -104,7 +104,7 @@
     </fragment>
     <fragment
         android:id="@+id/prepareBillFragment"
-        android:name="com.example.qfmenu.order.PrepareBillFragment"
+        android:name="com.example.qfmenu.ui.order.PrepareBillFragment"
         android:label="fragment_prepare_bill"
         tools:layout="@layout/fragment_prepare_bill">
         <action
@@ -113,12 +113,12 @@
     </fragment>
     <fragment
         android:id="@+id/exportBillFragment"
-        android:name="com.example.qfmenu.shop.export.ExportBillFragment"
+        android:name="com.example.qfmenu.ui.shop.export.ExportBillFragment"
         android:label="fragment_export_bill"
         tools:layout="@layout/fragment_export_bill" />
     <fragment
         android:id="@+id/editCreateMenuFragment"
-        android:name="com.example.qfmenu.menu.config.EditCreateMenuFragment"
+        android:name="com.example.qfmenu.ui.menu.config.EditCreateMenuFragment"
         android:label="fragment_edit_create_menu"
         tools:layout="@layout/fragment_edit_create_menu">
         <action
@@ -127,27 +127,27 @@
     </fragment>
     <fragment
         android:id="@+id/storeReivewCommentFragment"
-        android:name="com.example.qfmenu.review.store.comment.StoreReviewCommentFragment"
+        android:name="com.example.qfmenu.ui.review.store.comment.StoreReviewCommentFragment"
         android:label="fragment_store_reivew_comment"
         tools:layout="@layout/fragment_store_review_comment"/>
     <fragment
         android:id="@+id/editCreateInvestmentFragment"
-        android:name="com.example.qfmenu.overview.investment.EditCreateInvestmentFragment"
+        android:name="com.example.qfmenu.ui.overview.investment.EditCreateInvestmentFragment"
         android:label="EditCreateInvestmentFragment"
         tools:layout="@layout/fragment_edit_create_investment"/>
     <fragment
         android:id="@+id/memberEditProfileFragment"
-        android:name="com.example.qfmenu.member.profile.MemberEditProfileFragment"
+        android:name="com.example.qfmenu.ui.member.profile.MemberEditProfileFragment"
         android:label="fragment_member_edit_profile"
         tools:layout="@layout/fragment_member_edit_profile"/>
     <fragment
         android:id="@+id/editCreateDetailDishFragment"
-        android:name="com.example.qfmenu.menu.dish.config.detail.EditCreateDetailDishFragment"
+        android:name="com.example.qfmenu.ui.menu.dish.config.detail.EditCreateDetailDishFragment"
         android:label="fragment_edit_create_detail_dish"
         tools:layout="@layout/fragment_edit_create_detail_dish"/>
     <fragment
         android:id="@+id/billListFragment"
-        android:name="com.example.qfmenu.overview.bill.BillListFragment"
+        android:name="com.example.qfmenu.ui.overview.bill.BillListFragment"
         android:label="fragment_bill_list"
         tools:layout="@layout/fragment_bill_list">
         <action
@@ -156,7 +156,7 @@
     </fragment>
     <fragment
         android:id="@+id/editCreateCategoryFragment3"
-        android:name="com.example.qfmenu.menu.category.config.EditCreateCategoryFragment"
+        android:name="com.example.qfmenu.ui.menu.category.config.EditCreateCategoryFragment"
         android:label="fragment_edit_create_category"
         tools:layout="@layout/fragment_edit_create_category">
         <action
@@ -165,7 +165,7 @@
     </fragment>
     <fragment
         android:id="@+id/configShopFragment"
-        android:name="com.example.qfmenu.shop.ConfigShopFragment"
+        android:name="com.example.qfmenu.ui.shop.ConfigShopFragment"
         android:label="fragment_config_shop"
         tools:layout="@layout/fragment_config_shop">
         <action
@@ -183,7 +183,7 @@
     </fragment>
     <fragment
         android:id="@+id/overviewFragment"
-        android:name="com.example.qfmenu.overview.OverviewFragment"
+        android:name="com.example.qfmenu.ui.overview.OverviewFragment"
         android:label="fragment_overview"
         tools:layout="@layout/fragment_overview">
         <action
@@ -195,12 +195,12 @@
     </fragment>
     <fragment
         android:id="@+id/dishReviewFragment"
-        android:name="com.example.qfmenu.review.dish.list.DishReviewFragment"
+        android:name="com.example.qfmenu.ui.review.dish.list.DishReviewFragment"
         android:label="fragment_dish_review"
         tools:layout="@layout/fragment_dish_review"/>
     <fragment
         android:id="@+id/memberManagerFragment"
-        android:name="com.example.qfmenu.member.MemberManagerFragment"
+        android:name="com.example.qfmenu.ui.member.MemberManagerFragment"
         android:label="fragment_member_manager"
         tools:layout="@layout/fragment_member_manager">
         <action
@@ -209,12 +209,12 @@
     </fragment>
     <fragment
         android:id="@+id/billListCodeFragment"
-        android:name="com.example.qfmenu.overview.bill.code.BillListCodeFragment"
+        android:name="com.example.qfmenu.ui.overview.bill.code.BillListCodeFragment"
         android:label="fragment_bill_list_code"
         tools:layout="@layout/fragment_bill_list_code"/>
     <fragment
         android:id="@+id/reviewListDetailAdminFragment"
-        android:name="com.example.qfmenu.review.dish.list.admin.ReviewListDetailAdminFragment"
+        android:name="com.example.qfmenu.ui.review.dish.list.admin.ReviewListDetailAdminFragment"
         android:label="fragment_review_list_detail_admin"
         tools:layout="@layout/fragment_review_list_detail_admin">
         <action
@@ -223,7 +223,7 @@
     </fragment>
     <fragment
         android:id="@+id/reviewStoreListFragment"
-        android:name="com.example.qfmenu.review.store.list.ReviewStoreListFragment"
+        android:name="com.example.qfmenu.ui.review.store.list.ReviewStoreListFragment"
         android:label="fragment_review_store_list"
         tools:layout="@layout/fragment_review_store_list">
         <action
@@ -232,7 +232,7 @@
     </fragment>
     <fragment
         android:id="@+id/billListDetailFragment"
-        android:name="com.example.qfmenu.overview.bill.detail.BillListDetailFragment"
+        android:name="com.example.qfmenu.ui.overview.bill.detail.BillListDetailFragment"
         android:label="fragment_bill_list_detail"
         tools:layout="@layout/fragment_bill_list_detail">
         <action
@@ -241,7 +241,7 @@
     </fragment>
     <fragment
         android:id="@+id/reviewListFragment"
-        android:name="com.example.qfmenu.review.ReviewListFragment"
+        android:name="com.example.qfmenu.ui.review.ReviewListFragment"
         android:label="fragment_review_list"
         tools:layout="@layout/fragment_review_list">
         <action
@@ -256,7 +256,7 @@
     </fragment>
     <fragment
         android:id="@+id/editCreateDishFragment3"
-        android:name="com.example.qfmenu.menu.dish.config.EditCreateDishFragment"
+        android:name="com.example.qfmenu.ui.menu.dish.config.EditCreateDishFragment"
         android:label="fragment_edit_create_dish"
         tools:layout="@layout/fragment_edit_create_dish">
         <action
@@ -265,7 +265,7 @@
     </fragment>
     <fragment
         android:id="@+id/storeReviewFragment"
-        android:name="com.example.qfmenu.review.store.StoreReviewFragment"
+        android:name="com.example.qfmenu.ui.review.store.StoreReviewFragment"
         android:label="fragment_store_review"
         tools:layout="@layout/fragment_store_review" >
         <action
