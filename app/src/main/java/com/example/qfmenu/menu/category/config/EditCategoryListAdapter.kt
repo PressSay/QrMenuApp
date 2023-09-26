@@ -41,7 +41,7 @@ class EditCategoryListAdapter(
 
         holder.titleDishOrCategory.text = item.categoryName
         holder.btnTrash.setOnClickListener {
-            categoryViewModel.deleteCategory(item)
+            categoryViewModel.deleteCategoryWithDishes(item)
         }
     }
 

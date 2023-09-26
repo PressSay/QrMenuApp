@@ -1,6 +1,8 @@
 package com.example.qfmenu.menu.dish
 
 import android.content.Context
+import android.graphics.BitmapFactory
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +12,16 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.qfmenu.viewmodels.DishAmountDb
-import com.example.qfmenu.viewmodels.DishViewModel
 import com.example.qfmenu.R
-import com.example.qfmenu.database.entity.CategoryDb
+import com.example.qfmenu.viewmodels.DishAmountDb
 import com.example.qfmenu.viewmodels.SaveStateViewModel
+import com.squareup.picasso.Picasso
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.net.HttpURLConnection
+import java.net.URL
 
 class DishMenuAdapter(
     private val context: Context,
@@ -72,7 +79,8 @@ class DishMenuAdapter(
             }
         }
 
-        holder.img.setImageResource(R.drawable.img_image_6)
+//        holder.img.setImageResource(R.drawable.img_image_6)
+        Picasso.get().load("http://192.168.1.6/image-dish/0e61f2dc00aa125284584df1a2c01f13.jpg").resize(50, 50).centerCrop().into(holder.img)
         holder.title.text = item.dishDb.dishName
         holder.cost.text = item.dishDb.cost.toString()
         holder.amount.text = item.amount.toString()

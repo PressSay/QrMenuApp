@@ -1,5 +1,6 @@
 package com.example.qfmenu.database.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -18,7 +19,10 @@ interface TableDao {
     fun getTableWithOrders(tableId: Int): Flow<TableWithOrders>
 
     @Query("SELECT * FROM TableDb")
-    fun getTables(): Flow<List<TableDb>>
+    suspend fun getTables(): List<TableDb>
+
+    @Query("SELECT * FROM TableDb")
+    fun getTablesLiveData(): LiveData<List<TableDb>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(tableDb: TableDb)

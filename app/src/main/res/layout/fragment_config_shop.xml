@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".shop.ConfigShopFragment">
 
     <LinearLayout
@@ -25,87 +25,99 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:orientation="horizontal"
-                    android:layout_marginEnd="16dp"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="16dp"
                     android:layout_marginBottom="4dp"
-                    android:layout_marginTop="4dp">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="86dp"
                         android:layout_height="wrap_content"
                         android:text="Shop name:"
                         android:textSize="12sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/shopName"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/shape_rounded_border"/>
+                        android:background="@drawable/shape_rounded_border" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:orientation="horizontal"
-                    android:layout_marginEnd="16dp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginBottom="4dp">
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="4dp"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="86dp"
                         android:layout_height="wrap_content"
                         android:text="Address Shop: "
                         android:textSize="12sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/shopAddress"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/shape_rounded_border"/>
+                        android:background="@drawable/shape_rounded_border" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:orientation="horizontal"
-                    android:layout_marginEnd="16dp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginBottom="4dp">
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="4dp"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="86dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
                         android:text="Enable Review: "
                         android:textSize="12sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <Spinner
+                        android:id="@+id/enShopReview"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@drawable/shape_rounded_border"/>
+
+<!--                    <com.google.android.material.textfield.TextInputEditText-->
+<!--                        android:id="@+id/enShopReview"-->
+<!--                        android:inputType="number"-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:background="@drawable/shape_rounded_border" />-->
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:orientation="horizontal"
-                    android:layout_marginEnd="16dp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginBottom="4dp">
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="4dp"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="86dp"
                         android:layout_height="wrap_content"
                         android:text="Number Table: "
                         android:textSize="12sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/numberOfTableTextField"
@@ -115,181 +127,58 @@
                         android:background="@drawable/shape_rounded_border" />
 
                     <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/btnSaveNumberOfTable"
                         android:layout_width="50dp"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_save"
-                        android:id="@+id/btnSaveNumberOfTable" />
+                        android:src="@drawable/ic_save" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:orientation="horizontal"
-                    android:layout_marginEnd="16dp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginBottom="4dp">
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="4dp"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="86dp"
                         android:layout_height="wrap_content"
                         android:text="Promotion VIP: "
                         android:textSize="12sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/promotionVipShop"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/shape_rounded_border"/>
+                        android:background="@drawable/shape_rounded_border" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:orientation="horizontal"
-                    android:layout_marginEnd="16dp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginBottom="4dp">
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="4dp"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="86dp"
                         android:layout_height="wrap_content"
                         android:text="Promotion Bill: "
                         android:textSize="12sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/promotionBill"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/shape_rounded_border"/>
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="350dp"
-                    android:background="@drawable/shop_config"
-                    android:orientation="vertical"
-                    android:gravity="center">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="130dp"
-                        android:orientation="horizontal"
-                        android:gravity="center"
-                        android:layout_marginBottom="20dp"
-                        android:layout_marginTop="30dp">
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:gravity="center"
-                            android:layout_marginRight="38dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Menu ?"
-                                android:textStyle="bold"
-                                android:textSize="14sp"
-                                android:layout_marginBottom="2dp"/>
-
-                            <androidx.appcompat.widget.AppCompatImageButton
-                                android:id="@+id/btnMenuConfigShop"
-                                android:layout_width="110dp"
-                                android:layout_height="110dp"
-                                android:src="@drawable/ic_menu"
-                                android:contentDescription="@string/for_test"/>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:gravity="center">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Review"
-                                android:textStyle="bold"
-                                android:textSize="14sp"
-                                android:layout_marginBottom="2dp"/>
-
-                            <androidx.appcompat.widget.AppCompatImageButton
-                                android:id="@+id/btnReviewConfigShop"
-                                android:layout_width="110dp"
-                                android:layout_height="110dp"
-                                android:src="@drawable/ic_reviews"
-                                android:contentDescription="@string/for_test"/>
-
-                        </LinearLayout>
-
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="130dp"
-                        android:orientation="horizontal"
-                        android:gravity="center"
-                        android:layout_marginBottom="30dp">
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:gravity="center"
-                            android:layout_marginRight="38dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Overview ?"
-                                android:textStyle="bold"
-                                android:textSize="14sp"
-                                android:layout_marginBottom="2dp"/>
-
-                            <androidx.appcompat.widget.AppCompatImageButton
-                                android:id="@+id/btnOverviewConfigShop"
-                                android:layout_width="110dp"
-                                android:layout_height="110dp"
-                                android:src="@drawable/ic_overview"
-                                android:contentDescription="@string/for_test"/>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:gravity="center">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Staff"
-                                android:textStyle="bold"
-                                android:textSize="14sp"
-                                android:layout_marginBottom="2dp"/>
-
-                            <androidx.appcompat.widget.AppCompatImageButton
-                                android:id="@+id/btnStaffConfigShop"
-                                android:layout_width="110dp"
-                                android:layout_height="110dp"
-                                android:src="@drawable/ic_staff"
-                                android:contentDescription="@string/for_test"/>
-
-                        </LinearLayout>
-
-
-                    </LinearLayout>
+                        android:background="@drawable/shape_rounded_border" />
 
                 </LinearLayout>
 
@@ -297,11 +186,131 @@
 
         </ScrollView>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:background="@drawable/shop_config"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="38dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="2dp"
+                        android:text="Menu ?"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/btnMenuConfigShop"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:contentDescription="@string/for_test"
+                        android:src="@drawable/ic_menu" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="2dp"
+                        android:text="Review"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/btnReviewConfigShop"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:contentDescription="@string/for_test"
+                        android:src="@drawable/ic_reviews" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_marginBottom="30dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="38dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="2dp"
+                        android:text="Overview ?"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/btnOverviewConfigShop"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:contentDescription="@string/for_test"
+                        android:src="@drawable/ic_overview" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="2dp"
+                        android:text="Staff"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/btnStaffConfigShop"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:contentDescription="@string/for_test"
+                        android:src="@drawable/ic_staff" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
     </LinearLayout>
-
-
-
-
 
 
 </FrameLayout>

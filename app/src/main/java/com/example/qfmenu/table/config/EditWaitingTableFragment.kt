@@ -36,7 +36,7 @@ class EditWaitingTableFragment : Fragment() {
     private var param2: String? = null
 
     private var _binding: FragmentEditWaitingTableBinding? = null
-    private val binding = _binding!!
+    private val binding get() = _binding!!
     private val saveStateViewModel: SaveStateViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,8 +77,10 @@ class EditWaitingTableFragment : Fragment() {
                     "lock"
                 )
                 tableDao.update(tableDb = newTableDb)
+                findNavController().popBackStack()
             }
         }
+
         btnUnlock.setOnClickListener {
             GlobalScope.async {
                 val newTableDb = TableDb(
@@ -86,9 +88,9 @@ class EditWaitingTableFragment : Fragment() {
                     "free"
                 )
                 tableDao.update(tableDb = newTableDb)
+                findNavController().popBackStack()
             }
         }
-
 
         val backMenu = navBar.menu.findItem(R.id.backToHome)
         val homeMenu = navBar.menu.findItem(R.id.homeMenu)

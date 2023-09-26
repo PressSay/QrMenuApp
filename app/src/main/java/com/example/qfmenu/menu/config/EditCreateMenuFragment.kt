@@ -135,7 +135,6 @@ class EditCreateMenuFragment : Fragment() {
             true
         }
 
-
     }
 
     companion object {

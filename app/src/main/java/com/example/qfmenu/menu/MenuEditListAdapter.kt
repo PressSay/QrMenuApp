@@ -97,7 +97,7 @@ class MenuEditListAdapter(
                 this.selectedLocation = 0
             }
 
-            menuViewModel.deleteMenuWithCategories(currentList[atPosition])
+            menuViewModel.deleteMenu(currentList[atPosition])
         }
 
         holder.titleItemMenu.text = item.menuName

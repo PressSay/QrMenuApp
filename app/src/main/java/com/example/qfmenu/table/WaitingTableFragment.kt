@@ -41,7 +41,7 @@ class WaitingTableFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val saveStateViewModel: SaveStateViewModel by activityViewModels()
-    private val customerViewModel: CustomerViewModel by viewModels() {
+    private val customerViewModel: CustomerViewModel by viewModels {
         CustomerViewModelFactory(
             (activity?.application as QrMenuApplication).database.customerDao(),
             (activity?.application as QrMenuApplication).database.customerDishCrossRefDao(),
@@ -64,7 +64,11 @@ class WaitingTableFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        _binding = com.example.qfmenu.databinding.FragmentWaitingTableBinding.inflate(inflater, container, false)
+        _binding = FragmentWaitingTableBinding.inflate(
+            inflater,
+            container,
+            false
+        )
         return binding.root
     }
 
@@ -118,11 +122,19 @@ class WaitingTableFragment : Fragment() {
 
         val gridLayoutManager = GridLayoutManager(requireContext(), spanCount)
         recyclerView.layoutManager = gridLayoutManager
-        recyclerView.adapter = WaitingTableAdapter(
+        val waitingTableAdapter = WaitingTableAdapter(
             customerViewModel,
             saveStateViewModel,
             requireContext()
         )
+        recyclerView.adapter = waitingTableAdapter
+        val tableDao = (activity?.application as QrMenuApplication).database.tableDao()
+
+        tableDao.getTablesLiveData().observe(this.viewLifecycleOwner) {
+            it.let {
+                waitingTableAdapter.submitList(it)
+            }
+        }
 
     }
 

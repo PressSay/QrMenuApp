@@ -109,6 +109,7 @@ class CustomerViewModel(
             val customerIdCreated = customerDao.insert(
                 customerDb
             )
+
             orderDao.insert(
                 OrderDb(
                     customerOwnerId = customerIdCreated,

@@ -40,10 +40,7 @@ class CategoryViewModel(
 
     fun deleteCategoryWithDishes(categoryDb: CategoryDb) {
         viewModelScope.launch {
-            async(Dispatchers.IO) { categoryDao.getCategoryWithDishes(categoryDb.categoryId) }.await()
-                .dishesDb.forEach { dishDb ->
-                    dishDao.delete(dishDb)
-                }
+            categoryDao.deleteDishes(categoryDb.categoryId)
             categoryDao.delete(categoryDb)
         }
     }

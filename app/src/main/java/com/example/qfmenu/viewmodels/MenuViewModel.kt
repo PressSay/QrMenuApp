@@ -10,6 +10,7 @@ import com.example.qfmenu.database.dao.DishDao
 import kotlinx.coroutines.launch
 import com.example.qfmenu.database.dao.MenuDao
 import com.example.qfmenu.database.entity.MenuDb
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 
 class MenuViewModel(
@@ -40,21 +41,11 @@ class MenuViewModel(
 
     fun deleteMenu(menuDb: MenuDb) {
         viewModelScope.launch {
-            menuDao.delete(menuDb)
-        }
-    }
 
-    fun deleteMenuWithCategories(menuDb: MenuDb) {
-        viewModelScope.launch {
-            val menuWithCategories =
-                async { menuDao.getMenuWithCategories(menuDb.menuId) }.await()
-            menuWithCategories.categoriesDb.forEach { categoryDb ->
-                async { categoryDao.getCategoryWithDishes(categoryDb.categoryId) }.await().dishesDb.forEach {
-                    dishDao.delete(it)
-                }
-                categoryDao.delete(categoryDb)
-            }
+            async(Dispatchers.IO) { menuDao.deleteMenuDishes(menuDb.menuId) }.await()
+            menuDao.deleteMenuCategories(menuDb.menuId)
             menuDao.delete(menuDb)
+
         }
     }
 

@@ -67,4 +67,20 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
+    // Retrofit & OkHttp
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+    // JSON Converter
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // define a BOM and its version
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.10.0"))
+
+    // define any required OkHttp artifacts without version
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
+
+    implementation("com.squareup.picasso:picasso:2.8")
+
 }

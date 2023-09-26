@@ -37,4 +37,7 @@ interface CategoryDao {
 
     @Delete
     suspend fun delete(categoryDb: CategoryDb)
+
+    @Query("DELETE FROM DishDb WHERE categoryCreatorId = :categoryId")
+    suspend fun deleteDishes(categoryId: Long)
 }

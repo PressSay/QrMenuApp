@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -51,6 +53,15 @@ class WaitingTableAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = currentList[position]
         "${item.tableId}.${item.status}".also { holder.btnTable.text = it }
+
+        if (item.status == "lock") {
+            holder.btnTable.setBackgroundColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.green_error
+                )
+            )
+        }
 
         holder.btnTable.setOnClickListener {
             /*don't forget setup for save then navigate*/

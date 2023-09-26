@@ -1,31 +1,45 @@
 package com.example.qfmenu.menu.dish.config
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
+import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
-import com.example.qfmenu.menu.dish.DatasourceDish
-import com.example.qfmenu.viewmodels.DishViewModel
-import com.example.qfmenu.viewmodels.DishViewModelFactory
 import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.entity.CategoryDb
 import com.example.qfmenu.database.entity.DishDb
 import com.example.qfmenu.databinding.FragmentEditCreateDishBinding
+import com.example.qfmenu.menu.dish.DatasourceDish
+import com.example.qfmenu.network.QrApiService
+import com.example.qfmenu.viewmodels.DishViewModel
+import com.example.qfmenu.viewmodels.DishViewModelFactory
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
+import java.io.FileOutputStream
 
 /**
  * A simple [Fragment] subclass.
@@ -50,15 +64,19 @@ class EditCreateDishFragment : Fragment() {
             (activity?.application as QrMenuApplication).database.dishDao(),
             (activity?.application as QrMenuApplication).database.categoryDao(),
 
-        )
+            )
     }
 
+    //    private lateinit var imageViewUpload: ImageView
+//    private lateinit var observer : MyLifecycleObserver
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
+
     }
 
     override fun onCreateView(
@@ -107,11 +125,61 @@ class EditCreateDishFragment : Fragment() {
         val categoryDao = (activity?.application as QrMenuApplication).database.categoryDao()
         val listAdapter = EditDishListAdapter(dishViewModel, requireContext(), saveStateViewModel)
 
-        dishViewModel.getDishesLiveData(saveStateViewModel.stateCategoryDb.categoryId).observe(this.viewLifecycleOwner){
-            it.let {
-                listAdapter.submitList(it)
+        val linearUploadImage = linearTextField0.getChildAt(0) as ViewGroup
+        val imageViewUpload = linearUploadImage.getChildAt(0) as ImageView
+        val btnUploadImage = linearUploadImage.getChildAt(1) as AppCompatButton
+
+        val observer: MyLifecycleObserver = MyLifecycleObserver(
+            requireActivity().activityResultRegistry
+        ) {
+            val curUri = it
+            imageViewUpload.setImageURI(curUri)
+            btnUploadImage.setOnClickListener {
+                Log.d("ItImage", "" + curUri)
+                val filesDir = requireContext().filesDir
+                val file = File(filesDir, "image.jpg")
+
+                val inputStream = requireActivity().contentResolver.openInputStream(curUri)
+                val outputStream = FileOutputStream(file)
+                inputStream!!.copyTo(outputStream)
+
+                val requestBody = file.asRequestBody("image/*".toMediaType())
+                val part = MultipartBody.Part.createFormData("image", file.name, requestBody)
+
+                val httpClient = OkHttpClient.Builder()
+                httpClient.addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
+
+                val  BASE_URL =
+                    "http://192.168.1.6"
+
+                val retrofit = Retrofit.Builder()
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(httpClient.build())
+                    .baseUrl(BASE_URL)
+                    .build()
+                    .create(QrApiService::class.java)
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    val response = retrofit.uploadImage(part)
+                    Log.d("CHEEZYCODER", response.toString())
+                }
             }
         }
+
+        lifecycle.addObserver(observer)
+
+        imageViewUpload.setOnClickListener {
+            observer.selectImage()
+        }
+
+
+
+        dishViewModel.getDishesLiveData(saveStateViewModel.stateCategoryDb.categoryId)
+            .observe(this.viewLifecycleOwner) {
+                it.let {
+                    listAdapter.submitList(it)
+                }
+            }
 
 
         categoryEditText.setText(saveStateViewModel.stateCategoryDb.categoryName)

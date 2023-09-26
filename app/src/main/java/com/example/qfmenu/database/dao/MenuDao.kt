@@ -39,4 +39,11 @@ interface MenuDao {
 
     @Delete
     suspend fun delete(menuDb: MenuDb)
+
+    @Query("DELETE FROM DishDb WHERE categoryCreatorId IN (SELECT categoryId FROM CategoryDb WHERE menuCreatorId = :menuId)")
+    suspend fun deleteMenuDishes(menuId: Long)
+
+    @Query("DELETE FROM CategoryDb WHERE menuCreatorId = :menuId")
+    suspend fun deleteMenuCategories(menuId: Long)
+
 }
