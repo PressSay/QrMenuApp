@@ -1,4 +1,4 @@
-package com.example.qfmenu.ui.order.offline.queue
+package com.example.qfmenu.util
 
 import android.content.Context
 import android.view.LayoutInflater

@@ -17,7 +17,7 @@
         android:textSize="14sp"
         android:textStyle="bold"
         android:textColor="@color/green_primary"
-        android:background="@color/green_secondary_container"
+        android:background="@drawable/button_secondary_container_solid"
         android:layout_margin="4dp"/>
 
 
@@ -33,7 +33,8 @@
         android:gravity="center"
         android:text="Id"
         android:textSize="14sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:textColor="@color/green_primary"/>
 
     <View
         android:layout_width="1dp"

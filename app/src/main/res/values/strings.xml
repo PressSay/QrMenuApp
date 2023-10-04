@@ -1,10 +1,35 @@
 <resources>
     <string name="app_name">QFMenu</string>
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
-    <string name="title_example" translatable="false">Example %d</string>
-    <string name="description_example" translatable="false">Just a example description</string>
-    <string name="cost_example">18,000$</string>
-    <string name="amount_example">18</string>
-    <string name="for_test">for test</string>
-    <string name="category">category %d</string>
+    <string name="table_unlock">Table Unlock</string>
+    <string name="online_list">Online List</string>
+    <string name="offline_list">Offline List</string>
+    <string name="start_order">Start Order</string>
+    <string name="config_shop">Config Shop</string>
+    <string name="buy_take_away">Buy Take Away</string>
+    <string name="status_table_free">Free</string>
+    <string name="shop_name">Shop name:</string>
+    <string name="address_shop">Address shop:</string>
+    <string name="enable_review">Enable Review:</string>
+    <string name="amount_table">Amount Table:</string>
+    <string name="promotion_vip">Promotion Vip:</string>
+    <string name="promotion_bill">Promotion Bill:</string>
+    <string name="menu">Menu</string>
+    <string name="use_menu">Use</string>
+    <string name="upload">Upload</string>
+    <string name="Review">Review</string>
+    <string name="overview">Overview</string>
+    <string name="staff">Staff</string>
+    <string name="name_user">Name:</string>
+    <string name="phone_user">Phone:</string>
+    <string name="email_user">Email:</string>
+    <string name="delete_user">Delete</string>
+    <string name="tax">Tax: %s</string>
+    <string name="total">Total: %s</string>
+    <string name="order_id">Id order: %s</string>
+    <string name="payments">Payments:</string>
+    <string name="table_name">Table Name: %s</string>
+    <string name="guest_money">Guest Money: %s</string>
+    <string name="change_money">Change: %s</string>
+    <string name="code_bill">Code Bill:</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.qfmenu.ui.order.offline.queue
+package com.example.qfmenu.util
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,7 +8,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.qfmenu.viewmodels.models.Dish
 import com.example.qfmenu.R
 import com.example.qfmenu.viewmodels.DishAmountDb
 
@@ -24,7 +23,7 @@ class OrderQueueBillAdapter(
     class ItemViewHolder(val view: View): RecyclerView.ViewHolder(view) {
         val img = view.findViewById<ImageView>(R.id.imgItemConfirmOrderView)!!
         private val descriptionItemConfirmOrderView = view.findViewById<LinearLayout>(R.id.descriptionItemConfirmOrderView) as ViewGroup
-        val titleItem = descriptionItemConfirmOrderView.getChildAt(0) as TextView
+        val titleItem = (descriptionItemConfirmOrderView.getChildAt(0) as ViewGroup).getChildAt(0) as TextView
         private val itemsCost = descriptionItemConfirmOrderView.getChildAt(2) as ViewGroup
         val cost = itemsCost.getChildAt(0) as TextView
         val amount = itemsCost.getChildAt(1) as TextView

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -15,15 +16,17 @@ import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.entity.CustomerDishCrossRef
 import com.example.qfmenu.databinding.FragmentDishMenuBinding
+import com.example.qfmenu.util.DishMenuAdapter
 import com.example.qfmenu.viewmodels.DishAmountDb
 import com.example.qfmenu.viewmodels.DishViewModel
 import com.example.qfmenu.viewmodels.DishViewModelFactory
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.invoke
 import kotlinx.coroutines.launch
 
 
@@ -71,10 +74,8 @@ class DishMenuFragment : Fragment() {
         return binding.root
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val myDataset = DatasourceDish().loadDishMenu()
         val recyclerView = binding.recyclerViewDishMenu
         val btnCategory = binding.itemMenuCategoryBtn
         val root = binding.layoutDishMenu
@@ -113,15 +114,20 @@ class DishMenuFragment : Fragment() {
         }
 
         btnBuy.isEnabled = false
+        btnBuy.setTextColor(
+            ContextCompat.getColor(
+            requireContext(),
+            R.color.green_secondary
+        ))
 
         val dishMenuAdapter =
             DishMenuAdapter(requireContext(), btnBuy, saveStateViewModel)
         recyclerView.adapter = dishMenuAdapter
 
-        val categoryPos = saveStateViewModel.stateCategoryPositionMenu
+        val categoryPos = saveStateViewModel.stateCategoryPosition
 
         btnBuy.setOnClickListener {
-            GlobalScope.async {
+            CoroutineScope(Dispatchers.Main).launch {
                 if (saveStateViewModel.stateDishesByCategories.size == 0) {
                     saveStateViewModel.stateDishesByCategories.add(
                         mutableListOf()
@@ -136,12 +142,20 @@ class DishMenuFragment : Fragment() {
                     dishesDb.addAll(it)
                 }
 
+                saveStateViewModel.setStateDishesDb(dishesDb)
+
                 if (!saveStateViewModel.stateIsOffOnOrder) {
                     findNavController().navigate(R.id.action_dishMenuFragment_to_editConfirmDishFragment)
                 } else {
 
                     val customerDishCrossRefDao =
                         (activity?.application as QrMenuApplication).database.customerDishCrossRefDao()
+
+                    val customerDishCrossRefList =  async(Dispatchers.IO) {
+                        customerDishCrossRefDao.getListByCustomerId(
+                            saveStateViewModel.stateCustomerDb.customerId
+                        )
+                    }.await()
 
                     saveStateViewModel.stateDishes.forEach { dishAmountDb ->
                         val customerDishCrossRef = CustomerDishCrossRef(
@@ -150,12 +164,7 @@ class DishMenuFragment : Fragment() {
                             dishAmountDb.amount,
                             0
                         )
-
-                        async(Dispatchers.IO) {
-                            customerDishCrossRefDao.getListByCustomerId(
-                                saveStateViewModel.stateCustomerDb.customerId
-                            )
-                        }.await().forEach {
+                        customerDishCrossRefList.forEach {
                             if (it.dishId == dishAmountDb.dishDb.dishId) {
                                 customerDishCrossRefDao.delete(customerDishCrossRef)
                             }
@@ -171,9 +180,9 @@ class DishMenuFragment : Fragment() {
                         )
                         customerDishCrossRefDao.insert(customerDishCrossRef)
                     }
+
                     findNavController().popBackStack()
                 }
-                saveStateViewModel.setStateDishesDb(dishesDb)
             }
         }
 
@@ -185,7 +194,7 @@ class DishMenuFragment : Fragment() {
                             val categories = menuWithCategories.categoriesDb
                             if (categories.isNotEmpty()) {
                                 val categoryDb =
-                                    categories[saveStateViewModel.stateCategoryPositionMenu]
+                                    categories[saveStateViewModel.stateCategoryPosition]
                                 dishViewModel.getDishesAmountDbLiveData(categoryDb.categoryId)
                                     .observe(this.viewLifecycleOwner) {
                                         it.let {
@@ -224,10 +233,7 @@ class DishMenuFragment : Fragment() {
             true
         }
 
-
-
         recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
-
     }
 
 

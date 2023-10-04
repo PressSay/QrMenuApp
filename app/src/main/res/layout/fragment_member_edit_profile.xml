@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.member.profile.MemberEditProfileFragment">
+    tools:context=".ui.member.profile.MemberEditProfileFragment"
+    android:background="@color/green_background">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -36,14 +37,17 @@
                         android:layout_height="wrap_content"
                         android:text="Name"
                         android:textSize="14sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:textColor="@color/green_primary"/>
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/nameAccount"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:background="@drawable/shape_rounded_border"/>
+                        android:background="@drawable/shape_rounded_border"
+                        android:padding="4dp"
+                        android:textColor="@color/green_secondary"/>
 
                 </LinearLayout>
 
@@ -60,14 +64,17 @@
                         android:layout_height="wrap_content"
                         android:text="Phone"
                         android:textSize="14sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:textColor="@color/green_primary"/>
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/phoneAccount"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:background="@drawable/shape_rounded_border"/>
+                        android:background="@drawable/shape_rounded_border"
+                        android:padding="4dp"
+                        android:textColor="@color/green_secondary"/>
 
                 </LinearLayout>
 
@@ -84,14 +91,17 @@
                         android:layout_height="wrap_content"
                         android:text="Email"
                         android:textSize="14sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:textColor="@color/green_primary"/>
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/emailAccount"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:background="@drawable/shape_rounded_border"/>
+                        android:background="@drawable/shape_rounded_border"
+                        android:padding="4dp"
+                        android:textColor="@color/green_secondary"/>
 
                 </LinearLayout>
 
@@ -108,14 +118,17 @@
                         android:layout_height="wrap_content"
                         android:text="Address"
                         android:textSize="14sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:textColor="@color/green_primary"/>
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/addressAccount"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:background="@drawable/shape_rounded_border"/>
+                        android:background="@drawable/shape_rounded_border"
+                        android:padding="4dp"
+                        android:textColor="@color/green_secondary"/>
 
                 </LinearLayout>
 
@@ -132,14 +145,17 @@
                         android:layout_height="wrap_content"
                         android:text="Password"
                         android:textSize="14sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:textColor="@color/green_primary"/>
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/passwordAccount"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:background="@drawable/shape_rounded_border"/>
+                        android:background="@drawable/shape_rounded_border"
+                        android:padding="4dp"
+                        android:textColor="@color/green_secondary"/>
 
                 </LinearLayout>
 
@@ -156,14 +172,17 @@
                         android:layout_height="wrap_content"
                         android:text="Role"
                         android:textSize="14sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:textColor="@color/green_primary"/>
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/roleAccount"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:background="@drawable/shape_rounded_border"/>
+                        android:background="@drawable/shape_rounded_border"
+                        android:padding="4dp"
+                        android:textColor="@color/green_secondary"/>
 
                 </LinearLayout>
 
@@ -185,15 +204,21 @@
                         android:layout_height="49dp"
                         android:text="Upload"
                         android:textSize="14sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:background="@drawable/button_secondary_container_solid"
+                        android:padding="10dp"
+                        android:elevation="20dp"/>
 
                     <androidx.appcompat.widget.AppCompatButton
-                        android:layout_marginTop="24dp"
+                        android:layout_marginTop="16dp"
                         android:layout_width="wrap_content"
                         android:layout_height="49dp"
                         android:text="Delete"
                         android:textSize="14sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:background="@drawable/button_secondary_container_solid"
+                        android:padding="10dp"
+                        android:elevation="20dp"/>
 
                 </LinearLayout>
 

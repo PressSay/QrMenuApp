@@ -1,6 +1,7 @@
 package com.example.qfmenu.viewmodels
 
 import androidx.lifecycle.ViewModel
+import androidx.navigation.fragment.NavHostFragment
 import com.example.qfmenu.database.entity.AccountDb
 import com.example.qfmenu.database.entity.CategoryDb
 import com.example.qfmenu.database.entity.CustomerDb
@@ -11,7 +12,9 @@ import com.example.qfmenu.database.entity.TableDb
 
 class SaveStateViewModel : ViewModel() {
 
-
+    var tokenKey: String = ""
+    var myNavHostFragment1 : NavHostFragment? = null
+    var myNavHostFragment2 : NavHostFragment? = null
     var stateTableDb: TableDb? = null
     var stateReviewDb: Int = -1
     var stateCalendar: String = String.format(
@@ -23,7 +26,7 @@ class SaveStateViewModel : ViewModel() {
     var stateCustomerOrderQueue: CustomerOrderQueue? = null
 
     var stateIsOffOnOrder: Boolean = false
-    var stateCategoryPositionMenu: Int = 0
+    var stateCategoryPosition: Int = 0
     var stateIsTableUnClock: Boolean = true
     var stateIsStartOrder: Boolean = true
     var stateAccountDb: AccountDb? = null

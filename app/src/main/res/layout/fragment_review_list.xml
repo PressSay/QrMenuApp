@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".review.ReviewListFragment">
+    android:background="@color/green_background"
+    tools:context=".ui.review.ReviewListFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +23,8 @@
                 android:text="Review of Shop!!"
                 android:textStyle="bold"
                 android:textSize="20sp"
-                android:layout_marginBottom="24dp"/>
+                android:layout_marginBottom="24dp"
+                android:textColor="@color/green_primary"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -31,7 +32,8 @@
                 android:text="Satisfaction Level Store"
                 android:textStyle="bold"
                 android:textSize="20sp"
-                android:layout_marginBottom="4dp"/>
+                android:layout_marginBottom="4dp"
+                android:textColor="@color/green_primary"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnRStoreReviewList"
@@ -39,7 +41,11 @@
                 android:layout_height="64dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="1,450,000 star"/>
+                android:text="1,450,000 star"
+                android:textColor="@color/green_primary"
+                android:background="@drawable/button_secondary_container_solid"
+                android:padding="10dp"
+                android:elevation="20dp"/>
 
         </LinearLayout>
 

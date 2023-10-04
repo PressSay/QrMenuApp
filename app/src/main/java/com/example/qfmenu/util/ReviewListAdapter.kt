@@ -1,4 +1,4 @@
-package com.example.qfmenu.ui.review
+package com.example.qfmenu.util
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -12,13 +12,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-import com.example.qfmenu.viewmodels.models.Dish
 import com.example.qfmenu.R
-import com.example.qfmenu.database.entity.CategoryDb
 import com.example.qfmenu.database.entity.DishDb
 import com.example.qfmenu.viewmodels.SaveStateViewModel
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 
 class ReviewListAdapter(
     private val context: Context,
@@ -39,9 +35,9 @@ class ReviewListAdapter(
 
     class ItemViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val parentView = view.findViewById<LinearLayout>(R.id.itemConfirmOrderReview) as ViewGroup
-        val imgView = parentView.getChildAt(0) as ImageView
-        private val contentParentView = parentView.getChildAt(1) as ViewGroup
-        val titleItem = contentParentView.getChildAt(0) as TextView
+        val imgView = parentView.getChildAt(1) as ImageView
+        private val contentParentView = parentView.getChildAt(0) as ViewGroup
+        val titleItem = (contentParentView.getChildAt(0) as ViewGroup).getChildAt(0) as TextView
         private val subContentParentView = contentParentView.getChildAt(2) as ViewGroup
         val cost = subContentParentView.getChildAt(0) as TextView
         val amount = subContentParentView.getChildAt(1) as TextView

@@ -16,13 +16,16 @@ import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.entity.AccountDb
 import com.example.qfmenu.databinding.FragmentMemberManagerBinding
+import com.example.qfmenu.util.MemberManagerAdapter
 import com.example.qfmenu.viewmodels.SaveStateViewModel
-import com.example.qfmenu.viewmodels.models.Member
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,7 +64,6 @@ class MemberManagerFragment : Fragment() {
         return binding.root
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = binding.recyclerViewMemberManager
@@ -110,7 +112,7 @@ class MemberManagerFragment : Fragment() {
             }
             if (it.itemId == R.id.optionTwo) {
                 if (!(editInputName.text.isNullOrBlank() && editInputPass.text.isNullOrBlank())) {
-                    GlobalScope.async {
+                    CoroutineScope(Dispatchers.IO).launch {
                         val accountDb = AccountDb(
                             roleCreatorId = "staff",
                             name = "default",

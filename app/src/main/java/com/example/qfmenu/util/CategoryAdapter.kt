@@ -1,4 +1,4 @@
-package com.example.qfmenu.ui.menu.category
+package com.example.qfmenu.util
 
 import android.content.Context
 import android.util.Log
@@ -12,9 +12,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qfmenu.R
 import com.example.qfmenu.database.entity.CategoryDb
-import com.example.qfmenu.database.entity.MenuDb
 import com.example.qfmenu.viewmodels.SaveStateViewModel
-import com.example.qfmenu.viewmodels.models.Category
 
 class CategoryAdapter(
     private val context: Context,
@@ -46,7 +44,7 @@ class CategoryAdapter(
         val item = currentList[position]
         holder.btnCategory.text = item.categoryName
         holder.btnCategory.setOnClickListener {
-            saveStateViewModel.stateCategoryPositionMenu = holder.adapterPosition
+            saveStateViewModel.stateCategoryPosition = holder.adapterPosition
             val categoryPos = holder.adapterPosition
             if (categoryPos < saveStateViewModel.stateDishesByCategories.size) {
 

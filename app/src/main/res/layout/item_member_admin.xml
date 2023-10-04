@@ -21,6 +21,9 @@
         android:layout_height="116dp"
         android:src="@drawable/ic_person"
         android:scaleType="fitCenter"
-        android:background="@color/green_secondary_container"/>
+        android:background="@drawable/button_secondary_container_solid"
+        android:tint="@color/green_primary"
+        android:elevation="20dp"
+        android:padding="10dp"/>
 
 </LinearLayout>

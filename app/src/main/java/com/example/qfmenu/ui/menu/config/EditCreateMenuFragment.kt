@@ -17,7 +17,7 @@ import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.entity.MenuDb
 import com.example.qfmenu.databinding.FragmentEditCreateMenuBinding
-import com.example.qfmenu.ui.menu.MenuEditListAdapter
+import com.example.qfmenu.util.MenuEditListAdapter
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputEditText

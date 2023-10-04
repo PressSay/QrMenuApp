@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.order.online.EditOnlineOrderFragment">
+    tools:context=".ui.order.online.EditOnlineOrderFragment"
+    android:background="@color/green_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,24 +28,36 @@
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatImageButton
-                android:layout_width="82dp"
-                android:layout_height="82dp"
+                android:layout_width="78dp"
+                android:layout_height="78dp"
                 android:src="@drawable/ic_plus"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter"
+                android:background="@drawable/button_secondary_container_solid"
+                android:tint="@color/green_primary"
+                android:elevation="20dp"
+                android:padding="10dp"/>
 
             <androidx.appcompat.widget.AppCompatImageButton
-                android:layout_width="82dp"
-                android:layout_height="82dp"
+                android:layout_width="78dp"
+                android:layout_height="78dp"
                 android:src="@drawable/ic_local_shipping"
                 android:scaleType="fitCenter"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"/>
+                android:layout_marginEnd="16dp"
+                android:tint="@color/green_primary"
+                android:background="@drawable/button_secondary_container_solid"
+                android:padding="10dp"
+                android:elevation="20dp"/>
 
             <androidx.appcompat.widget.AppCompatImageButton
-                android:layout_width="82dp"
-                android:layout_height="82dp"
+                android:layout_width="78dp"
+                android:layout_height="78dp"
                 android:src="@drawable/ic_check_fill"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter"
+                android:background="@drawable/button_secondary_container_solid"
+                android:padding="10dp"
+                android:tint="@color/green_primary"
+                android:elevation="20dp"/>
 
 
         </LinearLayout>

@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.menu.config.EditCreateMenuFragment">
+    tools:context=".ui.menu.config.EditCreateMenuFragment"
+    android:background="@color/green_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,7 +46,8 @@
                     android:layout_width="50dp"
                     android:layout_height="match_parent"
                     android:src="@drawable/ic_category"
-                    android:scaleType="fitCenter"/>
+                    android:scaleType="fitCenter"
+                    app:tint="@color/green_primary" />
 
                 <View
                     android:layout_width="1dp"
@@ -55,7 +57,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:textColor="@color/green_secondary" />
 
             </LinearLayout>
 
@@ -71,7 +74,8 @@
                     android:layout_width="50dp"
                     android:layout_height="match_parent"
                     android:src="@drawable/ic_money"
-                    android:scaleType="fitCenter"/>
+                    android:scaleType="fitCenter"
+                    app:tint="@color/green_primary" />
 
                 <View
                     android:layout_width="1dp"
@@ -81,7 +85,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:textColor="@color/green_secondary"/>
 
             </LinearLayout>
 

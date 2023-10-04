@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.MainFragment"
+    android:background="@color/green_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/refreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="12dp"
+                        android:gravity="end"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="8dp"
+                                android:text="Account"
+                                android:textStyle="bold"
+                                android:textColor="@color/green_primary"/>
+
+                            <ImageButton
+                                android:layout_width="64dp"
+                                android:layout_height="64dp"
+                                android:background="@drawable/button_secondary_container_solid"
+                                android:src="@drawable/ic_person"
+                                app:tint="@color/green_primary"
+                                android:padding="10dp"
+                                android:elevation="20dp"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="58dp"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="The star of the store:"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/green_primary"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="1.45M"
+                                android:textSize="22sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/green_primary"/>
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/ic_star"
+                                app:tint="@color/green_primary" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="532dp"
+                        android:background="@drawable/background_home_admin"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="130dp"
+                            android:layout_marginBottom="20dp"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="38dp"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="2dp"
+                                    android:text="Table Unclock"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/green_primary"/>
+
+                                <androidx.appcompat.widget.AppCompatImageButton
+                                    android:id="@+id/btnTableUnlock"
+                                    android:layout_width="110dp"
+                                    android:layout_height="110dp"
+                                    android:src="@drawable/ic_table_bar"
+                                    android:padding="10dp"
+                                    android:elevation="20dp"
+                                    android:background="@drawable/button_secondary_container_solid"
+                                    android:tint="@color/green_primary"/>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="2dp"
+                                    android:text="Online List"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/green_primary"/>
+
+                                <androidx.appcompat.widget.AppCompatImageButton
+                                    android:id="@+id/btnOnlineList"
+                                    android:layout_width="110dp"
+                                    android:layout_height="110dp"
+                                    android:src="@drawable/ic_inactive_order"
+                                    android:tint="@color/green_primary"
+                                    android:padding="10dp"
+                                    android:elevation="20dp"
+                                    android:background="@drawable/button_secondary_container_solid"/>
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="130dp"
+                            android:layout_marginBottom="20dp"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="38dp"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="2dp"
+                                    android:text="Offline List"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/green_primary"/>
+
+                                <androidx.appcompat.widget.AppCompatImageButton
+                                    android:id="@+id/btnOfflineList"
+                                    android:layout_width="110dp"
+                                    android:layout_height="110dp"
+                                    android:src="@drawable/ic_inactive_order"
+                                    android:tint="@color/green_primary"
+                                    android:background="@drawable/button_secondary_container_solid"
+                                    android:padding="10dp"
+                                    android:elevation="20dp"/>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/textViewStartOrder"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="2dp"
+                                    android:text="Start Order"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/green_primary"/>
+
+                                <androidx.appcompat.widget.AppCompatImageButton
+                                    android:id="@+id/btnStartOrder"
+                                    android:layout_width="110dp"
+                                    android:layout_height="110dp"
+                                    android:src="@drawable/ic_shopping_bag"
+                                    android:tint="@color/green_primary"
+                                    android:background="@drawable/button_secondary_container_solid"
+                                    android:padding="10dp"
+                                    android:elevation="20dp"/>
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="130dp"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="38dp"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="2dp"
+                                    android:text="Config Shop"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/green_primary"/>
+
+                                <androidx.appcompat.widget.AppCompatImageButton
+                                    android:id="@+id/btnConfigShop"
+                                    android:layout_width="110dp"
+                                    android:layout_height="110dp"
+                                    android:src="@drawable/ic_settings"
+                                    android:tint="@color/green_primary"
+                                    android:background="@drawable/button_secondary_container_solid"
+                                    android:padding="10dp"
+                                    android:elevation="20dp"/>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="2dp"
+                                    android:text="Buy Take Away"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/green_primary"/>
+
+                                <androidx.appcompat.widget.AppCompatImageButton
+                                    android:id="@+id/btnBuyTakeAway"
+                                    android:layout_width="110dp"
+                                    android:layout_height="110dp"
+                                    android:src="@drawable/ic_point_of_sale"
+                                    android:tint="@color/green_primary"
+                                    android:background="@drawable/button_secondary_container_solid"
+                                    android:padding="10dp"
+                                    android:elevation="20dp"/>
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

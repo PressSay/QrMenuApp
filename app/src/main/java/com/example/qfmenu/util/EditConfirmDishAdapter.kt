@@ -1,4 +1,4 @@
-package com.example.qfmenu.ui.menu.dish.confirm
+package com.example.qfmenu.util
 
 import android.view.LayoutInflater
 import android.view.View

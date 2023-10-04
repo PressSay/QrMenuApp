@@ -15,6 +15,7 @@ import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.entity.CustomerDb
 import com.example.qfmenu.database.entity.CustomerDishCrossRef
 import com.example.qfmenu.databinding.FragmentEditConfirmDishBinding
+import com.example.qfmenu.util.EditConfirmDishAdapter
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.Calendar
@@ -96,8 +97,6 @@ class EditConfirmDishFragment : Fragment() {
         if (width > SCREEN_LARGE) {
             navBar.menu.findItem(R.id.homeMenu).isVisible = false
         }
-
-
 
         navBar.setOnItemSelectedListener {
             if (it.itemId == R.id.homeMenu) {

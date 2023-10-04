@@ -13,7 +13,7 @@ import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.entity.InvestmentDb
 import com.example.qfmenu.databinding.FragmentEditCreateInvestmentBinding
-import com.example.qfmenu.viewmodels.models.Investment
+import com.example.qfmenu.util.EditCreateInvestmentAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.GlobalScope

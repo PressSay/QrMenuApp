@@ -1,4 +1,4 @@
-package com.example.qfmenu.ui.member
+package com.example.qfmenu.util
 
 class MemberManagerListAdapter(
 ) {

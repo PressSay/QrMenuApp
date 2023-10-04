@@ -4,13 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:gravity="center_horizontal">
+    android:gravity="center_horizontal"
+    android:layout_margin="12dp">
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnTableSelect"
         android:layout_width="112dp"
         android:layout_height="112dp"
-        android:text="table 1"/>
+        android:text="table 1"
+        android:textColor="@color/green_primary"
+        android:background="@drawable/button_secondary_container_solid"
+        android:padding="10dp"
+        android:elevation="20dp"/>
 
 </LinearLayout>
 

@@ -13,7 +13,7 @@ import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.databinding.FragmentReviewStoreListBinding
-import com.example.qfmenu.ui.review.ReviewStoreOrDishAdapter
+import com.example.qfmenu.util.ReviewStoreOrDishAdapter
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 

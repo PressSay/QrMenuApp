@@ -21,10 +21,13 @@ import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.entity.TableDb
 import com.example.qfmenu.databinding.FragmentConfigShopBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
@@ -66,7 +69,6 @@ class ConfigShopFragment : Fragment() {
         return binding.root
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val scrollView = binding.scrollViewOfConfig
@@ -146,7 +148,6 @@ class ConfigShopFragment : Fragment() {
                 id: Long
             ) {
                 isEnableReview = isEnableReviewArray[position] == "Enable"
-                Log.d("IsEnableReview", isEnableReview.toString())
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -186,10 +187,9 @@ class ConfigShopFragment : Fragment() {
         binding.btnSaveNumberOfTable.setOnClickListener {
             if (numberOfTable.text?.isNotBlank() == true) {
 
-                GlobalScope.async {
+                CoroutineScope(Dispatchers.IO).launch {
                     val tableDao = (activity?.application as QrMenuApplication).database.tableDao()
                     async { tableDao.getTables() }.await().forEach {
-                        Log.d("table", "true " + it.tableId)
                         tableDao.delete(it)
                     }
                     for (i in 1..numberOfTable.text.toString().toInt()) {

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.shop.ConfigShopFragment">
+    tools:context=".ui.shop.ConfigShopFragment"
+    android:background="@color/green_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,8 +15,7 @@
         <ScrollView
             android:id="@+id/scrollViewOfConfig"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -32,6 +32,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:textColor="@color/green_primary"
                         android:layout_width="86dp"
                         android:layout_height="wrap_content"
                         android:text="Shop name:"
@@ -43,7 +44,8 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/shape_rounded_border" />
+                        android:background="@drawable/shape_rounded_border"
+                        android:textColor="@color/green_secondary"/>
 
                 </LinearLayout>
 
@@ -56,6 +58,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:textColor="@color/green_primary"
                         android:layout_width="86dp"
                         android:layout_height="wrap_content"
                         android:text="Address Shop: "
@@ -67,7 +70,8 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/shape_rounded_border" />
+                        android:background="@drawable/shape_rounded_border"
+                        android:textColor="@color/green_secondary"/>
 
                 </LinearLayout>
 
@@ -80,6 +84,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:textColor="@color/green_primary"
                         android:layout_width="86dp"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -92,7 +97,8 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/shape_rounded_border"/>
+                        android:background="@drawable/shape_rounded_border"
+                        android:textColor="@color/green_secondary"/>
 
 <!--                    <com.google.android.material.textfield.TextInputEditText-->
 <!--                        android:id="@+id/enShopReview"-->
@@ -113,6 +119,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:textColor="@color/green_primary"
                         android:layout_width="86dp"
                         android:layout_height="wrap_content"
                         android:text="Number Table: "
@@ -124,13 +131,17 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/shape_rounded_border" />
+                        android:background="@drawable/shape_rounded_border"
+                        android:layout_marginEnd="4dp"
+                        android:textColor="@color/green_secondary"/>
 
                     <androidx.appcompat.widget.AppCompatImageButton
+                        android:tint="@color/green_primary"
                         android:id="@+id/btnSaveNumberOfTable"
                         android:layout_width="50dp"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_save" />
+                        android:src="@drawable/ic_save"
+                        android:background="@drawable/button_secondary_container_solid"/>
 
                 </LinearLayout>
 
@@ -143,6 +154,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:textColor="@color/green_primary"
                         android:layout_width="86dp"
                         android:layout_height="wrap_content"
                         android:text="Promotion VIP: "
@@ -154,7 +166,8 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/shape_rounded_border" />
+                        android:background="@drawable/shape_rounded_border"
+                        android:textColor="@color/green_secondary"/>
 
                 </LinearLayout>
 
@@ -167,6 +180,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:textColor="@color/green_primary"
                         android:layout_width="86dp"
                         android:layout_height="wrap_content"
                         android:text="Promotion Bill: "
@@ -178,7 +192,150 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/shape_rounded_border" />
+                        android:background="@drawable/shape_rounded_border"
+                        android:textColor="@color/green_secondary"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    android:background="@drawable/shop_config"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="130dp"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginBottom="20dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="38dp"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:textColor="@color/green_primary"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="2dp"
+                                android:text="Menu"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <androidx.appcompat.widget.AppCompatImageButton
+                                android:tint="@color/green_primary"
+                                android:id="@+id/btnMenuConfigShop"
+                                android:layout_width="110dp"
+                                android:layout_height="110dp"
+                                android:src="@drawable/ic_menu"
+                                android:background="@drawable/button_secondary_container_solid"
+                                android:elevation="20dp"
+                                android:padding="10dp"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:textColor="@color/green_primary"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="2dp"
+                                android:text="Review"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <androidx.appcompat.widget.AppCompatImageButton
+                                android:tint="@color/green_primary"
+                                android:id="@+id/btnReviewConfigShop"
+                                android:layout_width="110dp"
+                                android:layout_height="110dp"
+                                android:src="@drawable/ic_reviews"
+                                android:background="@drawable/button_secondary_container_solid"
+                                android:elevation="20dp"
+                                android:padding="10dp"/>
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="130dp"
+                        android:layout_marginBottom="30dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="38dp"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:textColor="@color/green_primary"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="2dp"
+                                android:text="Overview"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <androidx.appcompat.widget.AppCompatImageButton
+                                android:tint="@color/green_primary"
+                                android:id="@+id/btnOverviewConfigShop"
+                                android:layout_width="110dp"
+                                android:layout_height="110dp"
+                                android:src="@drawable/ic_overview"
+                                android:background="@drawable/button_secondary_container_solid"
+                                android:elevation="20dp"
+                                android:padding="10dp"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:textColor="@color/green_primary"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="2dp"
+                                android:text="Staff"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <androidx.appcompat.widget.AppCompatImageButton
+                                android:tint="@color/green_primary"
+                                android:id="@+id/btnStaffConfigShop"
+                                android:layout_width="110dp"
+                                android:layout_height="110dp"
+                                android:src="@drawable/ic_staff"
+                                android:background="@drawable/button_secondary_container_solid"
+                                android:elevation="20dp"
+                                android:padding="10dp"/>
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+
 
                 </LinearLayout>
 
@@ -186,129 +343,8 @@
 
         </ScrollView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:background="@drawable/shop_config"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="130dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="20dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="38dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="2dp"
-                        android:text="Menu ?"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <androidx.appcompat.widget.AppCompatImageButton
-                        android:id="@+id/btnMenuConfigShop"
-                        android:layout_width="110dp"
-                        android:layout_height="110dp"
-                        android:contentDescription="@string/for_test"
-                        android:src="@drawable/ic_menu" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="2dp"
-                        android:text="Review"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <androidx.appcompat.widget.AppCompatImageButton
-                        android:id="@+id/btnReviewConfigShop"
-                        android:layout_width="110dp"
-                        android:layout_height="110dp"
-                        android:contentDescription="@string/for_test"
-                        android:src="@drawable/ic_reviews" />
-
-                </LinearLayout>
 
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="130dp"
-                android:layout_marginBottom="30dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="38dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="2dp"
-                        android:text="Overview ?"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <androidx.appcompat.widget.AppCompatImageButton
-                        android:id="@+id/btnOverviewConfigShop"
-                        android:layout_width="110dp"
-                        android:layout_height="110dp"
-                        android:contentDescription="@string/for_test"
-                        android:src="@drawable/ic_overview" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="2dp"
-                        android:text="Staff"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <androidx.appcompat.widget.AppCompatImageButton
-                        android:id="@+id/btnStaffConfigShop"
-                        android:layout_width="110dp"
-                        android:layout_height="110dp"
-                        android:contentDescription="@string/for_test"
-                        android:src="@drawable/ic_staff" />
-
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-        </LinearLayout>
 
     </LinearLayout>
 

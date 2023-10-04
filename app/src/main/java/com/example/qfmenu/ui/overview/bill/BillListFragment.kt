@@ -14,6 +14,7 @@ import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.databinding.FragmentBillListBinding
+import com.example.qfmenu.util.BillListAdapter
 import com.example.qfmenu.viewmodels.CustomerViewModel
 import com.example.qfmenu.viewmodels.CustomerViewModelFactory
 import com.example.qfmenu.viewmodels.SaveStateViewModel

@@ -1,4 +1,4 @@
-package com.example.qfmenu.ui.menu
+package com.example.qfmenu.util
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -44,7 +44,7 @@ class MenuEditListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuEditViewHolder {
-        return MenuEditListAdapter.MenuEditViewHolder(
+        return MenuEditViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_edit_menu, parent, false)
         )
     }

@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.overview.OverviewFragment">
+    tools:context=".ui.overview.OverviewFragment"
+    android:background="@color/green_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,9 +19,9 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="190dp"
                     android:orientation="vertical"
-                    android:paddingTop="8dp"
+                    android:layout_marginTop="10dp"
                     android:id="@+id/descriptionOverView">
 
                     <TextView
@@ -29,7 +30,8 @@
                         android:text="Amount Bill: 200"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:layout_marginBottom="8dp"/>
+                        android:layout_marginBottom="8dp"
+                        android:textColor="@color/green_secondary"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -37,7 +39,8 @@
                         android:text="Revenue: 3,000,000,000"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:layout_marginBottom="8dp"/>
+                        android:layout_marginBottom="8dp"
+                        android:textColor="@color/green_secondary"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -45,7 +48,8 @@
                         android:text="AVG Per Bill: 27,000"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:layout_marginBottom="8dp"/>
+                        android:layout_marginBottom="8dp"
+                        android:textColor="@color/green_secondary"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -53,7 +57,8 @@
                         android:text="Investment: 1,000,000,000"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:layout_marginBottom="8dp"/>
+                        android:layout_marginBottom="8dp"
+                        android:textColor="@color/green_secondary"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -61,7 +66,8 @@
                         android:text="Profit: 2,000,000,000"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:layout_marginBottom="8dp"/>
+                        android:layout_marginBottom="8dp"
+                        android:textColor="@color/green_secondary"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -76,7 +82,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:hint="DD/MM/YYYY"
-                            android:inputType="date" />
+                            android:inputType="date"
+                            android:textColor="@color/green_secondary"/>
 
                     </LinearLayout>
 
@@ -88,29 +95,42 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:layout_marginBottom="8dp">
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="120dp"
+                    android:layout_width="110dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="16dp"
                     android:text="Overview List"
-                    android:textSize="11sp"/>
+                    android:textSize="11sp"
+                    android:textColor="@color/green_primary"
+                    android:background="@drawable/button_secondary_container_solid"
+                    android:padding="10dp"
+                    android:elevation="20dp"/>
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="120dp"
+                    android:layout_width="110dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:text="import investment"
-                    android:textSize="10sp"/>
+                    android:textSize="10sp"
+                    android:textColor="@color/green_primary"
+                    android:background="@drawable/button_secondary_container_solid"
+                    android:padding="10dp"
+                    android:elevation="20dp"/>
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:layout_width="120dp"
+                    android:layout_width="110dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="16dp"
                     android:text="choose date"
-                    android:textSize="11sp"/>
+                    android:textSize="11sp"
+                    android:textColor="@color/green_primary"
+                    android:background="@drawable/button_secondary_container_solid"
+                    android:padding="10dp"
+                    android:elevation="20dp"/>
 
             </LinearLayout>
 

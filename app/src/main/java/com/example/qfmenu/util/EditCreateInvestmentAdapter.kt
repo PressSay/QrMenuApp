@@ -1,4 +1,4 @@
-package com.example.qfmenu.ui.overview.investment
+package com.example.qfmenu.util
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -14,9 +14,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qfmenu.R
 import com.example.qfmenu.database.dao.InvestmentDao
-import com.example.qfmenu.database.entity.CustomerDb
 import com.example.qfmenu.database.entity.InvestmentDb
-import com.example.qfmenu.viewmodels.models.Investment
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 
@@ -24,7 +22,7 @@ import kotlinx.coroutines.async
 class EditCreateInvestmentAdapter(
     private val context: Context,
     private val investmentDao: InvestmentDao
-) : ListAdapter<InvestmentDb,EditCreateInvestmentAdapter.ItemViewHolder>(DiffCallback) {
+) : ListAdapter<InvestmentDb, EditCreateInvestmentAdapter.ItemViewHolder>(DiffCallback) {
 
     companion object {
         private val DiffCallback = object : DiffUtil.ItemCallback<InvestmentDb>() {

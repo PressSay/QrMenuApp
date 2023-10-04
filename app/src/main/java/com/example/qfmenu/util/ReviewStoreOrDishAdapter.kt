@@ -1,4 +1,4 @@
-package com.example.qfmenu.ui.review
+package com.example.qfmenu.util
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,18 +8,15 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageButton
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qfmenu.R
 import com.example.qfmenu.database.dao.ReviewDao
-import com.example.qfmenu.database.entity.DishDb
 import com.example.qfmenu.database.entity.ReviewCustomerCrossRef
 import com.example.qfmenu.database.entity.ReviewDb
 import com.example.qfmenu.database.entity.ReviewDishCrossRef
 import com.example.qfmenu.viewmodels.SaveStateViewModel
-import com.example.qfmenu.viewmodels.models.Review
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

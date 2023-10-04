@@ -43,6 +43,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     val lifecycle_version = "2.4.1"
     implementation("androidx.fragment:fragment-ktx:1.1.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")

@@ -32,7 +32,8 @@
                         android:text="Name Shop: My Name Shop!!"
                         android:layout_marginBottom="20dp"
                         android:textSize="20sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:textColor="@color/green_secondary"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -40,7 +41,8 @@
                         android:text="Address Shop: My Address Shop!!"
                         android:layout_marginBottom="20dp"
                         android:textSize="20sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:textColor="@color/green_secondary"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -56,7 +58,8 @@
                         android:text="Tax(5%): 6,150$"
                         android:layout_marginBottom="20dp"
                         android:textSize="20sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:textColor="@color/green_secondary"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -64,7 +67,8 @@
                         android:text="Total: 123,000$"
                         android:layout_marginBottom="20dp"
                         android:textSize="20sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:textColor="@color/green_secondary"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -80,7 +84,8 @@
                         android:text="Change: 6,150$"
                         android:layout_marginBottom="20dp"
                         android:textSize="20sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:textColor="@color/green_secondary"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -102,7 +107,8 @@
                             android:textSize="24sp"
                             android:textStyle="italic"
                             android:text="Cusotomer code"
-                            android:layout_marginBottom="16dp"/>
+                            android:layout_marginBottom="16dp"
+                            android:textColor="@color/green_secondary"/>
 
                         <ImageView
                             android:layout_width="128dp"
@@ -116,7 +122,8 @@
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
                             android:textStyle="bold"
-                            android:text="JIOFJAOJSFOIJAIOSFJOJASOFJIOAJSFOASIFJOIASFJOJAOSFJoASJASOIFJOASJFOJAOSFJojJASFOIJOASFJOJASFO"/>
+                            android:text="JIOFJAOJSFOIJAIOSFJOJASOFJIOAJSFOASIFJOIASFJOJAOSFJoASJASOIFJOASJFOJAOSFJojJASFOIJOASFJOJASFO"
+                            android:textColor="@color/green_secondary"/>
 
                     </LinearLayout>
 

@@ -1,7 +1,6 @@
-package com.example.qfmenu.ui.menu.dish
+package com.example.qfmenu.util
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -16,12 +16,7 @@ import com.example.qfmenu.R
 import com.example.qfmenu.viewmodels.DishAmountDb
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.net.HttpURLConnection
-import java.net.URL
+import java.io.IOException
 
 class DishMenuAdapter(
     private val context: Context,
@@ -55,6 +50,7 @@ class DishMenuAdapter(
         val amount: TextView = view.findViewById(R.id.item_menu_amount)
         val btnPlus: AppCompatButton = view.findViewById(R.id.itemMenuPlusBtn)
         val btnMinus: AppCompatButton = view.findViewById(R.id.itemMenuMinusBtn)
+        val iconMinus: ImageView = view.findViewById(R.id.itemMenuIconMinus)
     }
 
 
@@ -67,25 +63,39 @@ class DishMenuAdapter(
 
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val item = currentList[position]
+        var item = currentList[position]
 
-        if (saveStateViewModel.stateCategoryPositionMenu < saveStateViewModel.stateDishesByCategories.size) {
-            saveStateViewModel.stateDishesByCategories[saveStateViewModel.stateCategoryPositionMenu].forEach {
+        if (saveStateViewModel.stateCategoryPosition < saveStateViewModel.stateDishesByCategories.size) {
+            saveStateViewModel.stateDishesByCategories[saveStateViewModel.stateCategoryPosition].forEach {
                 if (it.dishDb.dishId == item.dishDb.dishId) {
                     _listSelected.add(item)
                     currentList[position].selected = true
                     currentList[position].amount = it.amount
+                    item = currentList[position];
                 }
             }
         }
 
-//        holder.img.setImageResource(R.drawable.img_image_6)
-        Picasso.get().load("http://192.168.1.6/image-dish/0e61f2dc00aa125284584df1a2c01f13.jpg").resize(50, 50).centerCrop().into(holder.img)
+        holder.btnMinus.isEnabled = item.selected
+        var colorIconMinus = if (item.selected) R.color.green_error else R.color.green_surface_variant
+
+        holder.iconMinus.setColorFilter(ContextCompat.getColor(
+            context,
+            colorIconMinus
+        ))
+
+        try {
+            Picasso.get().load("http://192.168.1.6/image-dish/0e61f2dc00aa125284584df1a2c01f13.jpg")
+                .resize(50, 50).centerCrop().into(holder.img)
+        } catch (networkError: IOException) {
+            holder.img.setImageResource(R.drawable.img_image_6)
+            Log.d("NoInternet", true.toString())
+        }
+
         holder.title.text = item.dishDb.dishName
         holder.cost.text = item.dishDb.cost.toString()
         holder.amount.text = item.amount.toString()
         holder.description.text = item.dishDb.description
-
 
 
         holder.btnPlus.setOnClickListener {
@@ -96,7 +106,23 @@ class DishMenuAdapter(
             }
             holder.amount.text = currentList[position].amount.toString()
             btnBuy.isEnabled = _listSelected.isNotEmpty()
+            holder.btnMinus.isEnabled = currentList[position].selected
 
+            val colorBtnBuy = if (btnBuy.isEnabled) R.color.green_primary
+                else R.color.green_secondary
+
+            btnBuy.setTextColor(
+                ContextCompat.getColor(
+                    context,
+                    colorBtnBuy
+                )
+            )
+
+            colorIconMinus = if (currentList[position].selected) R.color.green_error else R.color.green_surface_variant
+            holder.iconMinus.setColorFilter(ContextCompat.getColor(
+                context,
+                colorIconMinus
+            ))
         }
 
         var isBtnEnable = false
@@ -106,7 +132,18 @@ class DishMenuAdapter(
                 break
             }
         }
+
         btnBuy.isEnabled = isBtnEnable
+
+        var colorBtnBuy = if (btnBuy.isEnabled) R.color.green_primary
+            else R.color.green_secondary
+
+        btnBuy.setTextColor(
+            ContextCompat.getColor(
+                context,
+                colorBtnBuy
+            )
+        )
 
         holder.btnMinus.setOnClickListener {
             if (currentList[position].selected) {
@@ -120,6 +157,22 @@ class DishMenuAdapter(
             holder.amount.text = currentList[position].amount.toString()
             btnBuy.isEnabled = _listSelected.isNotEmpty() || isBtnEnable
 
+            holder.btnMinus.isEnabled = currentList[position].selected
+            colorIconMinus = if (holder.btnMinus.isEnabled) R.color.green_error else R.color.green_surface_variant
+            holder.iconMinus.setColorFilter(ContextCompat.getColor(
+                context,
+                colorIconMinus
+            ))
+
+            colorBtnBuy = if (btnBuy.isEnabled) R.color.green_primary
+                else R.color.green_secondary
+
+            btnBuy.setTextColor(
+                ContextCompat.getColor(
+                    context,
+                    colorBtnBuy
+                )
+            )
         }
 
     }

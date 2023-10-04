@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.qr.QrOldFragment">
+    tools:context=".ui.qr.QrOldFragment"
+    android:background="@color/green_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,7 +35,10 @@
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:src="@drawable/ic_person"
-                    android:background="@drawable/shape_rounded_border"/>
+                    android:background="@drawable/button_secondary_container_solid"
+                    android:padding="10dp"
+                    android:elevation="20dp"
+                    app:tint="@color/green_primary" />
 
             </LinearLayout>
 
@@ -54,7 +59,8 @@
                 android:layout_marginStart="64dp"
                 android:layout_marginEnd="64dp"
                 android:text="QR code Text (Required)"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/green_primary"/>
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/inputQrText"
@@ -62,7 +68,8 @@
                 android:layout_marginStart="64dp"
                 android:layout_marginEnd="64dp"
                 android:layout_height="64dp"
-                android:background="@drawable/shape_rounded_border" />
+                android:background="@drawable/shape_rounded_border"
+                android:textColor="@color/green_secondary"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -77,7 +84,11 @@
                     android:layout_marginBottom="14dp"
                     android:layout_marginStart="64dp"
                     android:layout_marginEnd="64dp"
-                    android:text="Scan Image QR" />
+                    android:text="Scan Image QR"
+                    android:textColor="@color/green_primary"
+                    android:background="@drawable/button_secondary_container_solid"
+                    android:padding="10dp"
+                    android:elevation="20dp"/>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="match_parent"
@@ -85,7 +96,11 @@
                     android:layout_marginEnd="64dp"
                     android:layout_height="64dp"
                     android:layout_marginBottom="14dp"
-                    android:text="Upload Image QR" />
+                    android:text="Upload Image QR"
+                    android:textColor="@color/green_primary"
+                    android:background="@drawable/button_secondary_container_solid"
+                    android:padding="10dp"
+                    android:elevation="20dp"/>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="match_parent"
@@ -93,7 +108,11 @@
                     android:layout_marginStart="64dp"
                     android:layout_marginEnd="64dp"
                     android:layout_marginBottom="14dp"
-                    android:text="Cofirm the code" />
+                    android:text="Cofirm the code"
+                    android:textColor="@color/green_primary"
+                    android:background="@drawable/button_secondary_container_solid"
+                    android:padding="10dp"
+                    android:elevation="20dp"/>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="match_parent"
@@ -101,7 +120,11 @@
                     android:layout_marginBottom="14dp"
                     android:layout_marginStart="64dp"
                     android:layout_marginEnd="64dp"
-                    android:text="Back" />
+                    android:text="Back"
+                    android:textColor="@color/green_primary"
+                    android:background="@drawable/button_secondary_container_solid"
+                    android:padding="10dp"
+                    android:elevation="20dp"/>
 
             </LinearLayout>
 

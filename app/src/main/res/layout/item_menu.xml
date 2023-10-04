@@ -28,17 +28,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@drawable/shape_impression_plus"
-                android:backgroundTint="@color/green_secondary_container"/>
+                android:background="@drawable/button_impression_plus"
+                android:padding="15dp"
+                android:elevation="30dp"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/itemMenuMinusBtn"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@drawable/shape_impression_minus"
-                android:elevation="0dp"
-                android:backgroundTint="@color/green_error_container"/>
+                android:background="@drawable/button_impression_minus"
+                android:padding="15dp"
+                android:elevation="30dp" />
 
         </LinearLayout>
 
@@ -143,7 +144,8 @@
                                     android:layout_height="wrap_content"
                                     android:text="Description:"
                                     android:textSize="12sp"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+                                    android:textColor="@color/green_secondary"/>
                             </LinearLayout>
                         </LinearLayout>
 
@@ -159,7 +161,9 @@
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:text="something something something something something something something something something something something"
-                        android:textSize="11sp" />
+                        android:textSize="15sp"
+                        android:textColor="@color/green_secondary"
+                        android:textStyle="italic"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -189,6 +193,7 @@
                     </LinearLayout>
 
                     <ImageView
+                        android:id="@+id/itemMenuIconMinus"
                         android:layout_width="match_parent"
                         android:layout_height="28dp"
                         android:src="@drawable/ic_remove" />

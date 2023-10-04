@@ -6,16 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.qfmenu.QrMenuApplication
-import com.example.qfmenu.viewmodels.models.Dish
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
-import com.example.qfmenu.database.entity.MenuWithCategories
 import com.example.qfmenu.databinding.FragmentReviewListBinding
+import com.example.qfmenu.util.ReviewListAdapter
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -144,7 +142,7 @@ class ReviewListFragment : Fragment() {
                             val categories = menuWithCategories.categoriesDb
                             if (categories.isNotEmpty()) {
                                 val categoryDb =
-                                    categories[saveStateViewModel.stateCategoryPositionMenu]
+                                    categories[saveStateViewModel.stateCategoryPosition]
                                 categoryDao.getCategoryWithDishesLiveData(categoryDb.categoryId)
                                     .observe(this.viewLifecycleOwner) {
                                         it.let {

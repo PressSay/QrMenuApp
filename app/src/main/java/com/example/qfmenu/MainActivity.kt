@@ -1,12 +1,10 @@
 package com.example.qfmenu
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil.setContentView
-import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.qfmenu.databinding.ActivityMainBinding
@@ -18,13 +16,7 @@ val SCREEN_LARGE get() = 850
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
-    private fun popToStartDestination(navController: NavController) {
-        val startDestination = navController.graph.startDestination
-        val navOptions = NavOptions.Builder()
-            .setPopUpTo(startDestination, true)
-            .build()
-        navController.navigate(startDestination, null, navOptions)
-    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,94 +26,35 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         val slidingPaneLayout = binding.slidingPaneLayout
         val myNavHostFragment1: NavHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_detail) as NavHostFragment
+        val myNavHostFragment2: NavHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_login) as NavHostFragment
+
         val inflater1 = myNavHostFragment1.navController.navInflater
+        val inflater2 = myNavHostFragment2.navController.navInflater
+
         val graphOrder = inflater1.inflate(R.navigation.nav_graph)
+        val graphLogin = inflater2.inflate(R.navigation.login_graph)
+
         val navBar = binding.navBar
 
         binding.searchView.visibility = View.GONE
 
         myNavHostFragment1.navController.graph = graphOrder
+        myNavHostFragment2.navController.graph = graphLogin
+
+        saveStateViewModel.myNavHostFragment1 = myNavHostFragment1
+        saveStateViewModel.myNavHostFragment2 = myNavHostFragment2
 
         slidingPaneLayout.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
 
-        val width : Float = resources.displayMetrics.widthPixels / resources.displayMetrics.density
+        val navHostLogin = binding.navHostLogin
+        binding.navHostDetail.visibility = View.GONE
 
-        if (width < SCREEN_LARGE) {
-            navBar.visibility = View.GONE
-        } else {
-            navBar.menu.findItem(R.id.homeMenu).isVisible = false
-        }
+        val lp = SlidingPaneLayout.LayoutParams(
+            SlidingPaneLayout.LayoutParams.MATCH_PARENT,
+            SlidingPaneLayout.LayoutParams.MATCH_PARENT
+        )
 
-
-        binding.btnStartOrder.setOnClickListener {
-            popToStartDestination(myNavHostFragment1.navController)
-            saveStateViewModel.stateIsStartOrder = true
-            saveStateViewModel.stateIsOffOnOrder = false
-            saveStateViewModel.setStateDishesDb(listOf())
-            saveStateViewModel.stateCategoryPositionMenu = 0
-            saveStateViewModel.stateDishesByCategories = mutableListOf()
-            if (width < SCREEN_LARGE) {
-                binding.slidingPaneLayout.openPane()
-                navBar.visibility = View.VISIBLE
-            }
-        }
-
-        binding.btnBuyTakeAway.setOnClickListener {
-            popToStartDestination(myNavHostFragment1.navController)
-            saveStateViewModel.stateIsStartOrder = false
-            saveStateViewModel.stateIsOffOnOrder = false
-            saveStateViewModel.setStateDishesDb(listOf())
-            saveStateViewModel.stateCategoryPositionMenu = 0
-            saveStateViewModel.stateDishesByCategories = mutableListOf()
-            if (width < SCREEN_LARGE) {
-                slidingPaneLayout.openPane()
-                navBar.visibility = View.VISIBLE
-            }
-        }
-
-        binding.btnConfigShop.setOnClickListener {
-            popToStartDestination(myNavHostFragment1.navController)
-            myNavHostFragment1.navController.navigate(R.id.configShopFragment)
-
-            if (width < SCREEN_LARGE) {
-                slidingPaneLayout.openPane()
-                navBar.visibility = View.VISIBLE
-            }
-        }
-
-        binding.btnOfflineList.setOnClickListener {
-            popToStartDestination(myNavHostFragment1.navController)
-            myNavHostFragment1.navController.navigate(R.id.orderListUnconfirmedFragment)
-            saveStateViewModel.stateIsOffOnOrder = true
-            saveStateViewModel.setStateDishesDb(listOf())
-            saveStateViewModel.stateDishesByCategories = mutableListOf()
-            if (width < SCREEN_LARGE) {
-                slidingPaneLayout.openPane()
-                navBar.visibility = View.VISIBLE
-            }
-        }
-
-        binding.btnOnlineList.setOnClickListener {
-            popToStartDestination(myNavHostFragment1.navController)
-            myNavHostFragment1.navController.navigate(R.id.editOnlineOrderFragment)
-            saveStateViewModel.setStateDishesDb(listOf())
-            saveStateViewModel.stateDishesByCategories = mutableListOf()
-            if (width < SCREEN_LARGE) {
-                slidingPaneLayout.openPane()
-                navBar.visibility = View.VISIBLE
-            }
-        }
-
-        binding.btnTableUnlock.setOnClickListener {
-            saveStateViewModel.stateIsTableUnClock = true
-            popToStartDestination(myNavHostFragment1.navController)
-            myNavHostFragment1.navController.navigate(R.id.waitingTableFragment)
-
-            if (width < SCREEN_LARGE) {
-                slidingPaneLayout.openPane()
-                navBar.visibility = View.VISIBLE
-            }
-        }
+        navHostLogin.layoutParams = lp
 
     }
 }

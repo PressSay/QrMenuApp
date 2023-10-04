@@ -15,8 +15,9 @@
         android:layout_height="match_parent"
         android:src="@drawable/ic_build"
         android:scaleType="fitCenter"
-        android:background="@color/green_secondary_container"
-        android:layout_margin="4dp"/>
+        android:background="@drawable/button_secondary_container_solid"
+        android:layout_margin="4dp"
+        android:tint="@color/green_primary"/>
 
     <TextView
         android:id="@+id/titleItemEditCategoryOrDish"

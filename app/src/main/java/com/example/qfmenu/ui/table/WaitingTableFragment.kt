@@ -17,8 +17,8 @@ import com.example.qfmenu.viewmodels.CustomerViewModelFactory
 import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
-import com.example.qfmenu.database.entity.TableDb
 import com.example.qfmenu.databinding.FragmentWaitingTableBinding
+import com.example.qfmenu.util.WaitingTableAdapter
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 

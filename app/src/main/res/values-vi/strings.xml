@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">QFMenu</string>
+    <string name="table_unlock">Mỡ Khóa Bàn</string>
+    <string name="online_list">Danh Sách Onl</string>
+    <string name="offline_list">Danh Sách Off</string>
+    <string name="start_order">Đặt Món</string>
+    <string name="config_shop">Cấu Hình</string>
+    <string name="buy_take_away">Mua Mang Đi</string>
+    <string name="status_table_free">Trống</string>
+    <string name="shop_name">Tên Shop:</string>
+    <string name="address_shop">Địa Chỉ Shop:</string>
+    <string name="enable_review">Bật Review:</string>
+    <string name="amount_table">Số Lượng Bàn:</string>
+    <string name="promotion_vip">Triết Khấu VIP:</string>
+    <string name="promotion_bill">Triết Khấu Bill:</string>
+    <string name="menu">Thực Đơn</string>
+    <string name="use_menu">Dùng</string>
+    <string name="upload">Tải</string>
+    <string name="Review">Review</string>
+    <string name="overview">Tổng Quan</string>
+    <string name="staff">Nhân Viên</string>
+    <string name="name_user">Tên:</string>
+    <string name="phone_user">Số ĐT:</string>
+    <string name="email_user">Email:</string>
+    <string name="delete_user">Xóa</string>
+    <string name="tax">Thuế: %s</string>
+    <string name="total">Tổng: %s</string>
+    <string name="order_id">Mã Đơn: %s</string>
+    <string name="payments">Hình Thức Trả:</string>
+    <string name="table_name">Tên Bàn: %s</string>
+    <string name="guest_money">Tiền Khách: %s</string>
+    <string name="change_money">Tiền Thối: %s</string>
+    <string name="code_bill">Mã Bill:</string>
+</resources>

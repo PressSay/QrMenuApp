@@ -20,7 +20,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:src="@drawable/ic_person"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter"
+            android:padding="4dp"/>
 
         <View
             android:layout_width="match_parent"
@@ -33,7 +34,9 @@
             android:layout_weight="1"
             android:src="@drawable/ic_trash"
             android:background="@color/green_on_primary"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter"
+            android:layout_margin="4dp"
+            android:padding="5dp"/>
 
     </LinearLayout>
 

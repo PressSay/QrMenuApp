@@ -9,14 +9,14 @@ import androidx.room.Relation
 data class AccountDb(
     @PrimaryKey(autoGenerate = true)
     val accountId: Long = 0,
-    val roleCreatorId: String,
     val name: String,
+    val email: String,
     val phoneNumber: String,
     val level: Int,
-    val email: String,
     val password: String,
     val address: String,
     val avatar: String,
+    val roleCreatorId: String,
 )
 
 data class AccountWithCustomers(

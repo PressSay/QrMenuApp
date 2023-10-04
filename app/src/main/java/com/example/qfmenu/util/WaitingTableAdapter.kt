@@ -1,4 +1,4 @@
-package com.example.qfmenu.ui.table
+package com.example.qfmenu.util
 
 import android.app.AlertDialog
 import android.content.Context
@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
@@ -16,7 +15,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qfmenu.viewmodels.CustomerViewModel
 import com.example.qfmenu.R
-import com.example.qfmenu.database.entity.DishDb
 import com.example.qfmenu.database.entity.TableDb
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 

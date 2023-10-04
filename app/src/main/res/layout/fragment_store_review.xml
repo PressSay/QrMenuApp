@@ -18,7 +18,8 @@
             android:text="Are you satisfied with our service ?"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="16dp"
+            android:textColor="@color/green_primary"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:layout_width="match_parent"
@@ -29,7 +30,10 @@
             android:text="Yes"
             android:textStyle="bold"
             android:textSize="16sp"
-            android:background="@drawable/shape_rounded_border"/>
+            android:background="@drawable/button_secondary_container_solid"
+            android:textColor="@color/green_primary"
+            android:padding="10dp"
+            android:elevation="20dp"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:layout_width="match_parent"
@@ -40,7 +44,10 @@
             android:text="No"
             android:textStyle="bold"
             android:textSize="16sp"
-            android:background="@drawable/shape_rounded_border"/>
+            android:background="@drawable/button_secondary_container_solid"
+            android:textColor="@color/green_primary"
+            android:padding="10dp"
+            android:elevation="20dp"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:layout_width="match_parent"
@@ -51,7 +58,10 @@
             android:text="I don't know"
             android:textStyle="bold"
             android:textSize="16sp"
-            android:background="@drawable/shape_rounded_border"/>
+            android:background="@drawable/button_secondary_container_solid"
+            android:textColor="@color/green_primary"
+            android:padding="10dp"
+            android:elevation="20dp"/>
 
     </LinearLayout>
 

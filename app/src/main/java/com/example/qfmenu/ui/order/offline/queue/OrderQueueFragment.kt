@@ -14,6 +14,8 @@ import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.databinding.FragmentOrderQueueBinding
+import com.example.qfmenu.util.OrderQueueAdapter
+import com.example.qfmenu.util.OrderQueueBillAdapter
 import com.example.qfmenu.viewmodels.CustomerOrderQueue
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -20,8 +21,8 @@ import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.entity.CategoryDb
 import com.example.qfmenu.database.entity.DishDb
 import com.example.qfmenu.databinding.FragmentEditCreateDishBinding
-import com.example.qfmenu.network.QrApiService
-import com.example.qfmenu.ui.menu.dish.DatasourceDish
+import com.example.qfmenu.network.NetworkRetrofit
+import com.example.qfmenu.util.EditDishListAdapter
 import com.example.qfmenu.viewmodels.DishViewModel
 import com.example.qfmenu.viewmodels.DishViewModelFactory
 import com.example.qfmenu.viewmodels.SaveStateViewModel
@@ -40,6 +41,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 
 /**
  * A simple [Fragment] subclass.
@@ -91,7 +93,6 @@ class EditCreateDishFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = binding.recyclerViewEditCreateDish
-        val myDataset = DatasourceDish().loadDishMenu()
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val width: Float = (resources.displayMetrics.widthPixels / resources.displayMetrics.density)
         val spanCount = if (width < SCREEN_LARGE) 1 else 2
@@ -146,22 +147,14 @@ class EditCreateDishFragment : Fragment() {
                 val requestBody = file.asRequestBody("image/*".toMediaType())
                 val part = MultipartBody.Part.createFormData("image", file.name, requestBody)
 
-                val httpClient = OkHttpClient.Builder()
-                httpClient.addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
-
-                val  BASE_URL =
-                    "http://192.168.1.6"
-
-                val retrofit = Retrofit.Builder()
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(httpClient.build())
-                    .baseUrl(BASE_URL)
-                    .build()
-                    .create(QrApiService::class.java)
-
                 CoroutineScope(Dispatchers.IO).launch {
-                    val response = retrofit.uploadImage(part)
-                    Log.d("CHEEZYCODER", response.toString())
+                    try {
+                        val networkRetrofit = NetworkRetrofit()
+                        val response = networkRetrofit.retrofit().uploadImage(part)
+                        Log.d("CHEEZYCODER", response.toString())
+                    } catch (networkError: IOException) {
+                        Log.d("NoInternet", true.toString())
+                    }
                 }
             }
         }
@@ -186,7 +179,7 @@ class EditCreateDishFragment : Fragment() {
 
         categorySaveBtn.setOnClickListener {
             if (categoryEditText.text.toString() != categoryDb.categoryName) {
-                GlobalScope.launch {
+                CoroutineScope(Dispatchers.IO).launch {
                     categoryDb = CategoryDb(
                         categoryDb.categoryId,
                         categoryEditText.text.toString(),

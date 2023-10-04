@@ -1,7 +1,8 @@
-package com.example.qfmenu.ui.order
+package com.example.qfmenu.util
 
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,10 +24,12 @@ import com.example.qfmenu.viewmodels.CustomerOrderQueue
 import com.example.qfmenu.viewmodels.CustomerViewModel
 import com.example.qfmenu.viewmodels.DishAmountDb
 import com.example.qfmenu.viewmodels.SaveStateViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class OrderListUnconfirmedAdapter(
     private val isOffline: Boolean,
@@ -97,10 +100,9 @@ class OrderListUnconfirmedAdapter(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    @OptIn(DelicateCoroutinesApi::class)
+
     private fun removeCustomerOrder(position: Int) {
-        GlobalScope.async {
+        CoroutineScope(Dispatchers.IO).launch {
             if (saveStateViewModel.stateCustomerOrderQueuesPos.size > position) {
                 saveStateViewModel.stateCustomerOrderQueuesPos[position] = -1
             }
@@ -109,7 +111,16 @@ class OrderListUnconfirmedAdapter(
                 async { customerViewModel.getCustomer(currentList[position].customerId) }.await()
 //                    val tableId = async { customerViewModel.getOrder(currentList[position].customerId) }.await().tableCreatorId
 
-            saveStateViewModel.stateCustomerOrderQueues.removeIf { it.customerDb.customerId == customerDbCurrent.customerId }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                saveStateViewModel.stateCustomerOrderQueues.removeIf { it.customerDb.customerId == customerDbCurrent.customerId }
+            } else {
+                for (i in 0..<saveStateViewModel.stateCustomerOrderQueues.size) {
+                    if (saveStateViewModel.stateCustomerOrderQueues[i].customerDb.customerId == customerDbCurrent.customerId) {
+                        saveStateViewModel.stateCustomerOrderQueues.removeAt(i)
+                        break
+                    }
+                }
+            }
         }
     }
 
@@ -160,7 +171,7 @@ class OrderListUnconfirmedAdapter(
 
         colorCheck(holder, position)
 
-        GlobalScope.async {
+        CoroutineScope(Dispatchers.Main).launch {
             val it = async(Dispatchers.IO) {
                 customerViewModel.getOrder(item.customerId)
             }.await()
