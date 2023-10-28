@@ -68,7 +68,6 @@ class ReviewCommentFragment : Fragment() {
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
         val editInputStoreReview = binding.editInputStoreReview
-
         val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
             if (it == R.id.optionTwo) {
                 if (editInputStoreReview.text?.isNotBlank() == true) {
@@ -103,8 +102,6 @@ class ReviewCommentFragment : Fragment() {
         navGlobal.setVisibleNav(true, width < SCREEN_LARGE, false, optTwo = true)
         navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, 0, R.drawable.ic_star)
         navGlobal.impNav()
-
-
     }
 
     companion object {

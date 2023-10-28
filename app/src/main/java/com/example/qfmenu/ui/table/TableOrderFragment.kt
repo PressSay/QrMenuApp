@@ -84,14 +84,19 @@ class TableOrderFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val isStartOrder = false
-
         val slidingPaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val width = resources.displayMetrics.widthPixels / resources.displayMetrics.density
         val spanCount = if (width > SCREEN_LARGE) 4 else 2
         val recyclerView = binding.tableRecyclerView
-
+        val gridLayoutManager = GridLayoutManager(requireContext(), spanCount)
+        val tableDao = (activity?.application as QrMenuApplication).database.tableDao()
+        val waitingTableAdapter = WaitingTableAdapter(
+            customerViewModel,
+            saveStateViewModel,
+            requireContext()
+        )
         val navGlobal = NavGlobal(navBar, findNavController(), slidingPaneLayout, saveStateViewModel) {
             if (it == R.id.homeMenu) {
                 saveStateViewModel.setStateDishesDb(listOf())
@@ -100,22 +105,15 @@ class TableOrderFragment : Fragment() {
             if (it == R.id.optionTwo) {
             }
         }
+
         navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, 0, R.drawable.ic_search)
         navGlobal.setVisibleNav(isStartOrder, width < SCREEN_LARGE, false, optTwo = true)
         navGlobal.impNav()
 
         if (saveStateViewModel.isOpenSlide)
             navBar.visibility = View.VISIBLE
-
-        val gridLayoutManager = GridLayoutManager(requireContext(), spanCount)
         recyclerView.layoutManager = gridLayoutManager
-        val waitingTableAdapter = WaitingTableAdapter(
-            customerViewModel,
-            saveStateViewModel,
-            requireContext()
-        )
         recyclerView.adapter = waitingTableAdapter
-        val tableDao = (activity?.application as QrMenuApplication).database.tableDao()
 
         tableDao.getTablesLiveData().observe(this.viewLifecycleOwner) {
             it.let {

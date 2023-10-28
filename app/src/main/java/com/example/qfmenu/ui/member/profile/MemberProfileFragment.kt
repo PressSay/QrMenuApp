@@ -64,20 +64,11 @@ class MemberProfileFragment : Fragment() {
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
         val width: Float = resources.displayMetrics.widthPixels / resources.displayMetrics.density
-
-
-
         val nameAccount = binding.nameAccount
         val phoneAccount = binding.phoneAccount
         val addressAccount = binding.addressAccount
         val emailAccount = binding.emailAccount
         val accountDb = saveStateViewModel.stateAccountDb!!
-
-        nameAccount.setText(accountDb.name)
-        phoneAccount.setText(accountDb.phoneNumber)
-        addressAccount.setText(accountDb.address)
-        emailAccount.setText(accountDb.email)
-
         val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
             if (it == R.id.optionTwo) {
                 if (!(nameAccount.text.isNullOrBlank() && phoneAccount.text.isNullOrBlank() && addressAccount.text.isNullOrBlank() && emailAccount.text.isNullOrBlank())) {
@@ -112,8 +103,10 @@ class MemberProfileFragment : Fragment() {
         navGlobal.setIconNav(R.id.backToHome, R.id.homeMenu, R.id.optionOne, R.id.optionTwo)
         navGlobal.setVisibleNav(true, width < SCREEN_LARGE, optOne = false, optTwo = true)
         navGlobal.impNav();
-
-
+        nameAccount.setText(accountDb.name)
+        phoneAccount.setText(accountDb.phoneNumber)
+        addressAccount.setText(accountDb.address)
+        emailAccount.setText(accountDb.email)
     }
 
     companion object {

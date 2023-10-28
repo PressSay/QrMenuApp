@@ -84,57 +84,18 @@ class ConfigCategoryFragment : Fragment() {
         val width = resources.displayMetrics.widthPixels / resources.displayMetrics.density
         val recyclerView = binding.recyclerViewEditCreateCategory
         val spanCount = if (width < SCREEN_LARGE) 1 else 2
-
         val saveMenuEditCategory = binding.saveMenuEditCategory as ViewGroup
         val linearTextField1 = saveMenuEditCategory.getChildAt(0) as ViewGroup
         val menuEditTextView = linearTextField1.getChildAt(2) as TextInputEditText
         val saveMenuBtn = linearTextField1.getChildAt(3) as ImageButton
         val linearTextField2 = saveMenuEditCategory.getChildAt(1) as ViewGroup
         val categoryEditTextView = linearTextField2.getChildAt(2) as TextInputEditText
-
         val menuDao = (activity?.application as QrMenuApplication).database.menuDao()
         var menuDb = saveStateViewModel.stateMenuDb
-
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
-
         val configCategoryAdapter = ConfigCategoryAdapter(categoryViewModel, requireContext(), saveStateViewModel)
-
         var isSearch = false
         val icSearch = requireActivity().findViewById<AppCompatImageButton>(R.id.icSearch)
         val textSearch = requireActivity().findViewById<TextView>(R.id.textSearch)
-
-        icSearch.setOnClickListener {
-            categoryViewModel.getCategoriesLiveData(saveStateViewModel.stateMenuDb.menuId).observe(this.viewLifecycleOwner) { menuWithCategories ->
-                val filtered = menuWithCategories.categoriesDb.filter { it.name.contains(textSearch.text.toString(), ignoreCase = true) }
-                configCategoryAdapter.submitList(filtered)
-            }
-        }
-
-        categoryViewModel.getCategoriesLiveData(saveStateViewModel.stateMenuDb.menuId).observe(this.viewLifecycleOwner) {
-            configCategoryAdapter.submitList(it.categoriesDb)
-        }
-
-
-        recyclerView.adapter = configCategoryAdapter
-
-        menuEditTextView.setText(menuDb.menuName)
-
-        saveMenuBtn.setOnClickListener {
-            if (menuEditTextView.text.toString() != menuDb.menuName) {
-                GlobalScope.launch {
-                    menuDb = MenuDb(
-                        menuDb.menuId,
-                        menuEditTextView.text.toString(),
-                        menuDb.isUsed
-                    )
-                    menuDao.update(
-                        menuDb
-                    )
-                }
-            }
-
-        }
-
         val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
             if (it == R.id.optionOne) {
                 categoryViewModel.getCategoriesLiveData(saveStateViewModel.stateMenuDb.menuId).observe(this.viewLifecycleOwner) { menuWithCategories ->
@@ -159,6 +120,34 @@ class ConfigCategoryFragment : Fragment() {
         navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, R.drawable.ic_search, R.drawable.ic_plus)
         navGlobal.impNav()
 
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
+        icSearch.setOnClickListener {
+            categoryViewModel.getCategoriesLiveData(saveStateViewModel.stateMenuDb.menuId).observe(this.viewLifecycleOwner) { menuWithCategories ->
+                val filtered = menuWithCategories.categoriesDb.filter { it.name.contains(textSearch.text.toString(), ignoreCase = true) }
+                configCategoryAdapter.submitList(filtered)
+            }
+        }
+
+        categoryViewModel.getCategoriesLiveData(saveStateViewModel.stateMenuDb.menuId).observe(this.viewLifecycleOwner) {
+            configCategoryAdapter.submitList(it.categoriesDb)
+        }
+        recyclerView.adapter = configCategoryAdapter
+        menuEditTextView.setText(menuDb.menuName)
+        saveMenuBtn.setOnClickListener {
+            if (menuEditTextView.text.toString() != menuDb.menuName) {
+                GlobalScope.launch {
+                    menuDb = MenuDb(
+                        menuDb.menuId,
+                        menuEditTextView.text.toString(),
+                        menuDb.isUsed
+                    )
+                    menuDao.update(
+                        menuDb
+                    )
+                }
+            }
+
+        }
     }
 
     companion object {

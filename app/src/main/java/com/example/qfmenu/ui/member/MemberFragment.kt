@@ -70,18 +70,17 @@ class MemberFragment : Fragment() {
         val spanCount = if (width < SCREEN_LARGE) 2 else 4
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
-
         val layoutInputMemberManager = binding.itemsEditMemberManager as ViewGroup
         val layoutInputName = layoutInputMemberManager.getChildAt(0) as ViewGroup
         val layoutInputPass = layoutInputMemberManager.getChildAt(1) as ViewGroup
-
         val editInputName = layoutInputName.getChildAt(2) as TextInputEditText
         val editInputPass = layoutInputPass.getChildAt(2) as TextInputEditText
-
-//        1 admin 2 staff
-
         val accountDao = (activity?.application as QrMenuApplication).database.accountDao()
-
+        val memberAdapter =
+            MemberAdapter(
+                requireContext(),
+                saveStateViewModel
+            )
         val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
             if (it == R.id.optionTwo) {
                 if (!(editInputName.text.isNullOrBlank() && editInputPass.text.isNullOrBlank())) {
@@ -114,13 +113,7 @@ class MemberFragment : Fragment() {
         navGlobal.impNav();
 
         recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
-        val memberAdapter =
-            MemberAdapter(
-                requireContext(),
-                saveStateViewModel
-            )
         recyclerView.adapter = memberAdapter
-
         accountDao.getAccountsWithNameRole("staff").observe(this.viewLifecycleOwner) {
             it?.let {
                 memberAdapter.submitList(it.accountsDb)

@@ -125,6 +125,12 @@ class DishMenuFragment : Fragment() {
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val navHostDetail =
             requireActivity().findViewById<FragmentContainerView>(R.id.nav_host_detail)
+        val categoryPos = saveStateViewModel.stateCategoryPosition
+        val dishMenuAdapter =
+            DishMenuAdapter(requireContext(), btnBuy, saveStateViewModel)
+        var isSearch = false
+        val icSearch = requireActivity().findViewById<AppCompatImageButton>(R.id.icSearch)
+        val textSearch = requireActivity().findViewById<TextView>(R.id.textSearch)
 
         if (width < SCREEN_LARGE && navHostDetail.visibility != View.GONE && saveStateViewModel.isOpenSlide) {
             navBar.visibility = View.VISIBLE
@@ -142,12 +148,7 @@ class DishMenuFragment : Fragment() {
                 R.color.green_secondary
             )
         )
-
-        val dishMenuAdapter =
-            DishMenuAdapter(requireContext(), btnBuy, saveStateViewModel)
         recyclerView.adapter = dishMenuAdapter
-        val categoryPos = saveStateViewModel.stateCategoryPosition
-
         btnBuy.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 if (saveStateViewModel.stateDishesByCategories.size == 0) {
@@ -207,9 +208,6 @@ class DishMenuFragment : Fragment() {
             }
         }
 
-        var isSearch = false
-        val icSearch = requireActivity().findViewById<AppCompatImageButton>(R.id.icSearch)
-        val textSearch = requireActivity().findViewById<TextView>(R.id.textSearch)
         icSearch.setOnClickListener {
             getMenu(menuDao, menuUsed) { dishAmountDbs ->
                 val filtered =
@@ -264,12 +262,12 @@ class DishMenuFragment : Fragment() {
                 requireActivity().findViewById<LinearLayout>(R.id.searchView).visibility =
                     View.GONE
             }
-
         navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, R.drawable.ic_search, R.drawable.ic_menu)
         navGlobal.setVisibleNav(saveStateViewModel.stateIsOffOnOrder, width < SCREEN_LARGE, true,
             optTwo = true
         )
         navGlobal.impNav()
+
         recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
     }
 

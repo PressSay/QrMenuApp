@@ -76,13 +76,6 @@ class OrderUnconfirmedFragment : Fragment() {
         val width = resources.displayMetrics.widthPixels / resources.displayMetrics.density
         val recyclerView = binding.orderListUnconfirmedRecyclerView
         val spanCount = if (width < SCREEN_LARGE) 1 else 2
-
-
-        saveStateViewModel.stateCustomerOrderQueues = mutableListOf()
-        if (saveStateViewModel.isOpenSlide)
-            navBar.visibility = View.VISIBLE
-
-//        val orderListAdapter = OrderUnconfirmedAdapter(true, requireContext(), saveStateViewModel, saveStateViewModel.stateCustomerWithSelectDishes, this.viewLifecycleOwner)
         val orderUnconfirmedAdapter = OrderUnconfirmedAdapter(
             true,
             requireContext(),
@@ -90,18 +83,6 @@ class OrderUnconfirmedFragment : Fragment() {
             customerViewModel,
             (activity?.application as QrMenuApplication).database.customerDishCrossRefDao()
         )
-
-//        Not Use Ram
-        customerViewModel.customerList.observe(this.viewLifecycleOwner) {
-            it.apply {
-                orderUnconfirmedAdapter.submitList(it)
-            }
-            if (it.isEmpty())
-                saveStateViewModel.stateCustomerOrderQueuesPos = mutableListOf()
-        }
-        recyclerView.adapter = orderUnconfirmedAdapter
-
-
         val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
             if (it == R.id.optionOne) {
 
@@ -116,8 +97,21 @@ class OrderUnconfirmedFragment : Fragment() {
         navGlobal.setVisibleNav(false, width < SCREEN_LARGE, true, optTwo = true)
         navGlobal.impNav()
 
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
+        saveStateViewModel.stateCustomerOrderQueues = mutableListOf()
+        if (saveStateViewModel.isOpenSlide)
+            navBar.visibility = View.VISIBLE
 
+//        val orderListAdapter = OrderUnconfirmedAdapter(true, requireContext(), saveStateViewModel, saveStateViewModel.stateCustomerWithSelectDishes, this.viewLifecycleOwner)
+//        Not Use Ram
+        customerViewModel.customerList.observe(this.viewLifecycleOwner) {
+            it.apply {
+                orderUnconfirmedAdapter.submitList(it)
+            }
+            if (it.isEmpty())
+                saveStateViewModel.stateCustomerOrderQueuesPos = mutableListOf()
+        }
+        recyclerView.adapter = orderUnconfirmedAdapter
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
     }
 
     companion object {

@@ -1,33 +1,38 @@
 package com.example.qfmenu.network.services
 
+import com.example.qfmenu.network.entity.Category
+import retrofit2.Response
 import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface CategoryService {
+    @Headers("Accept: application/json")
     @GET("/api/categories")
-    suspend fun findALl()
-
+    suspend fun findALl(): Response<List<Category>>
+    @Headers("Accept: application/json")
     @GET("/api/categories/{id}")
-    suspend fun findOne(@Path("id") id: String)
-
+    suspend fun findOne(@Path("id") id: String): Response<Category>
+    @Headers("Accept: application/json")
     @FormUrlEncoded
     @POST("/api/categories")
     suspend fun create(
         @Field("name") name: String,
         @Field("menuId") isUsed: String
-    )
+    ): Response<Category>
+    @Headers("Accept: application/json")
     @FormUrlEncoded
     @PUT("/api/categories/{id}")
     suspend fun update(
         @Path("id") id: String,
         @Field("newName") newName: String,
-    )
-
+    ): Response<Category>
+    @Headers("Accept: application/json")
     @DELETE("/api/categories/{id}")
-    suspend fun delete(@Path("id") id: String)
+    suspend fun delete(@Path("id") id: String): Response<Category>
 }

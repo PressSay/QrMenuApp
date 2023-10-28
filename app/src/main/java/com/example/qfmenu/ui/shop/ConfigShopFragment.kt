@@ -1,10 +1,7 @@
 package com.example.qfmenu.ui.shop
 
 import android.app.AlertDialog
-import android.content.DialogInterface
-import android.os.Build.VERSION_CODES.P
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -25,17 +22,11 @@ import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileInputStream
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.OutputStream
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -77,31 +68,15 @@ class ConfigShopFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val scrollView = binding.scrollViewOfConfig
+//        val scrollView = binding.scrollViewOfConfig
         val width = resources.displayMetrics.widthPixels / resources.displayMetrics.density
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
-        if (saveStateViewModel.isOpenSlide)
-            navBar.visibility = View.VISIBLE
         val btnMenu = binding.btnMenuConfigShop
         val btnReview = binding.btnReviewConfigShop
         val btnOverView = binding.btnOverviewConfigShop
         val btnStaff = binding.btnStaffConfigShop
-
-        btnMenu.setOnClickListener {
-            findNavController().navigate(R.id.action_configShopFragment_to_configMenuFragment)
-        }
-        btnReview.setOnClickListener {
-            findNavController().navigate(R.id.action_configShopFragment_to_reviewFragment)
-        }
-        btnOverView.setOnClickListener {
-            findNavController().navigate(R.id.action_configShopFragment_to_overviewFragment)
-        }
-        btnStaff.setOnClickListener {
-            findNavController().navigate(R.id.action_configShopFragment_to_memberFragment)
-        }
-
         val path = requireContext().filesDir
         val letDirectory = File(path, "Config Shop")
         if (!letDirectory.exists())
@@ -113,32 +88,8 @@ class ConfigShopFragment : Fragment() {
         val numberOfTable = binding.numberOfTableTextField
         val promotionVipShop = binding.promotionVipShop
         val promotionBill = binding.promotionBill
-        var isEnableReview: Boolean = true
-        val navGlobal =
-            NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
-                if (it == R.id.optionTwo) {
-                    file.writeText(
-                        shopName.text.toString() + "_" +
-                                shopAddress.text.toString() + "_" +
-                                isEnableReview.toString() + "_" +
-                                numberOfTable.text.toString() + "_" +
-                                promotionVipShop.text.toString() + "_" +
-                                promotionBill.text.toString() + "_"
-                    )
-                    AlertDialog.Builder(context)
-                        .setTitle("Config Shop")
-                        .setMessage(requireContext().getString(R.string.your_config_has_been_saved))
-                        .setPositiveButton(android.R.string.ok,
-                            DialogInterface.OnClickListener { _, _ ->
-                            }).show()
-                }
-            }
-        navGlobal.setIconNav(0, R.drawable.ic_home, 0, R.drawable.ic_save)
-        navGlobal.setVisibleNav(false, width < SCREEN_LARGE, false, optTwo = true)
-        navGlobal.impNav()
-
-
-        val isEnableReviewArray = arrayOf<String>("Enable", "Disable")
+        var isEnableReview = true
+        val isEnableReviewArray = arrayOf("Enable", "Disable")
         val ad: ArrayAdapter<String> = ArrayAdapter<String>(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
@@ -155,25 +106,15 @@ class ConfigShopFragment : Fragment() {
                 view: View?,
                 position: Int,
                 id: Long
-            ) {
-                isEnableReview = isEnableReviewArray[position] == "Enable"
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-
-            }
-
+            ) { isEnableReview = isEnableReviewArray[position] == "Enable" }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
             override fun onItemClick(
                 parent: AdapterView<*>?,
                 view: View?,
                 position: Int,
                 id: Long
-            ) {
-
-            }
-
+            ) {}
         }
-
         if (file.exists()) {
             val inputAsString = FileInputStream(file).bufferedReader().use { it.readText() }
             val arrayInputString = inputAsString.split("_")
@@ -206,12 +147,47 @@ class ConfigShopFragment : Fragment() {
                             tableId = i.toLong(),
                             requireContext().getString(R.string.status_table_free)
                         )
-//                        Log.d("table", "true " + tableDb.tableId)
                         tableDao.insert(tableDb)
                     }
                 }
             }
         }
+        btnMenu.setOnClickListener {
+            findNavController().navigate(R.id.action_configShopFragment_to_configMenuFragment)
+        }
+        btnReview.setOnClickListener {
+            findNavController().navigate(R.id.action_configShopFragment_to_reviewFragment)
+        }
+        btnOverView.setOnClickListener {
+            findNavController().navigate(R.id.action_configShopFragment_to_overviewFragment)
+        }
+        btnStaff.setOnClickListener {
+            findNavController().navigate(R.id.action_configShopFragment_to_memberFragment)
+        }
+
+        if (saveStateViewModel.isOpenSlide)
+            navBar.visibility = View.VISIBLE
+        val navGlobal =
+            NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
+                if (it == R.id.optionTwo) {
+                    file.writeText(
+                        shopName.text.toString() + "_" +
+                                shopAddress.text.toString() + "_" +
+                                isEnableReview.toString() + "_" +
+                                numberOfTable.text.toString() + "_" +
+                                promotionVipShop.text.toString() + "_" +
+                                promotionBill.text.toString() + "_"
+                    )
+                    AlertDialog.Builder(context)
+                        .setTitle("Config Shop")
+                        .setMessage(requireContext().getString(R.string.your_config_has_been_saved))
+                        .setPositiveButton(android.R.string.ok
+                        ) { _, _ -> }.show()
+                }
+            }
+        navGlobal.setIconNav(0, R.drawable.ic_home, 0, R.drawable.ic_save)
+        navGlobal.setVisibleNav(false, width < SCREEN_LARGE, false, optTwo = true)
+        navGlobal.impNav()
 
 //        scrollView.post {
 //            scrollView.fullScroll(View.FOCUS_DOWN)

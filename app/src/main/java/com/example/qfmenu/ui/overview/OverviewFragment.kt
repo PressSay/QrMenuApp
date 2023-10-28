@@ -1,18 +1,11 @@
 package com.example.qfmenu.ui.overview
 
 import android.app.AlertDialog
-import android.content.DialogInterface
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.ArrayAdapter
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -64,42 +57,37 @@ class OverviewFragment : Fragment() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val width: Float = resources.displayMetrics.widthPixels / resources.displayMetrics.density
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
-
-        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {}
-        navGlobal.setVisibleNav(true, width < SCREEN_LARGE, false, optTwo = false)
-        navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, 0,0)
-        navGlobal.impNav()
-
         val editTextChooseDate = binding.editTextChooseDateOverview
-
         val buttonsOverView = binding.buttonsOverview
         val btnOverViewList = (buttonsOverView as ViewGroup).getChildAt(0) as AppCompatButton
         val btnInvestment = (buttonsOverView as ViewGroup).getChildAt(1) as AppCompatButton
         val btnChooseDate = (buttonsOverView as ViewGroup).getChildAt(2) as AppCompatButton
-
         val descriptionOverView = binding.descriptionOverView as ViewGroup
         val amountBill = descriptionOverView.getChildAt(0) as TextView
         val revenue = descriptionOverView.getChildAt(1) as TextView
         val avgPerBill = descriptionOverView.getChildAt(2) as TextView
         val investmentOverView = descriptionOverView.getChildAt(3) as TextView
         val profitOverView = descriptionOverView.getChildAt(4) as TextView
-
         val chartLayoutOverView = binding.chartOverView
-
         val sevenDayAgo = Calendar.getInstance()
-        sevenDayAgo.add(Calendar.DAY_OF_YEAR, -7)
         val threeDayAgo = Calendar.getInstance()
-        threeDayAgo.add(Calendar.DAY_OF_YEAR, -3)
         val oneDayAgo = Calendar.getInstance()
-        oneDayAgo.add(Calendar.DAY_OF_YEAR, -1)
+        val navGlobal =
+            NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {}
+        navGlobal.setVisibleNav(true, width < SCREEN_LARGE, false, optTwo = false)
+        navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, 0, 0)
+        navGlobal.impNav()
 
+        sevenDayAgo.add(Calendar.DAY_OF_YEAR, -7)
+        threeDayAgo.add(Calendar.DAY_OF_YEAR, -3)
+        oneDayAgo.add(Calendar.DAY_OF_YEAR, -1)
 
         btnOverViewList.setOnClickListener {
             findNavController().navigate(R.id.action_overviewFragment_to_billFragment)
@@ -116,17 +104,17 @@ class OverviewFragment : Fragment() {
                 AlertDialog.Builder(context)
                     .setTitle("Add Bill")
                     .setMessage("Your selection is blank!!")
-                    .setPositiveButton(android.R.string.ok,
-                        DialogInterface.OnClickListener { _, _ ->
-                        }).show()
+                    .setPositiveButton(
+                        android.R.string.ok
+                    ) { _, _ -> }.show()
             } else {
                 saveStateViewModel.stateCalendar = editTextChooseDate.text.toString()
                 AlertDialog.Builder(context)
                     .setTitle("Add Bill")
                     .setMessage("Your selection has been saved " + saveStateViewModel.stateCalendar)
-                    .setPositiveButton(android.R.string.ok,
-                        DialogInterface.OnClickListener { _, _ ->
-                        }).show()
+                    .setPositiveButton(
+                        android.R.string.ok
+                    ) { _, _ -> }.show()
             }
 
         }

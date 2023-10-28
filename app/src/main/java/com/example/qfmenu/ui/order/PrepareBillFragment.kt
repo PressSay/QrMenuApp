@@ -77,7 +77,6 @@ class PrepareBillFragment : Fragment() {
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val width = resources.displayMetrics.widthPixels / resources.displayMetrics.density
-
         val navGlobal = NavGlobal(navBar, findNavController(), slidingPaneLayout, saveStateViewModel) {
             if (it == R.id.optionTwo) {
                 GlobalScope.launch {

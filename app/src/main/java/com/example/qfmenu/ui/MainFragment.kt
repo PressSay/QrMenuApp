@@ -66,7 +66,6 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val swipeRefreshLayout = binding.refreshLayout
-
         val myNavHostFragment1 : NavHostFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_detail) as NavHostFragment
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val width : Float = resources.displayMetrics.widthPixels / resources.displayMetrics.density
@@ -75,6 +74,9 @@ class MainFragment : Fragment() {
 
         // Refresh function for the layout
         swipeRefreshLayout.setOnRefreshListener{
+
+
+
             swipeRefreshLayout.isRefreshing = false
         }
 

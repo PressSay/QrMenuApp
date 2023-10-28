@@ -26,10 +26,8 @@ class SatisfactionFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-
     private var _binding: FragmentSatisfactionBinding? = null
     private val binding get() = _binding!!
-
     private val saveStateViewModel: SaveStateViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -85,8 +85,6 @@ class CategoryFragment : Fragment() {
         val spanCount = if (width < SCREEN_LARGE) 1 else 2
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
-
-
         val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
             if (it == R.id.optionTwo) {
                findNavController().popBackStack()
@@ -95,7 +93,6 @@ class CategoryFragment : Fragment() {
         navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, R.drawable.ic_search, R.drawable.ic_check_fill)
         navGlobal.setVisibleNav(true, width < SCREEN_LARGE, optOne = true, optTwo = true)
         navGlobal.impNav()
-
 
         recycler.layoutManager = GridLayoutManager(requireContext(), spanCount)
         val categoryAdapter = CategoryAdapter(

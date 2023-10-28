@@ -77,43 +77,21 @@ class ConfigMenuFragment : Fragment() {
         val menuSubmitParent = binding.menuSubmit as ViewGroup
         val menuSubmitString =
             (menuSubmitParent.getChildAt(0) as ViewGroup).getChildAt(2) as TextInputEditText
-
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
         val width = resources.displayMetrics.widthPixels / resources.displayMetrics.density
         val recyclerView = binding.recyclerViewEditCreateMenu
         val spanCount = if (width < SCREEN_LARGE) 1 else 2
-
         val menus = menuViewModel.menus
-
         val configMenuAdapter = ConfigMenuAdapter(
             menuViewModel,
             requireContext(),
             saveStateViewModel,
         )
-
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
-        recyclerView.adapter = configMenuAdapter
-
         var isSearch = false
         val icSearch = requireActivity().findViewById<AppCompatImageButton>(R.id.icSearch)
         val textSearch = requireActivity().findViewById<TextView>(R.id.textSearch)
-
-        icSearch.setOnClickListener {
-            menus.observe(this.viewLifecycleOwner) { menuDbs ->
-                val filtered = menuDbs.filter {  it.menuName.contains(textSearch.text.toString(), ignoreCase = true) }
-                if (filtered.isNotEmpty()) {
-                    configMenuAdapter.submitList(filtered)
-                } else {
-                    configMenuAdapter.submitList(menuDbs)
-                }
-            }
-        }
-        menus.observe(this.viewLifecycleOwner) {
-            configMenuAdapter.submitList(it)
-        }
-
         val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) { it ->
             if (it == R.id.optionOne) {
                 menus.observe(this.viewLifecycleOwner) {
@@ -135,6 +113,22 @@ class ConfigMenuFragment : Fragment() {
         navGlobal.setVisibleNav(true, width < SCREEN_LARGE, true, optTwo = true)
         navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, R.drawable.ic_search, R.drawable.ic_save)
         navGlobal.impNav()
+
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
+        recyclerView.adapter = configMenuAdapter
+        icSearch.setOnClickListener {
+            menus.observe(this.viewLifecycleOwner) { menuDbs ->
+                val filtered = menuDbs.filter {  it.menuName.contains(textSearch.text.toString(), ignoreCase = true) }
+                if (filtered.isNotEmpty()) {
+                    configMenuAdapter.submitList(filtered)
+                } else {
+                    configMenuAdapter.submitList(menuDbs)
+                }
+            }
+        }
+        menus.observe(this.viewLifecycleOwner) {
+            configMenuAdapter.submitList(it)
+        }
 
     }
 

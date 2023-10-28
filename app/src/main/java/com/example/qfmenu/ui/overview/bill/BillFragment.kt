@@ -75,7 +75,7 @@ class BillFragment : Fragment() {
         val spanCount = if (width < SCREEN_LARGE) 1 else 2
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
-
+        val billAdapter = BillAdapter(requireContext(), saveStateViewModel, customerViewModel)
         val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
             if (it == R.id.optionTwo) {
             }
@@ -85,7 +85,6 @@ class BillFragment : Fragment() {
         navGlobal.impNav()
 
         recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
-        val billAdapter = BillAdapter(requireContext(), saveStateViewModel, customerViewModel)
         customerViewModel.getCustomersByCalendar(saveStateViewModel.stateCalendar).observe(this.viewLifecycleOwner) {
             it.let {
                 billAdapter.submitList(it)

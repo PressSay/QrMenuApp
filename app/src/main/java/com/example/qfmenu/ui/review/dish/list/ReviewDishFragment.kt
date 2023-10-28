@@ -1,7 +1,6 @@
 package com.example.qfmenu.ui.review.dish.list
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -22,12 +21,14 @@ import com.example.qfmenu.database.entity.DishDb
 import com.example.qfmenu.database.entity.ReviewDb
 import com.example.qfmenu.database.entity.ReviewDishCrossRef
 import com.example.qfmenu.databinding.FragmentReviewDishBinding
+import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -73,7 +74,6 @@ class ReviewDishFragment : Fragment() {
         val linear1_2_1 = linear1_2.getChildAt(0) as ViewGroup
         val linear1_2_1_1 = linear1_2_1.getChildAt(0) as ViewGroup
         val linear1_2_1_1_1 = linear1_2_1_1.getChildAt(0) as ViewGroup
-
         val titleDish = linear1_2_1_1_1.getChildAt(0) as TextView
         val img = linear1_1.getChildAt(0) as ImageView
         val costDish = linear1_1_1.getChildAt(0) as TextView
@@ -82,11 +82,8 @@ class ReviewDishFragment : Fragment() {
         titleDish.text = dishDb.dishName
         costDish.text = dishDb.cost.toString()
         descriptionDish.text = dishDb.description
-
-
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
@@ -96,15 +93,12 @@ class ReviewDishFragment : Fragment() {
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
         val editInputDishReview = binding.editInputDishReview
         val layoutIsThumpUp = binding.layoutIsThumbUp as ViewGroup
-
         var stateThumpUp = -1
         val btnThumbUp = layoutIsThumpUp.getChildAt(1) as AppCompatImageButton
         val btnThumbDown = layoutIsThumpUp.getChildAt(0) as AppCompatImageButton
-
         val layoutDishDb = binding.layoutDishDbReviewEdit.root
 
         setProDishDbReview(layoutDishDb, saveStateViewModel.stateDishDb)
-
         btnThumbUp.setOnClickListener {
             stateThumpUp = 1
             btnThumbUp.setColorFilter(
@@ -120,7 +114,6 @@ class ReviewDishFragment : Fragment() {
                 )
             )
         }
-
         btnThumbDown.setOnClickListener {
             stateThumpUp = 0
             btnThumbDown.setColorFilter(
@@ -137,37 +130,11 @@ class ReviewDishFragment : Fragment() {
                 )
             )
         }
-
-        val backMenu = navBar.menu.findItem(R.id.backToHome)
-        val homeMenu = navBar.menu.findItem(R.id.homeMenu)
-        val optionOne = navBar.menu.findItem(R.id.optionOne)
-        val optionTwo = navBar.menu.findItem(R.id.optionTwo)
-
-        homeMenu.isVisible = width < SCREEN_LARGE
-        backMenu.isVisible = true
-        optionOne.isVisible = false
-        optionTwo.isVisible = true
-
-        homeMenu.setIcon(R.drawable.ic_home)
-        backMenu.setIcon(R.drawable.ic_arrow_back)
-
-        optionTwo.setIcon(R.drawable.ic_star)
-
-        navBar.setOnItemSelectedListener {
-            if (it.itemId == R.id.backToHome) {
-                findNavController().popBackStack()
-            }
-            if (it.itemId == R.id.homeMenu) {
-                slidePaneLayout.closePane()
-                saveStateViewModel.isOpenSlide = !saveStateViewModel.isOpenSlide
-                navBar.visibility = View.GONE
-            }
-
-            if (it.itemId == R.id.optionTwo) {
-
+        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
+            if (it == R.id.optionTwo) {
                 Log.d("DishReview", "True")
                 if (editInputDishReview.text?.isNotBlank() == true) {
-                    GlobalScope.async {
+                    CoroutineScope(Dispatchers.Main).launch {
                         val reviewDao =
                             (activity?.application as QrMenuApplication).database.reviewDao()
                         val reviewDb = ReviewDb(
@@ -178,7 +145,7 @@ class ReviewDishFragment : Fragment() {
                         reviewDao.insertReviewDishCrossRef(
                             ReviewDishCrossRef(
                                 dishId = saveStateViewModel.stateDishDb.dishId,
-                                reviewId= reviewId
+                                reviewId = reviewId
                             )
                         )
                         findNavController().popBackStack()
@@ -187,14 +154,14 @@ class ReviewDishFragment : Fragment() {
                     AlertDialog.Builder(context)
                         .setTitle("Input Invalid")
                         .setMessage("Try Again")
-                        .setPositiveButton(android.R.string.ok,
-                            DialogInterface.OnClickListener { _, _ ->
-                            }).show()
+                        .setPositiveButton(android.R.string.ok
+                        ) { _, _ -> }.show()
                 }
-
             }
-            true
         }
+        navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, 0, R.drawable.ic_star)
+        navGlobal.setVisibleNav(true, width < SCREEN_LARGE, false, optTwo = true)
+        navGlobal.impNav()
     }
 
     companion object {
