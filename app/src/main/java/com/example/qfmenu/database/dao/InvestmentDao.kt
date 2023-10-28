@@ -15,7 +15,7 @@ interface InvestmentDao {
     @Query("SELECT * FROM InvestmentDb")
     fun getInvestments(): LiveData<List<InvestmentDb>>
 
-    @Query("SELECT * FROM InvestmentDb WHERE investmentName = :investmentNameId")
+    @Query("SELECT * FROM InvestmentDb WHERE name = :investmentNameId")
     fun getInvestments(investmentNameId: String): Flow<InvestmentDb>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

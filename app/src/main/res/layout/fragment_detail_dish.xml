@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.menu.dish.config.detail.DetailDishFragment"
+    android:background="@color/green_background">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/linear1EditCreateDetailDish">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="232dp"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <include
+                    layout="@layout/item_menu_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="28dp"
+                    android:layout_marginStart="28dp"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/green_primary"/>
+
+            <LinearLayout
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="88dp"
+                    android:layout_marginBottom="32dp"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="110dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="16dp"
+                        android:scaleType="fitXY"
+                        android:padding="4dp"
+                        android:background="@drawable/shape_impression_rounded_border"/>
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="132dp"
+                        android:layout_height="40dp"
+                        android:text="@string/upload"
+                        android:background="@drawable/button_secondary_container_solid"
+                        android:textColor="@color/green_primary"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginBottom="32dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/shape_rounded_border">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_dish"
+                        android:scaleType="fitCenter"
+                        android:padding="4dp"
+                        android:tint="@color/green_primary"/>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/green_primary" />
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dishName"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/green_secondary"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dishCost"
+                        android:layout_width="88dp"
+                        android:layout_height="match_parent"
+                        android:hint="18,000$"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:background="@color/green_secondary_container"
+                        android:layout_margin="4dp"
+                        android:scaleType="fitCenter"
+                        android:textColor="@color/green_primary"/>
+
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/dishDescription"
+                    android:layout_width="match_parent"
+                    android:gravity="top"
+                    android:layout_height="92dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:background="@drawable/shape_rounded_border"
+                    android:textColor="@color/green_secondary"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+</FrameLayout>

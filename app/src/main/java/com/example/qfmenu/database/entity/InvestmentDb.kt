@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class InvestmentDb(
     @PrimaryKey
-    val investmentName: String,
+    val name: String,
     val cost: Int,
     var isDropdown: Boolean = true
 )

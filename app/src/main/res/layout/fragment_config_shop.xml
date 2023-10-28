@@ -35,7 +35,7 @@
                         android:textColor="@color/green_primary"
                         android:layout_width="86dp"
                         android:layout_height="wrap_content"
-                        android:text="Shop name:"
+                        android:text="@string/shop_name"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -61,7 +61,7 @@
                         android:textColor="@color/green_primary"
                         android:layout_width="86dp"
                         android:layout_height="wrap_content"
-                        android:text="Address Shop: "
+                        android:text="@string/address_shop"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -88,7 +88,7 @@
                         android:layout_width="86dp"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="Enable Review: "
+                        android:text="@string/enable_review"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -122,7 +122,7 @@
                         android:textColor="@color/green_primary"
                         android:layout_width="86dp"
                         android:layout_height="wrap_content"
-                        android:text="Number Table: "
+                        android:text="@string/amount_table"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -157,7 +157,7 @@
                         android:textColor="@color/green_primary"
                         android:layout_width="86dp"
                         android:layout_height="wrap_content"
-                        android:text="Promotion VIP: "
+                        android:text="@string/promotion_vip"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -183,7 +183,7 @@
                         android:textColor="@color/green_primary"
                         android:layout_width="86dp"
                         android:layout_height="wrap_content"
-                        android:text="Promotion Bill: "
+                        android:text="@string/promotion_bill"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -224,7 +224,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="2dp"
-                                android:text="Menu"
+                                android:text="@string/menu"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
 
@@ -251,7 +251,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="2dp"
-                                android:text="Review"
+                                android:text="@string/review"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
 
@@ -289,7 +289,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="2dp"
-                                android:text="Overview"
+                                android:text="@string/overview"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
 
@@ -316,7 +316,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="2dp"
-                                android:text="Staff"
+                                android:text="@string/staff"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
 

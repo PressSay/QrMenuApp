@@ -40,15 +40,20 @@
         android:id="@+id/searchView">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textSearch"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"/>
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:layout_width="52dp"
+            android:id="@+id/icSearch"
+            android:layout_width="48dp"
             android:layout_height="match_parent"
             android:src="@drawable/ic_search"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter"
+            android:background="@drawable/button_secondary_container_solid"
+            android:padding="10dp"
+            android:elevation="20dp"/>
 
     </LinearLayout>
 

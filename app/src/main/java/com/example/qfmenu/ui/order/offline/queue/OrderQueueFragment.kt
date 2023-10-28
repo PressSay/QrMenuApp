@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -14,11 +15,14 @@ import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.databinding.FragmentOrderQueueBinding
+import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.util.OrderQueueAdapter
-import com.example.qfmenu.util.OrderQueueBillAdapter
+import com.example.qfmenu.util.QueueBillOrderAdapter
 import com.example.qfmenu.viewmodels.CustomerOrderQueue
+import com.example.qfmenu.viewmodels.DishAmountDb
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.text.NumberFormat
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -57,6 +61,20 @@ class OrderQueueFragment : Fragment() {
         return binding.root
     }
 
+    private fun calTotal(
+        customerId: Long,
+        totalTextView: TextView,
+        idOrder: TextView,
+        dishesAmountDb: List<DishAmountDb>
+    ) {
+        var total = 0
+        idOrder.text = requireContext().getString(R.string.order_id, customerId.toString())
+        dishesAmountDb.forEach {
+            total += (it.amount.toInt() * it.dishDb.cost)
+        }
+        val totalCurrency = NumberFormat.getCurrencyInstance().format(total)
+        totalTextView.text = requireContext().getString(R.string.total, "$total\$")
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -68,6 +86,13 @@ class OrderQueueFragment : Fragment() {
         val spanCount = if (width < SCREEN_LARGE) 1 else 2
         val recyclerViewQueue = binding.horizontalListOrderQueue
         val recyclerViewDish = binding.recyclerViewItemConfirmOrderView
+        val discount = binding.orderQueueDiscount
+        val tax = binding.orderQueueTax
+        val totalTextView = binding.orderQueueTotal
+        val idOrder = binding.orderQueueIdOrder
+
+        discount.text = requireContext().getString(R.string.discount, "0%")
+        tax.text = requireContext().getString(R.string.tax, "5%")
 
         val orderQueueList: MutableList<CustomerOrderQueue> =
             saveStateViewModel.stateCustomerOrderQueues
@@ -77,17 +102,30 @@ class OrderQueueFragment : Fragment() {
         } else {
 
             orderQueueList[0].isSelected = true
-            val adapterOrderQueueBill = OrderQueueBillAdapter(
+            val adapterOrderQueueBill = QueueBillOrderAdapter(
                 requireContext(),
                 orderQueueList[0].dishesAmountDb
             )
             var position = 0
 
+            calTotal(
+                orderQueueList[0].customerDb.customerId,
+                totalTextView,
+                idOrder,
+                orderQueueList[0].dishesAmountDb
+            )
+
             val adapterOrderQueue = OrderQueueAdapter(
-                {
-                    position = it[0]
+                { ints ->
+                    position = ints[0]
                     adapterOrderQueueBill.setDataset(
-                        orderQueueList[it[0]].dishesAmountDb
+                        orderQueueList[ints[0]].dishesAmountDb
+                    )
+                    calTotal(
+                        orderQueueList[ints[0]].customerDb.customerId,
+                        totalTextView,
+                        idOrder,
+                        orderQueueList[ints[0]].dishesAmountDb
                     )
                     adapterOrderQueueBill.notifyDataSetChanged()
                 },
@@ -98,57 +136,48 @@ class OrderQueueFragment : Fragment() {
             recyclerViewQueue.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             recyclerViewDish.layoutManager = GridLayoutManager(requireContext(), spanCount)
-
             recyclerViewQueue.adapter = adapterOrderQueue
             recyclerViewDish.adapter = adapterOrderQueueBill
 
 
-            navBar.setOnItemSelectedListener { menuItem ->
-                if (menuItem.itemId == R.id.homeMenu) {
-                    slidingPaneLayout.closePane()
-                    navBar.visibility = View.GONE
-                    saveStateViewModel.stateCustomerOrderQueues = mutableListOf()
+            val navGlobal =
+                NavGlobal(navBar, findNavController(), slidingPaneLayout, saveStateViewModel) {
+                    if (it == R.id.backToHome) {
+                        saveStateViewModel.isOpenSlide = !saveStateViewModel.isOpenSlide
+                        saveStateViewModel.stateCustomerOrderQueues = mutableListOf()
+                    }
+                    if (it == R.id.optionOne) {
+                        val pNext = (position + 1) % adapterOrderQueue.getDataset.size
+                        adapterOrderQueue.getDataset[pNext].isSelected = true
+                        adapterOrderQueue.getDataset[position].isSelected = false
+                        adapterOrderQueue.notifyItemChanged(pNext)
+                        adapterOrderQueue.notifyItemChanged(position)
+                        adapterOrderQueueBill.setDataset(
+                            orderQueueList[pNext].dishesAmountDb
+                        )
+                        calTotal(
+                            orderQueueList[pNext].customerDb.customerId,
+                            totalTextView,
+                            idOrder,
+                            orderQueueList[pNext].dishesAmountDb
+                        )
+                        adapterOrderQueueBill.notifyDataSetChanged()
+                        position = pNext
+                    }
+                    if (it == R.id.optionTwo) {
+                        saveStateViewModel.setStateCustomer(adapterOrderQueue.getDataset[position].customerDb)
+                        saveStateViewModel.posCusCurrentQueue = position
+                        findNavController().navigate(R.id.action_orderQueueFragment_to_prepareBillFragment)
+                    }
                 }
-                if (menuItem.itemId == R.id.backToHome) {
-//                saveStateViewModel.stateCustomerWithSelectDishesToBill = mutableListOf()
-                    findNavController().popBackStack()
-                    saveStateViewModel.stateCustomerOrderQueues = mutableListOf()
-                }
-                if (menuItem.itemId == R.id.optionOne) {
-                    val pNext = (position + 1) % adapterOrderQueue.getDataset.size
-                    adapterOrderQueue.getDataset[pNext].isSelected = true
-                    adapterOrderQueue.getDataset[position].isSelected = false
-                    adapterOrderQueue.notifyItemChanged(pNext)
-                    adapterOrderQueue.notifyItemChanged(position)
-                    adapterOrderQueueBill.setDataset(
-                        orderQueueList[pNext].dishesAmountDb
-                    )
-                    adapterOrderQueueBill.notifyDataSetChanged()
-                    position = pNext
-                }
-                if (menuItem.itemId == R.id.optionTwo) {
-                    saveStateViewModel.setStateCustomer(adapterOrderQueue.getDataset[position].customerDb)
-                    saveStateViewModel.posCusCurrentQueue = position
-                    findNavController().navigate(R.id.action_orderQueueFragment_to_prepareBillFragment)
-                }
-                true
-            }
-
-
-            val homeMenu = navBar.menu.findItem(R.id.homeMenu)
-            val backMenu = navBar.menu.findItem(R.id.backToHome)
-            val optionOne = navBar.menu.findItem(R.id.optionOne)
-            val optionTwo = navBar.menu.findItem(R.id.optionTwo)
-
-            homeMenu.isVisible = width < SCREEN_LARGE
-            backMenu.isVisible = true
-            optionOne.isVisible = true
-            optionTwo.isVisible = true
-
-            homeMenu.setIcon(R.drawable.ic_home)
-            backMenu.setIcon(R.drawable.ic_arrow_back)
-            optionOne.setIcon(R.drawable.ic_skip_next)
-            optionTwo.setIcon(R.drawable.ic_approve_order)
+            navGlobal.setVisibleNav(true, width < SCREEN_LARGE, true, optTwo = true)
+            navGlobal.setIconNav(
+                R.drawable.ic_arrow_back,
+                R.drawable.ic_home,
+                R.drawable.ic_skip_next,
+                R.drawable.ic_approve_order
+            )
+            navGlobal.impNav()
 
         }
     }

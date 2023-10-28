@@ -11,7 +11,6 @@ import androidx.room.Update
 import com.example.qfmenu.database.entity.CustomerDishCrossRef
 import com.example.qfmenu.database.entity.DishDb
 import com.example.qfmenu.database.entity.ReviewDb
-import com.example.qfmenu.database.entity.ReviewDishCrossRef
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -24,8 +23,6 @@ interface CustomerDishCrossRefDao {
 
     @Query("SELECT * FROM ReviewDb WHERE reviewId = :reviewCreatorId")
     suspend fun getReview(reviewCreatorId: Int): ReviewDb
-
-
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(customerDishCrossRef: CustomerDishCrossRef)

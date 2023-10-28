@@ -21,6 +21,7 @@ import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.databinding.FragmentOverviewBinding
+import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.Calendar
@@ -71,29 +72,10 @@ class OverviewFragment : Fragment() {
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
 
-        val backMenu = navBar.menu.findItem(R.id.backToHome)
-        val homeMenu = navBar.menu.findItem(R.id.homeMenu)
-        val optionOne = navBar.menu.findItem(R.id.optionOne)
-        val optionTwo = navBar.menu.findItem(R.id.optionTwo)
-
-        homeMenu.isVisible = width < SCREEN_LARGE
-        backMenu.isVisible = true
-        optionOne.isVisible = false
-        optionTwo.isVisible = false
-
-        homeMenu.setIcon(R.drawable.ic_home)
-        backMenu.setIcon(R.drawable.ic_arrow_back)
-
-        navBar.setOnItemSelectedListener {
-            if (it.itemId == R.id.backToHome) {
-                findNavController().popBackStack()
-            }
-            if (it.itemId == R.id.homeMenu) {
-                slidePaneLayout.closePane()
-                navBar.visibility = View.GONE
-            }
-            true
-        }
+        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {}
+        navGlobal.setVisibleNav(true, width < SCREEN_LARGE, false, optTwo = false)
+        navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, 0,0)
+        navGlobal.impNav()
 
         val editTextChooseDate = binding.editTextChooseDateOverview
 
@@ -120,10 +102,10 @@ class OverviewFragment : Fragment() {
 
 
         btnOverViewList.setOnClickListener {
-            findNavController().navigate(R.id.action_overviewFragment_to_billListFragment)
+            findNavController().navigate(R.id.action_overviewFragment_to_billFragment)
         }
         btnInvestment.setOnClickListener {
-            findNavController().navigate(R.id.action_overviewFragment_to_editCreateInvestmentFragment)
+            findNavController().navigate(R.id.action_overviewFragment_to_configInvestmentFragment)
         }
         btnChooseDate.setOnClickListener {
             if (editTextChooseDate.text.isBlank() || !Pattern.matches(

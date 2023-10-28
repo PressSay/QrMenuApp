@@ -13,8 +13,8 @@
             android:id="@+id/action_dishMenuFragment_to_categoryFragment"
             app:destination="@id/categoryFragment" />
         <action
-            android:id="@+id/action_dishMenuFragment_to_editConfirmDishFragment"
-            app:destination="@id/editConfirmDishFragment" />
+            android:id="@+id/action_dishMenuFragment_to_confirmDishFragment"
+            app:destination="@id/ConfirmDishFragment" />
     </fragment>
     <fragment
         android:id="@+id/qrOldFragment"
@@ -36,62 +36,62 @@
         android:label="UploadImageQrFragment"
         tools:layout="@layout/fragment_upload_image_qr" />
     <fragment
-        android:id="@+id/editWaitingTableFragment"
-        android:name="com.example.qfmenu.ui.table.config.EditWaitingTableFragment"
-        android:label="fragment_edit_watting_table"
-        tools:layout="@layout/fragment_edit_waiting_table">
+        android:id="@+id/configTableFragment"
+        android:name="com.example.qfmenu.ui.table.config.ConfigTableFragment"
+        android:label="fragment_config_table"
+        tools:layout="@layout/fragment_config_table">
         <action
-            android:id="@+id/action_editWaitingTableFragment_to_editConfirmDishFragment"
-            app:destination="@id/editConfirmDishFragment" />
+            android:id="@+id/action_tableOrderFragment_to_confirmDishFragment"
+            app:destination="@id/ConfirmDishFragment" />
     </fragment>
     <fragment
-        android:id="@+id/waitingTableFragment"
-        android:name="com.example.qfmenu.ui.table.WaitingTableFragment"
-        android:label="fragment_waiting_table"
-        tools:layout="@layout/fragment_waiting_table">
+        android:id="@+id/tableOrderFragment"
+        android:name="com.example.qfmenu.ui.table.TableOrderFragment"
+        android:label="fragment_table_order"
+        tools:layout="@layout/fragment_table_order">
         <action
-            android:id="@+id/action_waittingTableFragment_to_editWattingTableFragment"
-            app:destination="@id/editWaitingTableFragment" />
+            android:id="@+id/action_tableOrderFragment_to_configTableFragment"
+            app:destination="@id/configTableFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/editConfirmDishFragment"
-        android:name="com.example.qfmenu.ui.menu.dish.confirm.EditConfirmDishFragment"
-        android:label="fragment_edit_confirm_dish"
-        tools:layout="@layout/fragment_edit_confirm_dish" >
+        android:id="@+id/ConfirmDishFragment"
+        android:name="com.example.qfmenu.ui.menu.dish.confirm.ConfirmDishFragment"
+        android:label="fragment_confirm_dish"
+        tools:layout="@layout/fragment_confirm_dish" >
         <action
-            android:id="@+id/action_editConfirmDishFragment_to_prepareBillFragment"
+            android:id="@+id/action_confirmDishFragment_to_prepareBillFragment"
             app:destination="@id/prepareBillFragment" />
         <action
-            android:id="@+id/action_editConfirmDishFragment_to_qrOldFragment"
+            android:id="@+id/action_confirmDishFragment_to_qrOldFragment"
             app:destination="@id/qrOldFragment" />
         <action
-            android:id="@+id/action_editConfirmDishFragment_to_waittingTableFragment"
-            app:destination="@id/waitingTableFragment" />
+            android:id="@+id/action_confirmDishFragment_to_tableOrderFragment"
+            app:destination="@id/tableOrderFragment" />
         <action
-            android:id="@+id/action_editConfirmDishFragment_to_dishMenuFragment"
+            android:id="@+id/action_confirmDishFragment_to_dishMenuFragment"
             app:destination="@id/dishMenuFragment" />
     </fragment>
     <fragment
-        android:id="@+id/editOnlineOrderFragment"
-        android:name="com.example.qfmenu.ui.order.online.EditOnlineOrderFragment"
-        android:label="fragment_edit_online_order"
-        tools:layout="@layout/fragment_edit_online_order">
+        android:id="@+id/onlineOrderFragment"
+        android:name="com.example.qfmenu.ui.order.online.OnlineOrderFragment"
+        android:label="fragment_online_order"
+        tools:layout="@layout/fragment_online_order">
         <action
-            android:id="@+id/action_editOnlineOrderFragment_to_editConfirmDishFragment"
-            app:destination="@id/editConfirmDishFragment" />
+            android:id="@+id/action_onlineOrderFragment_to_confirmDishFragment"
+            app:destination="@id/ConfirmDishFragment" />
     </fragment>
     <fragment
-        android:id="@+id/orderListUnconfirmedFragment"
-        android:name="com.example.qfmenu.ui.order.offline.OrderListUnconfirmedFragment"
-        android:label="fragment_order_list_unconfirmed"
-        tools:layout="@layout/fragment_order_list_unconfirmed">
+        android:id="@+id/orderUnconfirmedFragment"
+        android:name="com.example.qfmenu.ui.order.offline.OrderUnconfirmedFragment"
+        android:label="fragment_order_unconfirmed"
+        tools:layout="@layout/fragment_order_unconfirmed">
         <action
-            android:id="@+id/action_orderListUnconfirmedFragment_to_orderQueueFragment"
+            android:id="@+id/action_orderUnconfirmedFragment_to_orderQueueFragment"
             app:destination="@id/orderQueueFragment" />
         <action
-            android:id="@+id/action_orderListUnconfirmedFragment_to_editConfirmDishFragment"
-            app:destination="@id/editConfirmDishFragment" />
+            android:id="@+id/action_orderUnconfirmedFragment_to_confirmDishFragment"
+            app:destination="@id/ConfirmDishFragment" />
     </fragment>
     <fragment
         android:id="@+id/orderQueueFragment"
@@ -117,51 +117,51 @@
         android:label="fragment_export_bill"
         tools:layout="@layout/fragment_export_bill" />
     <fragment
-        android:id="@+id/editCreateMenuFragment"
-        android:name="com.example.qfmenu.ui.menu.config.EditCreateMenuFragment"
-        android:label="fragment_edit_create_menu"
-        tools:layout="@layout/fragment_edit_create_menu">
+        android:id="@+id/configMenuFragment"
+        android:name="com.example.qfmenu.ui.menu.config.ConfigMenuFragment"
+        android:label="fragment_config_menu"
+        tools:layout="@layout/fragment_config_menu">
         <action
-            android:id="@+id/action_editCreateMenuFragment_to_editCreateCategoryFragment"
-            app:destination="@id/editCreateCategoryFragment3" />
+            android:id="@+id/action_configMenuFragment_to_configCategoryFragment"
+            app:destination="@id/configCategoryFragment" />
     </fragment>
     <fragment
-        android:id="@+id/storeReivewCommentFragment"
-        android:name="com.example.qfmenu.ui.review.store.comment.StoreReviewCommentFragment"
-        android:label="fragment_store_reivew_comment"
-        tools:layout="@layout/fragment_store_review_comment"/>
+        android:id="@+id/reviewCommentFragment"
+        android:name="com.example.qfmenu.ui.review.store.comment.ReviewCommentFragment"
+        android:label="fragment_review_comment"
+        tools:layout="@layout/fragment_review_comment"/>
     <fragment
-        android:id="@+id/editCreateInvestmentFragment"
-        android:name="com.example.qfmenu.ui.overview.investment.EditCreateInvestmentFragment"
-        android:label="EditCreateInvestmentFragment"
-        tools:layout="@layout/fragment_edit_create_investment"/>
+        android:id="@+id/configInvestmentFragment"
+        android:name="com.example.qfmenu.ui.overview.investment.ConfigInvestmentFragment"
+        android:label="configInvestmentFragment"
+        tools:layout="@layout/fragment_config_investment"/>
     <fragment
-        android:id="@+id/memberEditProfileFragment"
-        android:name="com.example.qfmenu.ui.member.profile.MemberEditProfileFragment"
-        android:label="fragment_member_edit_profile"
-        tools:layout="@layout/fragment_member_edit_profile"/>
+        android:id="@+id/memberProfileFragment"
+        android:name="com.example.qfmenu.ui.member.profile.MemberProfileFragment"
+        android:label="fragment_member_profile"
+        tools:layout="@layout/fragment_member_profile"/>
     <fragment
-        android:id="@+id/editCreateDetailDishFragment"
-        android:name="com.example.qfmenu.ui.menu.dish.config.detail.EditCreateDetailDishFragment"
-        android:label="fragment_edit_create_detail_dish"
-        tools:layout="@layout/fragment_edit_create_detail_dish"/>
+        android:id="@+id/detailDishFragment"
+        android:name="com.example.qfmenu.ui.menu.dish.config.detail.DetailDishFragment"
+        android:label="fragment_detail_dish"
+        tools:layout="@layout/fragment_detail_dish"/>
     <fragment
-        android:id="@+id/billListFragment"
-        android:name="com.example.qfmenu.ui.overview.bill.BillListFragment"
-        android:label="fragment_bill_list"
-        tools:layout="@layout/fragment_bill_list">
+        android:id="@+id/billFragment"
+        android:name="com.example.qfmenu.ui.overview.bill.BillFragment"
+        android:label="fragment_bill"
+        tools:layout="@layout/fragment_bill">
         <action
-            android:id="@+id/action_billListFragment_to_billListDetailFragment"
-            app:destination="@id/billListDetailFragment" />
+            android:id="@+id/action_billFragment_to_billDetailFragment"
+            app:destination="@id/billDetailFragment" />
     </fragment>
     <fragment
-        android:id="@+id/editCreateCategoryFragment3"
-        android:name="com.example.qfmenu.ui.menu.category.config.EditCreateCategoryFragment"
-        android:label="fragment_edit_create_category"
-        tools:layout="@layout/fragment_edit_create_category">
+        android:id="@+id/configCategoryFragment"
+        android:name="com.example.qfmenu.ui.menu.category.config.ConfigCategoryFragment"
+        android:label="fragment_config_category"
+        tools:layout="@layout/fragment_config_category">
         <action
-            android:id="@+id/action_editCreateCategoryFragment_to_editCreateDishFragment"
-            app:destination="@id/editCreateDishFragment3" />
+            android:id="@+id/action_configCategoryFragment_to_configDishFragment"
+            app:destination="@id/configDishFragment" />
     </fragment>
     <fragment
         android:id="@+id/configShopFragment"
@@ -169,17 +169,17 @@
         android:label="fragment_config_shop"
         tools:layout="@layout/fragment_config_shop">
         <action
-            android:id="@+id/action_configShopFragment_to_editCreateMenuFragment"
-            app:destination="@id/editCreateMenuFragment" />
+            android:id="@+id/action_configShopFragment_to_configMenuFragment"
+            app:destination="@id/configMenuFragment" />
         <action
-            android:id="@+id/action_configShopFragment_to_memberManagerFragment"
-            app:destination="@id/memberManagerFragment" />
+            android:id="@+id/action_configShopFragment_to_memberFragment"
+            app:destination="@id/memberFragment" />
         <action
             android:id="@+id/action_configShopFragment_to_overviewFragment"
             app:destination="@id/overviewFragment" />
         <action
-            android:id="@+id/action_configShopFragment_to_reviewListFragment"
-            app:destination="@id/reviewListFragment" />
+            android:id="@+id/action_configShopFragment_to_reviewFragment"
+            app:destination="@id/reviewFragment" />
     </fragment>
     <fragment
         android:id="@+id/overviewFragment"
@@ -187,89 +187,89 @@
         android:label="fragment_overview"
         tools:layout="@layout/fragment_overview">
         <action
-            android:id="@+id/action_overviewFragment_to_editCreateInvestmentFragment"
-            app:destination="@id/editCreateInvestmentFragment" />
+            android:id="@+id/action_overviewFragment_to_configInvestmentFragment"
+            app:destination="@id/configInvestmentFragment" />
         <action
-            android:id="@+id/action_overviewFragment_to_billListFragment"
-            app:destination="@id/billListFragment" />
+            android:id="@+id/action_overviewFragment_to_billFragment"
+            app:destination="@id/billFragment" />
     </fragment>
     <fragment
-        android:id="@+id/dishReviewFragment"
-        android:name="com.example.qfmenu.ui.review.dish.list.DishReviewFragment"
-        android:label="fragment_dish_review"
-        tools:layout="@layout/fragment_dish_review"/>
+        android:id="@+id/reviewDishFragment"
+        android:name="com.example.qfmenu.ui.review.dish.list.ReviewDishFragment"
+        android:label="fragment_review_dish"
+        tools:layout="@layout/fragment_review_dish"/>
     <fragment
-        android:id="@+id/memberManagerFragment"
-        android:name="com.example.qfmenu.ui.member.MemberManagerFragment"
-        android:label="fragment_member_manager"
-        tools:layout="@layout/fragment_member_manager">
+        android:id="@+id/memberFragment"
+        android:name="com.example.qfmenu.ui.member.MemberFragment"
+        android:label="fragment_member"
+        tools:layout="@layout/fragment_member">
         <action
-            android:id="@+id/action_memberManagerFragment_to_memberEditProfileFragment"
-            app:destination="@id/memberEditProfileFragment" />
+            android:id="@+id/action_memberFragment_to_memberProfileFragment"
+            app:destination="@id/memberProfileFragment" />
     </fragment>
     <fragment
-        android:id="@+id/billListCodeFragment"
-        android:name="com.example.qfmenu.ui.overview.bill.code.BillListCodeFragment"
-        android:label="fragment_bill_list_code"
-        tools:layout="@layout/fragment_bill_list_code"/>
+        android:id="@+id/billCodeFragment"
+        android:name="com.example.qfmenu.ui.overview.bill.code.BillCodeFragment"
+        android:label="fragment_bill_code"
+        tools:layout="@layout/fragment_bill_code"/>
     <fragment
-        android:id="@+id/reviewListDetailAdminFragment"
-        android:name="com.example.qfmenu.ui.review.dish.list.admin.ReviewListDetailAdminFragment"
-        android:label="fragment_review_list_detail_admin"
-        tools:layout="@layout/fragment_review_list_detail_admin">
+        android:id="@+id/reviewDetailFragment"
+        android:name="com.example.qfmenu.ui.review.dish.list.admin.ReviewDetailFragment"
+        android:label="fragment_review_detail"
+        tools:layout="@layout/fragment_review_detail">
         <action
-            android:id="@+id/action_reviewListDetailAdminFragment_to_dishReviewFragment"
-            app:destination="@id/dishReviewFragment" />
+            android:id="@+id/action_reviewDetailFragment_to_reviewDishFragment"
+            app:destination="@id/reviewDishFragment" />
     </fragment>
     <fragment
-        android:id="@+id/reviewStoreListFragment"
-        android:name="com.example.qfmenu.ui.review.store.list.ReviewStoreListFragment"
-        android:label="fragment_review_store_list"
-        tools:layout="@layout/fragment_review_store_list">
+        android:id="@+id/reviewStoreFragment"
+        android:name="com.example.qfmenu.ui.review.store.list.ReviewStoreFragment"
+        android:label="fragment_review_store"
+        tools:layout="@layout/fragment_review_store">
         <action
-            android:id="@+id/action_reviewStoreListFragment_to_storeReviewFragment"
-            app:destination="@id/storeReviewFragment" />
+            android:id="@+id/action_reviewStoreFragment_to_satisfactionFragment"
+            app:destination="@id/satisfactionFragment" />
     </fragment>
     <fragment
-        android:id="@+id/billListDetailFragment"
-        android:name="com.example.qfmenu.ui.overview.bill.detail.BillListDetailFragment"
-        android:label="fragment_bill_list_detail"
-        tools:layout="@layout/fragment_bill_list_detail">
+        android:id="@+id/billDetailFragment"
+        android:name="com.example.qfmenu.ui.overview.bill.detail.BillDetailFragment"
+        android:label="fragment_bill_detail"
+        tools:layout="@layout/fragment_bill_detail">
         <action
-            android:id="@+id/action_billListDetailFragment_to_billListCodeFragment"
-            app:destination="@id/billListCodeFragment" />
+            android:id="@+id/action_billDetailFragment_to_billCodeFragment"
+            app:destination="@id/billCodeFragment" />
     </fragment>
     <fragment
-        android:id="@+id/reviewListFragment"
-        android:name="com.example.qfmenu.ui.review.ReviewListFragment"
-        android:label="fragment_review_list"
-        tools:layout="@layout/fragment_review_list">
+        android:id="@+id/reviewFragment"
+        android:name="com.example.qfmenu.ui.review.ReviewFragment"
+        android:label="fragment_review"
+        tools:layout="@layout/fragment_review">
         <action
-            android:id="@+id/action_reviewListFragment_to_reviewListDetailAdminFragment"
-            app:destination="@id/reviewListDetailAdminFragment" />
+            android:id="@+id/action_reviewFragment_to_reviewDetailFragment"
+            app:destination="@id/reviewDetailFragment" />
         <action
-            android:id="@+id/action_reviewListFragment_to_reviewStoreListFragment"
-            app:destination="@id/reviewStoreListFragment" />
+            android:id="@+id/action_reviewFragment_to_reviewStoreFragment"
+            app:destination="@id/reviewStoreFragment" />
         <action
-            android:id="@+id/action_reviewListFragment_to_categoryFragment"
+            android:id="@+id/action_reviewFragment_to_categoryFragment"
             app:destination="@id/categoryFragment" />
     </fragment>
     <fragment
-        android:id="@+id/editCreateDishFragment3"
-        android:name="com.example.qfmenu.ui.menu.dish.config.EditCreateDishFragment"
-        android:label="fragment_edit_create_dish"
-        tools:layout="@layout/fragment_edit_create_dish">
+        android:id="@+id/configDishFragment"
+        android:name="com.example.qfmenu.ui.menu.dish.config.ConfigDishFragment"
+        android:label="fragment_config_dish"
+        tools:layout="@layout/fragment_config_dish">
         <action
-            android:id="@+id/action_editCreateDishFragment_to_editCreateDetailDishFragment"
-            app:destination="@id/editCreateDetailDishFragment" />
+            android:id="@+id/action_configDishFragment_to_detailDishFragment"
+            app:destination="@id/detailDishFragment" />
     </fragment>
     <fragment
-        android:id="@+id/storeReviewFragment"
-        android:name="com.example.qfmenu.ui.review.store.StoreReviewFragment"
-        android:label="fragment_store_review"
-        tools:layout="@layout/fragment_store_review" >
+        android:id="@+id/satisfactionFragment"
+        android:name="com.example.qfmenu.ui.review.store.SatisfactionFragment"
+        android:label="fragment_satisfaction"
+        tools:layout="@layout/fragment_satisfaction" >
         <action
-            android:id="@+id/action_storeReviewFragment_to_storeReivewCommentFragment"
-            app:destination="@id/storeReivewCommentFragment" />
+            android:id="@+id/action_satisfactionFragment_to_reviewCommentFragment"
+            app:destination="@id/reviewCommentFragment" />
     </fragment>
 </navigation>

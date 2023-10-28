@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="325dp"
     android:layout_height="156dp">
 
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="325dp"
         android:layout_height="156dp"
         android:background="@drawable/shape_impression_rounded_border"
         android:baselineAligned="false"
@@ -38,7 +38,7 @@
                     android:layout_height="18dp"
                     android:background="@drawable/shape_normal_rounded"
                     android:backgroundTint="@color/green_primary"
-                    android:text="18,000 $"
+                    android:text="@string/example_cost_dish"
                     android:textStyle="bold"
                     android:textColor="#FFFFFF"
                     android:gravity="center"
@@ -77,7 +77,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="end"
-                            android:text="Orange Juice"
+                            android:text="@string/title_dish"
                             android:textColor="#3C691B"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -93,7 +93,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Description:"
+                            android:text="@string/description_dish"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
@@ -105,8 +105,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="something something something something something something something something something something something"
-                    android:textSize="11sp" />
+                    android:text="@string/lorem"
+                    android:textSize="14sp" />
 
             </LinearLayout>
 

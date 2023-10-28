@@ -7,15 +7,15 @@
     tools:context=".ui.MainFragment"
     android:background="@color/green_background">
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/refreshLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -43,7 +43,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="8dp"
-                                android:text="Account"
+                                android:text="@string/account"
                                 android:textStyle="bold"
                                 android:textColor="@color/green_primary"/>
 
@@ -69,7 +69,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="The star of the store:"
+                            android:text="@string/star_of_store"
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:textColor="@color/green_primary"/>
@@ -83,7 +83,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="1.45M"
+                                android:text="@string/example_amount_star"
                                 android:textSize="22sp"
                                 android:textStyle="bold"
                                 android:textColor="@color/green_primary"/>
@@ -125,7 +125,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="2dp"
-                                    android:text="Table Unclock"
+                                    android:text="@string/table_unlock"
                                     android:textSize="14sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/green_primary"/>
@@ -152,7 +152,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="2dp"
-                                    android:text="Online List"
+                                    android:text="@string/online_list"
                                     android:textSize="14sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/green_primary"/>
@@ -191,7 +191,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="2dp"
-                                    android:text="Offline List"
+                                    android:text="@string/offline_list"
                                     android:textSize="14sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/green_primary"/>
@@ -219,7 +219,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="2dp"
-                                    android:text="Start Order"
+                                    android:text="@string/start_order"
                                     android:textSize="14sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/green_primary"/>
@@ -257,7 +257,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="2dp"
-                                    android:text="Config Shop"
+                                    android:text="@string/config_shop"
                                     android:textSize="14sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/green_primary"/>
@@ -284,7 +284,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="2dp"
-                                    android:text="Buy Take Away"
+                                    android:text="@string/buy_take_away"
                                     android:textSize="14sp"
                                     android:textStyle="bold"
                                     android:textColor="@color/green_primary"/>
@@ -310,8 +310,16 @@
 
             </ScrollView>
 
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+        <androidx.viewpager.widget.ViewPager
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/green_on_primary"/>
 
     </LinearLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </FrameLayout>

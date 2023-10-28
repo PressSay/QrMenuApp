@@ -1,35 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="322dp"
+    android:id="@+id/itemReviewPersonAdmin"
+    android:layout_width="match_parent"
     android:layout_height="112dp"
+    android:layout_marginBottom="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginStart="16dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
-    android:background="@drawable/shape_normal_rounded">
+    android:background="@drawable/shape_normal_rounded_border">
+
     <LinearLayout
         android:layout_width="71dp"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:src="@drawable/ic_person"
             android:scaleType="fitCenter"
-            app:tint="@color/green_primary"
-            android:padding="4dp"/>
+            android:padding="4dp"
+            app:tint="@color/green_primary" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/green_primary"/>
-        <ImageView
+
+        <androidx.appcompat.widget.AppCompatImageButton
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:src="@drawable/ic_thumb_up"
+            android:src="@drawable/ic_trash"
+            android:background="@color/green_on_primary"
             android:scaleType="fitCenter"
-            app:tint="@color/green_tertiary"
+            android:layout_margin="4dp"
             android:padding="5dp"/>
+
     </LinearLayout>
+
     <View
         android:layout_width="1dp"
         android:layout_height="match_parent"
@@ -39,8 +50,9 @@
         android:layout_weight="1"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:text="something something seomthing seomthing something something"
-        android:textSize="11dp"
+        android:text="@string/lorem"
+        android:textSize="14sp"
         android:textColor="@color/green_primary"
         android:padding="10dp"/>
+
 </LinearLayout>

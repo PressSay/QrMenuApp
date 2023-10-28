@@ -8,9 +8,10 @@ import androidx.room.Relation
 @Entity
 data class AccountDb(
     @PrimaryKey(autoGenerate = true)
-    val accountId: Long = 0,
+    val id: Long = 0,
     val name: String,
     val email: String,
+    val exp: Int,
     val phoneNumber: String,
     val level: Int,
     val password: String,
@@ -22,7 +23,7 @@ data class AccountDb(
 data class AccountWithCustomers(
     @Embedded val accountDb: AccountDb,
     @Relation(
-        parentColumn = "accountId",
+        parentColumn = "id",
         entityColumn = "accountCreatorId",
     )
     val customersDb: List<CustomerDb>

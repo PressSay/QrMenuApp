@@ -36,13 +36,13 @@ class CategoryAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val adapterView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_list_category, parent, false)
+            .inflate(R.layout.item_category, parent, false)
         return ItemViewHolder(adapterView)
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = currentList[position]
-        holder.btnCategory.text = item.categoryName
+        holder.btnCategory.text = item.name
         holder.btnCategory.setOnClickListener {
             saveStateViewModel.stateCategoryPosition = holder.adapterPosition
             val categoryPos = holder.adapterPosition

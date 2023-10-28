@@ -11,11 +11,11 @@ data class DishDb(
     @PrimaryKey(autoGenerate = true)
     val dishId:Long = 0,
     val dishName: String,
-    val categoryCreatorId: Long,
+    val categoryId: Long,
     val description: String,
     val cost: Int,
-    val countTimes: Int = 0,
-    val img: String = "Empty"
+    val numberOfTimesCalled: Int = 0,
+    val images: String = "Empty"
 )
 
 data class DishWithCustomers(

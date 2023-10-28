@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="16dp"
+    android:layout_height="70dp"
+    android:orientation="horizontal"
+    android:background="@drawable/shape_rounded_border">
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnUseItemEditMenu"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:text="@string/use_menu"
+        android:textColor="@color/green_primary"
+        android:layout_margin="4dp"
+        android:background="@color/green_secondary_container"
+        android:textStyle="bold"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/green_primary"/>
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btnConfigItemEditMenu"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_build"
+        android:scaleType="fitCenter"
+        android:background="@color/green_secondary_container"
+        android:layout_margin="4dp"
+        android:tint="@color/green_primary"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/green_primary"/>
+
+    <TextView
+        android:id="@+id/titleItemEditMenu"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="Menu 1"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/green_primary"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/green_primary"/>
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/btnTrashItemEditMenu"
+        android:layout_width="56dp"
+        android:layout_height="match_parent"
+        android:background="@color/green_error_container"
+        android:layout_margin="4dp"
+        android:src="@drawable/ic_trash"
+        android:scaleType="fitCenter"/>
+
+
+</LinearLayout>

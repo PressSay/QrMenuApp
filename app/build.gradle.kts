@@ -83,5 +83,10 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor")
 
     implementation("com.squareup.picasso:picasso:2.8")
+    implementation("androidx.appcompat:appcompat:1.6.0-alpha04")
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
+
 
 }

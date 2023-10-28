@@ -19,7 +19,7 @@ data class MenuWithCategories(
     @Embedded val menuDb: MenuDb,
     @Relation(
         parentColumn = "menuId",
-        entityColumn = "menuCreatorId",
+        entityColumn = "menuId",
     )
     val categoriesDb: List<CategoryDb>
 )

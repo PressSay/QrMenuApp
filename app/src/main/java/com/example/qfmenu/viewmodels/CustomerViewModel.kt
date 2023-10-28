@@ -113,7 +113,7 @@ class CustomerViewModel(
             orderDao.insert(
                 OrderDb(
                     customerOwnerId = customerIdCreated,
-                    tableCreatorId = tableId,
+                    tableId = tableId,
                     payments = payment,
                     status = status,
                     promotion = promotion

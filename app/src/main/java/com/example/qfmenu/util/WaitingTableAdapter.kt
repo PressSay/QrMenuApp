@@ -43,7 +43,7 @@ class WaitingTableAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val adapter =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_table_select, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_table, parent, false)
         return ItemViewHolder(adapter)
     }
 
@@ -52,7 +52,7 @@ class WaitingTableAdapter(
         val item = currentList[position]
         "${item.tableId}.${item.status}".also { holder.btnTable.text = it }
 
-        if (item.status == "lock") {
+        if (item.status == context.getString(R.string.lock)) {
             holder.btnTable.setBackgroundColor(
                 ContextCompat.getColor(
                     context,
@@ -69,6 +69,7 @@ class WaitingTableAdapter(
                 )
 
                 saveStateViewModel.stateDishesByCategories = mutableListOf()
+                saveStateViewModel.stateCategoryPosition = 0
 
 //                saveStateViewModel.stateCustomerWithSelectDishes.add(
 //                    CustomerWithSelectDishes(
@@ -97,7 +98,7 @@ class WaitingTableAdapter(
                     .show()
             } else {
                 saveStateViewModel.stateTableDb = item
-                holder.view.findNavController().navigate(R.id.action_waittingTableFragment_to_editWattingTableFragment)
+                holder.view.findNavController().navigate(R.id.action_tableOrderFragment_to_configTableFragment)
             }
 
         }

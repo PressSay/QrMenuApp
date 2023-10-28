@@ -12,12 +12,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
-import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.NavHostFragment
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.qfmenu.R
 import com.example.qfmenu.databinding.FragmentLoginBinding
 import com.example.qfmenu.network.NetworkRetrofit
-import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -44,7 +43,6 @@ class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
-    private val saveStateViewModel: SaveStateViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,28 +68,23 @@ class LoginFragment : Fragment() {
         isHaveToken: Boolean
     ) {
         if (isHaveToken) {
-
             requireActivity().runOnUiThread {
                 navHostDetail.visibility = View.VISIBLE
             }
-
             val pixels = TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 425f, resources.displayMetrics
             )
-
             val lpNavHostLogin = SlidingPaneLayout.LayoutParams(
                 pixels.toInt(),
                 SlidingPaneLayout.LayoutParams.MATCH_PARENT,
             )
-
             lpNavHostLogin.weight = 1 / 3F
-
             navHostLogin.layoutParams = lpNavHostLogin
-
             navBar.visibility = View.VISIBLE
-
-            saveStateViewModel.myNavHostFragment2!!.navController.navigate(R.id.action_loginFragment_to_mainFragment)
+            val myNavHostFragment2 =
+                requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_login) as NavHostFragment
+            myNavHostFragment2.navController.navigate(R.id.action_loginFragment_to_mainFragment)
         }
     }
 
@@ -108,29 +101,36 @@ class LoginFragment : Fragment() {
         val sharePref = requireActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
         val editPref = sharePref.edit()
 
+        navHostDetail.visibility = View.GONE
         navBar.visibility = View.GONE
+        val lp = SlidingPaneLayout.LayoutParams(
+            SlidingPaneLayout.LayoutParams.MATCH_PARENT,
+            SlidingPaneLayout.LayoutParams.MATCH_PARENT
+        )
+        navHostLogin.layoutParams = lp
 
         val token = sharePref.getString("token", "") ?: ""
-        val networkRetrofit = NetworkRetrofit()
+        val networkRetrofit = NetworkRetrofit(token)
         val offlineMode = binding.offlineMode
 
         offlineMode.setOnClickListener {
             val dialogClickListener =
-                DialogInterface.OnClickListener { dialog, which ->
+                DialogInterface.OnClickListener { _, which ->
                     when (which) {
                         DialogInterface.BUTTON_POSITIVE -> {
                             AlertDialog.Builder(context)
                                 .setTitle("Offline Mode")
                                 .setMessage("This Mean You Can't Sync!!")
-                                .setPositiveButton(android.R.string.ok,
-                                    DialogInterface.OnClickListener { _, _ ->
-                                        navigateToMainFragment(
-                                            navBar,
-                                            navHostDetail,
-                                            navHostLogin,
-                                            true
-                                        )
-                                    }).show()
+                                .setPositiveButton(
+                                    android.R.string.ok
+                                ) { _, _ ->
+                                    navigateToMainFragment(
+                                        navBar,
+                                        navHostDetail,
+                                        navHostLogin,
+                                        true
+                                    )
+                                }.show()
                         }
                         DialogInterface.BUTTON_NEGATIVE -> {}
                     }
@@ -142,9 +142,11 @@ class LoginFragment : Fragment() {
         }
 
         if (token.isNotEmpty()) {
+            Log.d("token", token)
             CoroutineScope(Dispatchers.Main).launch {
                 try {
-                    val response = networkRetrofit.retrofitToken(token).user()
+                    val response = networkRetrofit.user().user()
+                    Log.d("response", response.toString())
                     if (response.isSuccessful) {
                         val userNetwork = response.body()
                         Log.d("User-Network", userNetwork.toString())
@@ -164,9 +166,10 @@ class LoginFragment : Fragment() {
                     AlertDialog.Builder(context)
                         .setTitle("Login")
                         .setMessage("No Internet")
-                        .setPositiveButton(android.R.string.ok,
-                            DialogInterface.OnClickListener { _, _ ->
-                            }).show()
+                        .setPositiveButton(
+                            android.R.string.ok
+                        ) { _, _ ->
+                        }.show()
                 }
             }
         }
@@ -176,20 +179,13 @@ class LoginFragment : Fragment() {
             if (email.text?.isNotBlank() == true && password.text?.isNotBlank() == true) {
                 CoroutineScope(Dispatchers.Main).launch {
                     try {
-                        val response = networkRetrofit.retrofit().login(
+                        val response = networkRetrofit.user().login(
                             email.text.toString(),
                             password.text.toString()
                         )
-
                         if (response.isSuccessful) {
                             val tokenKey = response.body()?.token
-//                            Log.d("token", tokenKey ?: "empty")
                             if (tokenKey != null) {
-
-//                                Log.d("token", response.body().toString())
-//                                Log.d("token", response.code().toString())
-//                                Log.d("token", response.message())
-
                                 try {
                                     editPref.putString("token", tokenKey)
                                     editPref.apply()
@@ -207,27 +203,30 @@ class LoginFragment : Fragment() {
                                 AlertDialog.Builder(context)
                                     .setTitle("Login")
                                     .setMessage("Wrong Password Or Email!!")
-                                    .setPositiveButton(android.R.string.ok,
-                                        DialogInterface.OnClickListener { _, _ ->
-                                        }).show()
+                                    .setPositiveButton(
+                                        android.R.string.ok
+                                    ) { _, _ ->
+                                    }.show()
                             }
                         }
                     } catch (_: IOException) {
                         AlertDialog.Builder(context)
                             .setTitle("Login")
                             .setMessage("No Internet")
-                            .setPositiveButton(android.R.string.ok,
-                                DialogInterface.OnClickListener { _, _ ->
-                                }).show()
+                            .setPositiveButton(
+                                android.R.string.ok
+                            ) { _, _ ->
+                            }.show()
                     }
                 }
             } else {
                 AlertDialog.Builder(context)
                     .setTitle("Login")
                     .setMessage("Input Invalid!")
-                    .setPositiveButton(android.R.string.ok,
-                        DialogInterface.OnClickListener { _, _ ->
-                        }).show()
+                    .setPositiveButton(
+                        android.R.string.ok
+                    ) { _, _ ->
+                    }.show()
             }
         }
     }

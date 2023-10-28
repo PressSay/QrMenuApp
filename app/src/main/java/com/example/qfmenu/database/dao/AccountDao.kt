@@ -16,10 +16,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AccountDao {
     @Transaction
-    @Query("SELECT * FROM AccountDb WHERE accountId = :accountId")
+    @Query("SELECT * FROM AccountDb WHERE id = :accountId")
     suspend fun getAccountWithCustomers(accountId: Long): AccountWithCustomers
 
-    @Query("SELECT * FROM AccountDb WHERE accountId = :accountId")
+    @Query("SELECT * FROM AccountDb WHERE id = :accountId")
     suspend fun getAccount(accountId: Long): AccountDb
 
     @Transaction

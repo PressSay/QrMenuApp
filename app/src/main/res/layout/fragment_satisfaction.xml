@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.review.store.SatisfactionFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:id="@+id/layoutStoreReviewYN">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/is_satisfied"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"
+            android:textColor="@color/green_primary"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/yes"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:background="@drawable/button_secondary_container_solid"
+            android:textColor="@color/green_primary"
+            android:padding="10dp"
+            android:elevation="20dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/no"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:background="@drawable/button_secondary_container_solid"
+            android:textColor="@color/green_primary"
+            android:padding="10dp"
+            android:elevation="20dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/not_understand"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:background="@drawable/button_secondary_container_solid"
+            android:textColor="@color/green_primary"
+            android:padding="10dp"
+            android:elevation="20dp"/>
+
+    </LinearLayout>
+
+</FrameLayout>

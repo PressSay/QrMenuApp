@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.member.profile.MemberProfileFragment"
+    android:background="@color/green_background">
+
+    <ScrollView
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="top">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/name_user"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/green_primary"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/nameAccount"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_rounded_border"
+                        android:padding="4dp"
+                        android:textColor="@color/green_secondary"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/phone_user"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/green_primary"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/phoneAccount"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_rounded_border"
+                        android:padding="4dp"
+                        android:textColor="@color/green_secondary"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/email_user"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/green_primary"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/emailAccount"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_rounded_border"
+                        android:padding="4dp"
+                        android:textColor="@color/green_secondary"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/address_shop"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/green_primary"/>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/addressAccount"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_rounded_border"
+                        android:padding="4dp"
+                        android:textColor="@color/green_secondary"/>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:id="@+id/layoutUploadAccount">
+
+                    <ImageView
+                        android:layout_width="94dp"
+                        android:layout_height="94dp"
+                        android:background="@drawable/shape_rounded_border"
+                        android:layout_marginBottom="10dp"/>
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="49dp"
+                        android:text="@string/upload"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/button_secondary_container_solid"
+                        android:padding="10dp"
+                        android:elevation="20dp"/>
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:layout_marginTop="16dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="49dp"
+                        android:text="@string/delete_user"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/button_secondary_container_solid"
+                        android:padding="10dp"
+                        android:elevation="20dp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+    
+
+
+
+
+</FrameLayout>

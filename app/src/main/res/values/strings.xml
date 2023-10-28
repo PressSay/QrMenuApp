@@ -1,15 +1,25 @@
 <resources>
     <string name="app_name">QFMenu</string>
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="account">Account</string>
+    <string name="star_of_store">Amount Start Of Store</string>
     <string name="table_unlock">Table Unlock</string>
+    <string name="confirm_unlock_table">Confirm Unlock Table</string>
+    <string name="lock">Lock</string>
+    <string name="unlock">unlock</string>
     <string name="online_list">Online List</string>
     <string name="offline_list">Offline List</string>
     <string name="start_order">Start Order</string>
+    <string name="order">Order</string>
+    <string name="category">Category</string>
     <string name="config_shop">Config Shop</string>
+    <string name="your_config_has_been_saved">Your config has been saved</string>
     <string name="buy_take_away">Buy Take Away</string>
     <string name="status_table_free">Free</string>
     <string name="shop_name">Shop name:</string>
+    <string name="shop_name_input">Shop Name: %s</string>
     <string name="address_shop">Address shop:</string>
+    <string name="address_shop_input">Address Shop: %s</string>
     <string name="enable_review">Enable Review:</string>
     <string name="amount_table">Amount Table:</string>
     <string name="promotion_vip">Promotion Vip:</string>
@@ -17,19 +27,59 @@
     <string name="menu">Menu</string>
     <string name="use_menu">Use</string>
     <string name="upload">Upload</string>
-    <string name="Review">Review</string>
+    <string name="review">Review</string>
+    <string name="review_of_shop">Review Of Shop!</string>
+    <string name="satisfaction_level_store">Satisfaction Level Store</string>
+    <string name="example_amount_star_detail">1,450,000 star</string>
+    <string name="example_amount_star" translatable="false">1.45M</string>
+    <string name="is_satisfied">Are you satisfied with our service?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="not_understand">I don\'t know</string>
+    <string name="why_did_you_choose_it">Why did you choose it ?</string>
     <string name="overview">Overview</string>
+    <string name="amount_bill">Amount Bill: %s</string>
+    <string name="revenue">Revenue: %s</string>
+    <string name="agv_per_bill">AVG Per Bill: %s</string>
+    <string name="investment">Investment: %s</string>
+    <string name="profit">Profit: %s</string>
+    <string name="overview_list">Overview List</string>
+    <string name="detail_overview_list">Detail</string>
+    <string name="import_investment">Import Investment</string>
+    <string name="choose_calendar">Choose Calendar</string>
     <string name="staff">Staff</string>
     <string name="name_user">Name:</string>
+    <string name="name_customer">Name Customer: %s</string>
+    <string name="customer_code">Bill Code Customer</string>
     <string name="phone_user">Phone:</string>
     <string name="email_user">Email:</string>
+    <string name="email_login">Email</string>
+    <string name="password_login">Password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="offline_mode">Offline Mode</string>
+    <string name="forget_password">Forgot Password</string>
     <string name="delete_user">Delete</string>
+    <string name="discount">Discount: %s</string>
     <string name="tax">Tax: %s</string>
     <string name="total">Total: %s</string>
     <string name="order_id">Id order: %s</string>
     <string name="payments">Payments:</string>
+    <string name="payments_input">Payments: %s</string>
     <string name="table_name">Table Name: %s</string>
-    <string name="guest_money">Guest Money: %s</string>
+    <string name="guest_money">Guest Money:</string>
+    <string name="guest_money_input">Guest Money: %s</string>
     <string name="change_money">Change: %s</string>
     <string name="code_bill">Code Bill:</string>
+    <string name="phone_customer">Phone: %s</string>
+    <string name="title_dish">Title Dish</string>
+    <string name="description_dish">Description:</string>
+    <string name="example_cost_dish"  translatable="false">18,000$</string>
+    <string name="example_amount_dish" translatable="false">012</string>
+    <string name="lorem" translatable="false">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</string>
+    <string name="qr_code_text">QR code Text (Required)</string>
+    <string name="scan_image_qr">Scan Image QR</string>
+    <string name="upload_image_qr">Upload Image QR</string>
+    <string name="confirm_the_code">Cofirm the code</string>
+    <string name="back">Back</string>
 </resources>

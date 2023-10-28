@@ -12,12 +12,12 @@ data class CustomerDb(
     @PrimaryKey(autoGenerate = true)
     val customerId: Long = 0,
     val accountCreatorId: Long,
-    val expired: String,
+    val dateExpireCode: String,
     val name: String,
     val code: String,
     val phone: String,
     val address: String,
-    val calendar: String = String.format(
+    val created: String = String.format(
         "%02d/%02d/%04d", Calendar.getInstance()
             .get(Calendar.DATE), Calendar.getInstance()
             .get(Calendar.MONTH), Calendar.getInstance()

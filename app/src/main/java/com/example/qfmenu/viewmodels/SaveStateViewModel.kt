@@ -1,7 +1,6 @@
 package com.example.qfmenu.viewmodels
 
 import androidx.lifecycle.ViewModel
-import androidx.navigation.fragment.NavHostFragment
 import com.example.qfmenu.database.entity.AccountDb
 import com.example.qfmenu.database.entity.CategoryDb
 import com.example.qfmenu.database.entity.CustomerDb
@@ -12,9 +11,7 @@ import com.example.qfmenu.database.entity.TableDb
 
 class SaveStateViewModel : ViewModel() {
 
-    var tokenKey: String = ""
-    var myNavHostFragment1 : NavHostFragment? = null
-    var myNavHostFragment2 : NavHostFragment? = null
+    var isOpenSlide = false
     var stateTableDb: TableDb? = null
     var stateReviewDb: Int = -1
     var stateCalendar: String = String.format(
@@ -41,8 +38,6 @@ class SaveStateViewModel : ViewModel() {
     val stateCategoryDb get() = _stateCategoryDb!!
     val stateMenuDb get() = _stateMenuDb!!
     val stateCustomerDb get() = _stateCustomerDb!!
-    val stateCustomerDishCrossRef get() = _stateCustomerDishCrossRef!!
-
 
     var stateDishesByCategories: MutableList<MutableList<DishAmountDb>> = mutableListOf()
     private var _stateDishes : List<DishAmountDb> = listOf()
@@ -53,12 +48,11 @@ class SaveStateViewModel : ViewModel() {
 
 //    var stateCustomerWithSelectDishes: MutableList<CustomerWithSelectDishes> = mutableListOf()
 //    var stateCustomerWithSelectDishesToBill: MutableList<CustomerWithSelectDishes> = mutableListOf()
+
     var posCusCurrentQueue: Int = -1
     var stateCustomerOrderQueues: MutableList<CustomerOrderQueue> = mutableListOf()
     var stateCustomerOrderQueuesPos: MutableList<Int> = mutableListOf()
     val stateDishes get() = _stateDishes
-    val stateCategories get() = _stateCategories
-    val stateMenus get() = _stateMenus
 
     fun setStateDish(state: DishDb) {
         _stateDishDb = state

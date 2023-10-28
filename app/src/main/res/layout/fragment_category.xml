@@ -19,7 +19,7 @@
             android:layout_gravity="center"
             android:layout_margin="18dp"
             android:layout_weight="1"
-            tools:listitem="@layout/item_list_category" />
+            tools:listitem="@layout/item_category" />
 
     </LinearLayout>
 

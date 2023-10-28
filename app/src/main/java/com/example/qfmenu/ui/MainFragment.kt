@@ -2,9 +2,11 @@ package com.example.qfmenu.ui
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
@@ -46,7 +48,7 @@ class MainFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         // Inflate the layout for this fragment
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
@@ -64,20 +66,17 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val swipeRefreshLayout = binding.refreshLayout
-        val sharePref = requireActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-        val token = sharePref.getString("token", "") ?: ""
-        val networkRetrofit = NetworkRetrofit()
-        val retrofit = networkRetrofit.retrofitToken(token)
+
+        val myNavHostFragment1 : NavHostFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_detail) as NavHostFragment
+        val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
+        val width : Float = resources.displayMetrics.widthPixels / resources.displayMetrics.density
+        val slidingPaneLayout = requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
+
 
         // Refresh function for the layout
         swipeRefreshLayout.setOnRefreshListener{
             swipeRefreshLayout.isRefreshing = false
         }
-
-        val myNavHostFragment1 : NavHostFragment = saveStateViewModel.myNavHostFragment1!!
-        val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
-        val width : Float = resources.displayMetrics.widthPixels / resources.displayMetrics.density
-        val slidingPaneLayout = requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
 
         if (width < SCREEN_LARGE) {
             navBar.visibility = View.GONE
@@ -93,9 +92,10 @@ class MainFragment : Fragment() {
             saveStateViewModel.stateCategoryPosition = 0
             saveStateViewModel.stateDishesByCategories = mutableListOf()
             if (width < SCREEN_LARGE) {
+                saveStateViewModel.isOpenSlide = !saveStateViewModel.isOpenSlide
                 slidingPaneLayout.openPane()
-                navBar.visibility = View.VISIBLE
             }
+            requireActivity().findViewById<LinearLayout>(R.id.searchView).visibility = View.GONE
         }
 
         binding.btnBuyTakeAway.setOnClickListener {
@@ -106,9 +106,10 @@ class MainFragment : Fragment() {
             saveStateViewModel.stateCategoryPosition = 0
             saveStateViewModel.stateDishesByCategories = mutableListOf()
             if (width < SCREEN_LARGE) {
+                saveStateViewModel.isOpenSlide = !saveStateViewModel.isOpenSlide
                 slidingPaneLayout.openPane()
-                navBar.visibility = View.VISIBLE
             }
+            requireActivity().findViewById<LinearLayout>(R.id.searchView).visibility = View.GONE
         }
 
         binding.btnConfigShop.setOnClickListener {
@@ -116,43 +117,47 @@ class MainFragment : Fragment() {
             myNavHostFragment1.navController.navigate(R.id.configShopFragment)
 
             if (width < SCREEN_LARGE) {
+                saveStateViewModel.isOpenSlide = !saveStateViewModel.isOpenSlide
+                Log.d("openSide", "true")
                 slidingPaneLayout.openPane()
-                navBar.visibility = View.VISIBLE
             }
+            requireActivity().findViewById<LinearLayout>(R.id.searchView).visibility = View.GONE
         }
 
         binding.btnOfflineList.setOnClickListener {
             popToStartDestination(myNavHostFragment1.navController)
-            myNavHostFragment1.navController.navigate(R.id.orderListUnconfirmedFragment)
+            myNavHostFragment1.navController.navigate(R.id.orderUnconfirmedFragment)
             saveStateViewModel.stateIsOffOnOrder = true
             saveStateViewModel.setStateDishesDb(listOf())
             saveStateViewModel.stateDishesByCategories = mutableListOf()
             if (width < SCREEN_LARGE) {
+                saveStateViewModel.isOpenSlide = !saveStateViewModel.isOpenSlide
                 slidingPaneLayout.openPane()
-                navBar.visibility = View.VISIBLE
             }
+            requireActivity().findViewById<LinearLayout>(R.id.searchView).visibility = View.GONE
         }
 
         binding.btnOnlineList.setOnClickListener {
             popToStartDestination(myNavHostFragment1.navController)
-            myNavHostFragment1.navController.navigate(R.id.editOnlineOrderFragment)
+            myNavHostFragment1.navController.navigate(R.id.onlineOrderFragment)
             saveStateViewModel.setStateDishesDb(listOf())
             saveStateViewModel.stateDishesByCategories = mutableListOf()
             if (width < SCREEN_LARGE) {
+                saveStateViewModel.isOpenSlide = !saveStateViewModel.isOpenSlide
                 slidingPaneLayout.openPane()
-                navBar.visibility = View.VISIBLE
             }
+            requireActivity().findViewById<LinearLayout>(R.id.searchView).visibility = View.GONE
         }
 
         binding.btnTableUnlock.setOnClickListener {
             saveStateViewModel.stateIsTableUnClock = true
             popToStartDestination(myNavHostFragment1.navController)
-            myNavHostFragment1.navController.navigate(R.id.waitingTableFragment)
-
+            myNavHostFragment1.navController.navigate(R.id.tableOrderFragment)
             if (width < SCREEN_LARGE) {
+                saveStateViewModel.isOpenSlide = !saveStateViewModel.isOpenSlide
                 slidingPaneLayout.openPane()
-                navBar.visibility = View.VISIBLE
             }
+            requireActivity().findViewById<LinearLayout>(R.id.searchView).visibility = View.GONE
         }
 
     }

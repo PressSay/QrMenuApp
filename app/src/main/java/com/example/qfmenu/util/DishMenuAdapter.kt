@@ -1,6 +1,7 @@
 package com.example.qfmenu.util
 
 import android.content.Context
+import android.system.Os.remove
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -38,9 +39,6 @@ class DishMenuAdapter(
 
     private var _listSelected: MutableList<DishAmountDb> = mutableListOf()
     val listSelected get() = _listSelected
-    fun setListSelected(listSelected: MutableList<DishAmountDb>) {
-        _listSelected = listSelected
-    }
 
     class ItemViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val img: ImageView = view.findViewById(R.id.item_menu_img)
@@ -66,6 +64,8 @@ class DishMenuAdapter(
         var item = currentList[position]
 
         if (saveStateViewModel.stateCategoryPosition < saveStateViewModel.stateDishesByCategories.size) {
+            Log.d("Adapter", "${saveStateViewModel.stateCategoryPosition} ${saveStateViewModel.stateDishesByCategories.size}")
+            _listSelected = mutableListOf()
             saveStateViewModel.stateDishesByCategories[saveStateViewModel.stateCategoryPosition].forEach {
                 if (it.dishDb.dishId == item.dishDb.dishId) {
                     _listSelected.add(item)
@@ -83,9 +83,9 @@ class DishMenuAdapter(
             context,
             colorIconMinus
         ))
-
+        // Image get api here!
         try {
-            Picasso.get().load("http://192.168.1.6/image-dish/0e61f2dc00aa125284584df1a2c01f13.jpg")
+            Picasso.get().load("http://192.168.1.3/image-dish/6e94d3b654e3785cd10e994ce8385270.jpg")
                 .resize(50, 50).centerCrop().into(holder.img)
         } catch (networkError: IOException) {
             holder.img.setImageResource(R.drawable.img_image_6)
@@ -104,6 +104,7 @@ class DishMenuAdapter(
                 _listSelected.add(item)
                 currentList[position].selected = true
             }
+
             holder.amount.text = currentList[position].amount.toString()
             btnBuy.isEnabled = _listSelected.isNotEmpty()
             holder.btnMinus.isEnabled = currentList[position].selected
@@ -151,9 +152,29 @@ class DishMenuAdapter(
                 if (currentList[position].amount <= 0) {
                     currentList[position].selected = false
                     currentList[position].amount = 0
-                    _listSelected.remove(currentList[position])
+
+                    for (i in 0..<_listSelected.size){
+                        if (_listSelected[i].dishDb.dishId == currentList[position].dishDb.dishId) {
+                            _listSelected.removeAt(i)
+                            break
+                        }
+                    }
+
                 }
             }
+
+            if (_listSelected.isEmpty()) {
+                isBtnEnable = false
+                val sizeCategoriesDishes = saveStateViewModel.stateDishesByCategories.size
+                for (i in 0..<sizeCategoriesDishes) {
+                    val dishAmountDbList = saveStateViewModel.stateDishesByCategories[i]
+                    if (dishAmountDbList.size != 0 && i != saveStateViewModel.stateCategoryPosition) {
+                        isBtnEnable = true
+                        break
+                    }
+                }
+            }
+
             holder.amount.text = currentList[position].amount.toString()
             btnBuy.isEnabled = _listSelected.isNotEmpty() || isBtnEnable
 

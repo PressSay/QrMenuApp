@@ -5,12 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.databinding.FragmentExportBillBinding
+import com.example.qfmenu.util.NavGlobal
+import com.example.qfmenu.viewmodels.SaveStateViewModel
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -30,6 +33,7 @@ class ExportBillFragment : Fragment() {
     private var param2: String? = null
 
     private var _binding: FragmentExportBillBinding? = null
+    private val saveStateViewModel: SaveStateViewModel by activityViewModels()
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,38 +59,13 @@ class ExportBillFragment : Fragment() {
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val width = resources.displayMetrics.widthPixels / resources.displayMetrics.density
 
-        val homeMenu = navBar.menu.findItem(R.id.homeMenu)
-        val backMenu = navBar.menu.findItem(R.id.backToHome)
-        val optionOne = navBar.menu.findItem(R.id.optionOne)
-        val optionTwo = navBar.menu.findItem(R.id.optionTwo)
-
-        homeMenu.isVisible = width < SCREEN_LARGE
-        backMenu.isVisible = true
-        optionOne.isVisible = true
-        optionTwo.isVisible = true
-
-
-        homeMenu.setIcon(R.drawable.ic_home)
-        backMenu.setIcon(R.drawable.ic_arrow_back)
-        optionOne.setIcon(R.drawable.ic_save)
-        optionTwo.setIcon(R.drawable.ic_print)
-
-        navBar.setOnItemSelectedListener {
-            if (it.itemId == R.id.homeMenu) {
-                slidingPaneLayout.closePane()
-                navBar.visibility = View.GONE
-            }
-            if (it.itemId == R.id.backToHome) {
-                val startDestination = R.id.orderQueueFragment
-                val navOptions = NavOptions.Builder()
-                    .setPopUpTo(startDestination, true)
-                    .build()
-                findNavController().navigate(startDestination, null, navOptions)
-            }
-            if (it.itemId == R.id.optionOne) {}
-            if (it.itemId == R.id.optionTwo) {}
-            true
+        val navGlobal = NavGlobal(navBar, findNavController(), slidingPaneLayout, saveStateViewModel) {
+            if (it == R.id.optionOne) {}
+            if (it == R.id.optionTwo) {}
         }
+        navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, R.drawable.ic_save, R.drawable.ic_print)
+        navGlobal.setVisibleNav(true, width < SCREEN_LARGE, true, optTwo = true)
+        navGlobal.impNav()
     }
 
     companion object {

@@ -1,22 +1,31 @@
 package com.example.qfmenu.ui.menu.dish
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
+import com.example.qfmenu.database.dao.MenuDao
 import com.example.qfmenu.database.entity.CustomerDishCrossRef
+import com.example.qfmenu.database.entity.MenuDb
 import com.example.qfmenu.databinding.FragmentDishMenuBinding
 import com.example.qfmenu.util.DishMenuAdapter
+import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.viewmodels.DishAmountDb
 import com.example.qfmenu.viewmodels.DishViewModel
 import com.example.qfmenu.viewmodels.DishViewModelFactory
@@ -74,6 +83,31 @@ class DishMenuFragment : Fragment() {
         return binding.root
     }
 
+    private fun getMenu(
+        menuDao: MenuDao,
+        menuDb: LiveData<MenuDb>,
+        handlerFun: (List<DishAmountDb>) -> Unit
+    ) {
+        menuDb.observe(this.viewLifecycleOwner) { menuDb ->
+            if (menuDb != null) {
+                menuDao.getMenuWithCategoriesLiveData(menuId = menuDb.menuId)
+                    .observe(this.viewLifecycleOwner) { menuWithCategories ->
+                        if (menuWithCategories != null) {
+                            val categories = menuWithCategories.categoriesDb
+                            if (categories.isNotEmpty()) {
+                                val categoryDb =
+                                    categories[saveStateViewModel.stateCategoryPosition]
+                                dishViewModel.getDishesAmountDbLiveData(categoryDb.categoryId)
+                                    .observe(this.viewLifecycleOwner) { dishAmountDbs ->
+                                        handlerFun(dishAmountDbs)
+                                    }
+                            }
+                        }
+                    }
+            }
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = binding.recyclerViewDishMenu
@@ -85,45 +119,33 @@ class DishMenuFragment : Fragment() {
         val spanCount = if (width < SCREEN_LARGE) 1 else 2
         val btnBuy = binding.itemMenuOrderBtn
         val titleMenu = binding.titleMenuOrder
-
         val menuDao = (activity?.application as QrMenuApplication).database.menuDao()
         val menuUsed = menuDao.getMenuUsedLiveData()
         val menuUsedLiveData = menuDao.getMenuUsedLiveData()
-
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
+        val navHostDetail =
+            requireActivity().findViewById<FragmentContainerView>(R.id.nav_host_detail)
 
-        val backMenu = navBar.menu.findItem(R.id.backToHome)
-        val homeMenu = navBar.menu.findItem(R.id.homeMenu)
-        val optionOne = navBar.menu.findItem(R.id.optionOne)
-        val optionTwo = navBar.menu.findItem(R.id.optionTwo)
-
-        homeMenu.isVisible = width < SCREEN_LARGE
-        backMenu.isVisible = saveStateViewModel.stateIsOffOnOrder
-        optionOne.isVisible = true
-        optionTwo.isVisible = true
-
-        homeMenu.setIcon(R.drawable.ic_home)
-        backMenu.setIcon(R.drawable.ic_arrow_back)
-        optionOne.setIcon(R.drawable.ic_search)
-        optionTwo.setIcon(R.drawable.ic_menu)
-
+        if (width < SCREEN_LARGE && navHostDetail.visibility != View.GONE && saveStateViewModel.isOpenSlide) {
+            navBar.visibility = View.VISIBLE
+        }
         if (saveStateViewModel.stateIsStartOrder) {
-            titleMenu.text = "Start Order"
+            titleMenu.text = requireContext().getString(R.string.start_order)
         } else {
-            titleMenu.text = "Buy Take Away"
+            titleMenu.text = requireContext().getString(R.string.buy_take_away)
         }
 
         btnBuy.isEnabled = false
         btnBuy.setTextColor(
             ContextCompat.getColor(
-            requireContext(),
-            R.color.green_secondary
-        ))
+                requireContext(),
+                R.color.green_secondary
+            )
+        )
 
         val dishMenuAdapter =
             DishMenuAdapter(requireContext(), btnBuy, saveStateViewModel)
         recyclerView.adapter = dishMenuAdapter
-
         val categoryPos = saveStateViewModel.stateCategoryPosition
 
         btnBuy.setOnClickListener {
@@ -133,7 +155,6 @@ class DishMenuFragment : Fragment() {
                         mutableListOf()
                     )
                 }
-
                 saveStateViewModel.stateDishesByCategories[categoryPos] =
                     dishMenuAdapter.listSelected
 
@@ -145,13 +166,13 @@ class DishMenuFragment : Fragment() {
                 saveStateViewModel.setStateDishesDb(dishesDb)
 
                 if (!saveStateViewModel.stateIsOffOnOrder) {
-                    findNavController().navigate(R.id.action_dishMenuFragment_to_editConfirmDishFragment)
+                    findNavController().navigate(R.id.action_dishMenuFragment_to_confirmDishFragment)
                 } else {
 
                     val customerDishCrossRefDao =
                         (activity?.application as QrMenuApplication).database.customerDishCrossRefDao()
 
-                    val customerDishCrossRefList =  async(Dispatchers.IO) {
+                    val customerDishCrossRefList = async(Dispatchers.IO) {
                         customerDishCrossRefDao.getListByCustomerId(
                             saveStateViewModel.stateCustomerDb.customerId
                         )
@@ -186,53 +207,69 @@ class DishMenuFragment : Fragment() {
             }
         }
 
-        menuUsed.observe(this.viewLifecycleOwner) { menuDb ->
-            if (menuDb != null) {
-                menuDao.getMenuWithCategoriesLiveData(menuId = menuDb.menuId)
-                    .observe(this.viewLifecycleOwner) { menuWithCategories ->
-                        if (menuWithCategories != null) {
-                            val categories = menuWithCategories.categoriesDb
-                            if (categories.isNotEmpty()) {
-                                val categoryDb =
-                                    categories[saveStateViewModel.stateCategoryPosition]
-                                dishViewModel.getDishesAmountDbLiveData(categoryDb.categoryId)
-                                    .observe(this.viewLifecycleOwner) {
-                                        it.let {
-                                            dishMenuAdapter.submitList(it)
-                                        }
-                                    }
-                            }
-                        }
-
+        var isSearch = false
+        val icSearch = requireActivity().findViewById<AppCompatImageButton>(R.id.icSearch)
+        val textSearch = requireActivity().findViewById<TextView>(R.id.textSearch)
+        icSearch.setOnClickListener {
+            getMenu(menuDao, menuUsed) { dishAmountDbs ->
+                val filtered =
+                    dishAmountDbs.filter {
+                        it.dishDb.dishName.contains(
+                            textSearch.text.toString(),
+                            ignoreCase = true
+                        )
                     }
-            }
-        }
-
-        navBar.setOnItemSelectedListener {
-            if (it.itemId == R.id.homeMenu) {
-                slidingPaneLayout.closePane()
-                navBar.visibility = View.GONE
-            }
-            if (it.itemId == R.id.optionOne) {
-
-            }
-            if (it.itemId == R.id.backToHome) {
-                findNavController().popBackStack()
-            }
-            if (it.itemId == R.id.optionTwo) {
-                if (categoryPos < saveStateViewModel.stateDishesByCategories.size) {
-                    saveStateViewModel.stateDishesByCategories[categoryPos] =
-                        dishMenuAdapter.listSelected
+                if (filtered.isNotEmpty()) {
+                    dishMenuAdapter.submitList(filtered)
                 } else {
-                    saveStateViewModel.stateDishesByCategories.add(
-                        dishMenuAdapter.listSelected
-                    )
+                    dishMenuAdapter.submitList(dishAmountDbs)
                 }
-                findNavController().navigate(R.id.action_dishMenuFragment_to_categoryFragment)
             }
-            true
+        }
+        getMenu(menuDao, menuUsed) {
+            dishMenuAdapter.submitList(it)
         }
 
+        val navGlobal =
+            NavGlobal(navBar, findNavController(), slidingPaneLayout, saveStateViewModel) {
+                if (it == R.id.optionOne) {
+                    isSearch = !isSearch
+                    if (isSearch) {
+                        if (categoryPos < saveStateViewModel.stateDishesByCategories.size) {
+                            Log.d("CategoryPos", "GreaterThan")
+                            saveStateViewModel.stateDishesByCategories[categoryPos] =
+                                dishMenuAdapter.listSelected
+                        } else {
+                            Log.d("CategoryPos", "LessThan")
+                            saveStateViewModel.stateDishesByCategories.add(
+                                dishMenuAdapter.listSelected
+                            )
+                        }
+                        getMenu(menuDao, menuUsed) {
+                            dishMenuAdapter.submitList(it)
+                        }
+                    }
+                }
+                if (it == R.id.optionTwo) {
+                    if (categoryPos < saveStateViewModel.stateDishesByCategories.size) {
+                        saveStateViewModel.stateDishesByCategories[categoryPos] =
+                            dishMenuAdapter.listSelected
+                    } else {
+                        saveStateViewModel.stateDishesByCategories.add(
+                            dishMenuAdapter.listSelected
+                        )
+                    }
+                    findNavController().navigate(R.id.action_dishMenuFragment_to_categoryFragment)
+                }
+                requireActivity().findViewById<LinearLayout>(R.id.searchView).visibility =
+                    View.GONE
+            }
+
+        navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, R.drawable.ic_search, R.drawable.ic_menu)
+        navGlobal.setVisibleNav(saveStateViewModel.stateIsOffOnOrder, width < SCREEN_LARGE, true,
+            optTwo = true
+        )
+        navGlobal.impNav()
         recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
     }
 

@@ -14,6 +14,7 @@ import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.entity.OrderDb
 import com.example.qfmenu.databinding.FragmentPrepareBillBinding
+import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.viewmodels.CustomerViewModel
 import com.example.qfmenu.viewmodels.CustomerViewModelFactory
 import com.example.qfmenu.viewmodels.SaveStateViewModel
@@ -77,30 +78,8 @@ class PrepareBillFragment : Fragment() {
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val width = resources.displayMetrics.widthPixels / resources.displayMetrics.density
 
-        val homeMenu = navBar.menu.findItem(R.id.homeMenu)
-        val backMenu = navBar.menu.findItem(R.id.backToHome)
-        val optionOne = navBar.menu.findItem(R.id.optionOne)
-        val optionTwo = navBar.menu.findItem(R.id.optionTwo)
-
-        homeMenu.isVisible = width < SCREEN_LARGE
-        backMenu.isVisible = saveStateViewModel.stateIsOffOnOrder
-        optionOne.isVisible = false
-        optionTwo.isVisible = true
-
-
-        homeMenu.setIcon(R.drawable.ic_home)
-        backMenu.setIcon(R.drawable.ic_arrow_back)
-        optionTwo.setIcon(R.drawable.ic_approve_order)
-
-        navBar.setOnItemSelectedListener {
-            if (it.itemId == R.id.homeMenu) {
-                slidingPaneLayout.closePane()
-                navBar.visibility = View.GONE
-            }
-            if (it.itemId == R.id.backToHome) {
-                findNavController().popBackStack()
-            }
-            if (it.itemId == R.id.optionTwo) {
+        val navGlobal = NavGlobal(navBar, findNavController(), slidingPaneLayout, saveStateViewModel) {
+            if (it == R.id.optionTwo) {
                 GlobalScope.launch {
                     if (saveStateViewModel.stateIsOffOnOrder) {
                         val orderDao =
@@ -110,7 +89,7 @@ class PrepareBillFragment : Fragment() {
                         val newOrderDb = OrderDb(
                             orderId = orderDb.orderId,
                             customerOwnerId = orderDb.customerOwnerId,
-                            tableCreatorId = orderDb.tableCreatorId,
+                            tableId = orderDb.tableId,
                             status = "Bill Paid",
                             payments = "Cash",
                             promotion = 0
@@ -126,8 +105,12 @@ class PrepareBillFragment : Fragment() {
                     findNavController().navigate(R.id.action_prepareBillFragment_to_exportBillFragment)
                 }
             }
-            true
         }
+        navGlobal.setIconNav(0, R.drawable.ic_home, R.drawable.ic_arrow_back, R.drawable.ic_approve_order)
+        navGlobal.setVisibleNav(saveStateViewModel.stateIsOffOnOrder, width < SCREEN_LARGE, false,
+            optTwo = true
+        )
+        navGlobal.impNav()
 
     }
 

@@ -31,10 +31,11 @@
                 android:background="@color/green_primary" />
 
             <TextView
+                android:id="@+id/orderQueueDiscount"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="Tax(5%): 6,150$"
+                android:text="@string/discount"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:layout_margin="4dp"
@@ -42,10 +43,23 @@
                 android:textColor="@color/green_secondary"/>
 
             <TextView
+                android:id="@+id/orderQueueTax"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="Total: 123,150$"
+                android:text="@string/tax"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_margin="4dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/green_secondary"/>
+
+            <TextView
+                android:id="@+id/orderQueueTotal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/total"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:gravity="center_vertical"
@@ -53,10 +67,11 @@
                 android:textColor="@color/green_secondary"/>
 
             <TextView
+                android:id="@+id/orderQueueIdOrder"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="Id order: 129"
+                android:text="@string/order_id"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:gravity="center_vertical"

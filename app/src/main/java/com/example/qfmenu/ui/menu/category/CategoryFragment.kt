@@ -18,6 +18,7 @@ import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.databinding.FragmentCategoryBinding
 import com.example.qfmenu.util.CategoryAdapter
+import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -85,36 +86,15 @@ class CategoryFragment : Fragment() {
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
 
-        val backMenu = navBar.menu.findItem(R.id.backToHome)
-        val homeMenu = navBar.menu.findItem(R.id.homeMenu)
-        val optionOne = navBar.menu.findItem(R.id.optionOne)
-        val optionTwo = navBar.menu.findItem(R.id.optionTwo)
 
-        homeMenu.isVisible = width < SCREEN_LARGE
-        backMenu.isVisible = true
-        optionOne.isVisible = true
-        optionTwo.isVisible = true
-
-        homeMenu.setIcon(R.drawable.ic_home)
-        backMenu.setIcon(R.drawable.ic_arrow_back)
-        optionOne.setIcon(R.drawable.ic_search)
-        optionTwo.setIcon(R.drawable.ic_check_fill)
-
-        navBar.setOnItemSelectedListener {
-            if (it.itemId == R.id.backToHome) {
-                findNavController().popBackStack()
+        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
+            if (it == R.id.optionTwo) {
+               findNavController().popBackStack()
             }
-            if (it.itemId == R.id.homeMenu) {
-                slidePaneLayout.closePane()
-                navBar.visibility = View.GONE
-            }
-            if (it.itemId == R.id.optionOne) {
-            }
-            if (it.itemId == R.id.optionTwo) {
-                findNavController().popBackStack()
-            }
-            true
         }
+        navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, R.drawable.ic_search, R.drawable.ic_check_fill)
+        navGlobal.setVisibleNav(true, width < SCREEN_LARGE, optOne = true, optTwo = true)
+        navGlobal.impNav()
 
 
         recycler.layoutManager = GridLayoutManager(requireContext(), spanCount)
@@ -122,10 +102,7 @@ class CategoryFragment : Fragment() {
             requireContext(), saveStateViewModel
         )
 
-        val thisViewLifecycleOwner = this.viewLifecycleOwner
-
         val menuDao = (activity?.application as QrMenuApplication).database.menuDao()
-
         menuDao.getMenuUsedLiveData().observe(this.viewLifecycleOwner) { menuDb ->
             if (menuDb != null) {
                 menuDao.getMenuWithCategoriesLiveData(menuId = menuDb.menuId)

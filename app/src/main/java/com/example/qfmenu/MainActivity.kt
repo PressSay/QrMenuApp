@@ -1,8 +1,13 @@
 package com.example.qfmenu
 
+import android.app.Activity
+import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.util.TypedValue
+import android.util.Log
+import android.view.MenuItem
 import android.view.View
+import android.window.OnBackInvokedDispatcher
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
@@ -27,34 +32,33 @@ class MainActivity : AppCompatActivity() {
         val slidingPaneLayout = binding.slidingPaneLayout
         val myNavHostFragment1: NavHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_detail) as NavHostFragment
         val myNavHostFragment2: NavHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_login) as NavHostFragment
-
         val inflater1 = myNavHostFragment1.navController.navInflater
         val inflater2 = myNavHostFragment2.navController.navInflater
-
         val graphOrder = inflater1.inflate(R.navigation.nav_graph)
         val graphLogin = inflater2.inflate(R.navigation.login_graph)
 
-        val navBar = binding.navBar
 
         binding.searchView.visibility = View.GONE
 
         myNavHostFragment1.navController.graph = graphOrder
         myNavHostFragment2.navController.graph = graphLogin
 
-        saveStateViewModel.myNavHostFragment1 = myNavHostFragment1
-        saveStateViewModel.myNavHostFragment2 = myNavHostFragment2
-
         slidingPaneLayout.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
 
-        val navHostLogin = binding.navHostLogin
-        binding.navHostDetail.visibility = View.GONE
 
-        val lp = SlidingPaneLayout.LayoutParams(
-            SlidingPaneLayout.LayoutParams.MATCH_PARENT,
-            SlidingPaneLayout.LayoutParams.MATCH_PARENT
-        )
-
-        navHostLogin.layoutParams = lp
-
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val width = resources.displayMetrics.widthPixels / resources.displayMetrics.density
+                if (saveStateViewModel.isOpenSlide) {
+                    if (width < SCREEN_LARGE) {
+                        binding.searchView.visibility = View.GONE
+                        saveStateViewModel.isOpenSlide = !saveStateViewModel.isOpenSlide
+                        binding.slidingPaneLayout.closePane()
+                        binding.navBar.visibility = View.GONE
+                    }
+                }
+            }
+        })
     }
+
 }

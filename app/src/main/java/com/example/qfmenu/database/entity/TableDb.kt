@@ -16,7 +16,7 @@ data class TableWithOrders(
     @Embedded val tableDb: TableDb,
     @Relation(
         parentColumn = "tableId",
-        entityColumn = "tableCreatorId"
+        entityColumn = "tableId"
     )
     val ordersDb: List<OrderDb>
 )
