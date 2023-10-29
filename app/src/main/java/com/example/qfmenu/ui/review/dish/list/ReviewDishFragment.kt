@@ -19,14 +19,13 @@ import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.entity.DishDb
 import com.example.qfmenu.database.entity.ReviewDb
-import com.example.qfmenu.database.entity.ReviewDishCrossRef
+import com.example.qfmenu.database.entity.ReviewDishDb
 import com.example.qfmenu.databinding.FragmentReviewDishBinding
 import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -79,7 +78,7 @@ class ReviewDishFragment : Fragment() {
         val costDish = linear1_1_1.getChildAt(0) as TextView
         val descriptionDish = linear1_2_1.getChildAt(1) as TextView
 
-        titleDish.text = dishDb.dishName
+        titleDish.text = dishDb.name
         costDish.text = dishDb.cost.toString()
         descriptionDish.text = dishDb.description
     }
@@ -143,7 +142,7 @@ class ReviewDishFragment : Fragment() {
                         )
                         val reviewId = reviewDao.insert(reviewDb)
                         reviewDao.insertReviewDishCrossRef(
-                            ReviewDishCrossRef(
+                            ReviewDishDb(
                                 dishId = saveStateViewModel.stateDishDb.dishId,
                                 reviewId = reviewId
                             )

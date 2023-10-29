@@ -26,7 +26,7 @@ interface DishService {
         @Field("name") name: String,
         @Field("description") description: String,
         @Field("cost") cost: String,
-        @Field("numberOfTimesCalled") numberOfTimesCalled: String
+        @Field("numberOfTimesCalled") numberOfTimesCalled: Int
     ): Response<List<Dish>>
     @Headers("Accept: application/json")
     @FormUrlEncoded

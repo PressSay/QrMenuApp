@@ -1,7 +1,6 @@
 package com.example.qfmenu.util
 
 import android.content.Context
-import android.system.Os.remove
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -92,7 +91,7 @@ class DishMenuAdapter(
             Log.d("NoInternet", true.toString())
         }
 
-        holder.title.text = item.dishDb.dishName
+        holder.title.text = item.dishDb.name
         holder.cost.text = item.dishDb.cost.toString()
         holder.amount.text = item.amount.toString()
         holder.description.text = item.dishDb.description

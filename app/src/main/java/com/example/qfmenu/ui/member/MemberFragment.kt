@@ -86,7 +86,7 @@ class MemberFragment : Fragment() {
                 if (!(editInputName.text.isNullOrBlank() && editInputPass.text.isNullOrBlank())) {
                     CoroutineScope(Dispatchers.IO).launch {
                         val accountDb = AccountDb(
-                            roleCreatorId = "staff",
+                            nameRole = "staff",
                             name = "default",
                             phoneNumber = "default",
                             level = 0,
@@ -116,7 +116,7 @@ class MemberFragment : Fragment() {
         recyclerView.adapter = memberAdapter
         accountDao.getAccountsWithNameRole("staff").observe(this.viewLifecycleOwner) {
             it?.let {
-                memberAdapter.submitList(it.accountsDb)
+                memberAdapter.submitList(it)
             }
         }
     }

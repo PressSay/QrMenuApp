@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qfmenu.R
 import com.example.qfmenu.database.dao.ReviewDao
-import com.example.qfmenu.database.entity.ReviewCustomerCrossRef
+import com.example.qfmenu.database.entity.ReviewCustomerDb
 import com.example.qfmenu.database.entity.ReviewDb
-import com.example.qfmenu.database.entity.ReviewDishCrossRef
+import com.example.qfmenu.database.entity.ReviewDishDb
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -67,18 +67,18 @@ class StoDisReviewAdapter(
                 val reviewDb = currentList[position]
                 if (!isStore) {
                     val dishDb = saveStateViewModel.stateDishDb
-                    val reviewDishCrossRef = ReviewDishCrossRef(
+                    val reviewDishDb = ReviewDishDb(
                         dishId = dishDb.dishId,
                         reviewId = reviewDb.reviewId
                     )
-                    reviewDao.deleteReviewDishCrossRef(reviewDishCrossRef)
+                    reviewDao.deleteReviewDishCrossRef(reviewDishDb)
                 } else {
                     val customerDb = saveStateViewModel.stateCustomerDb
-                    val reviewCustomerCrossRef = ReviewCustomerCrossRef(
+                    val reviewCustomerDb = ReviewCustomerDb(
                         reviewDb.reviewId,
                         customerDb.customerId
                     )
-                    reviewDao.deleteReviewCustomerCrossRef(reviewCustomerCrossRef)
+                    reviewDao.deleteReviewCustomerCrossRef(reviewCustomerDb)
                 }
                 reviewDao.delete(reviewDb)
             }

@@ -13,7 +13,7 @@ import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.entity.CustomerDb
-import com.example.qfmenu.database.entity.CustomerDishCrossRef
+import com.example.qfmenu.database.entity.CustomerDishDb
 import com.example.qfmenu.databinding.FragmentConfirmDishBinding
 import com.example.qfmenu.util.ConfirmDishAdapter
 import com.example.qfmenu.util.NavGlobal
@@ -127,21 +127,21 @@ class ConfirmDishFragment : Fragment() {
                     )
                     saveStateViewModel.setStateCustomer(customerDb)
 
-                    val customerDishCrossRefs = mutableListOf<CustomerDishCrossRef>()
+                    val customerDishDbs = mutableListOf<CustomerDishDb>()
 
                     confirmDishAdapter.getDataset().forEach { dishAmountDb ->
-                        val customerDishCrossRef = CustomerDishCrossRef(
+                        val customerDishDb = CustomerDishDb(
                             customerDb.customerId,
                             dishAmountDb.dishDb.dishId,
                             dishAmountDb.amount,
                             0
                         )
-                        customerDishCrossRefs.add(customerDishCrossRef)
+                        customerDishDbs.add(customerDishDb)
                     }
 
                     saveStateViewModel.setStateDishesDb(confirmDishAdapter.getDataset())
                     saveStateViewModel.setStateCustomer(customerDb)
-                    saveStateViewModel.setStateCustomerDishCrossRefs(customerDishCrossRefs)
+                    saveStateViewModel.setStateCustomerDishCrossRefs(customerDishDbs)
 
                     if (saveStateViewModel.stateIsStartOrder) {
                         saveStateViewModel.stateIsTableUnClock = false

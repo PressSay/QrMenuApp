@@ -54,7 +54,7 @@ class ReviewAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = currentList[position]
         holder.imgView.setImageResource(R.drawable.img_image_4)
-        holder.titleItem.text = item.dishName
+        holder.titleItem.text = item.name
         holder.cost.text = item.cost.toString()
         holder.amount.visibility = View.GONE
         holder.parentView.setOnClickListener {

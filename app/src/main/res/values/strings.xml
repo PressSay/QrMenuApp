@@ -74,7 +74,7 @@
     <string name="phone_customer">Phone: %s</string>
     <string name="title_dish">Title Dish</string>
     <string name="description_dish">Description:</string>
-    <string name="example_cost_dish"  translatable="false">18,000$</string>
+    <string name="example_cost_dish" translatable="false">18,000$</string>
     <string name="example_amount_dish" translatable="false">012</string>
     <string name="lorem" translatable="false">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</string>
     <string name="qr_code_text">QR code Text (Required)</string>

@@ -10,8 +10,6 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.example.qfmenu.database.entity.AccountDb
 import com.example.qfmenu.database.entity.AccountWithCustomers
-import com.example.qfmenu.database.entity.RoleWithAccounts
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AccountDao {
@@ -23,8 +21,11 @@ interface AccountDao {
     suspend fun getAccount(accountId: Long): AccountDb
 
     @Transaction
-    @Query("SELECT * FROM RoleDb WHERE roleNameId = :roleNameId")
-    fun getAccountsWithNameRole(roleNameId: String): LiveData<RoleWithAccounts>
+    @Query("SELECT * FROM AccountDb WHERE nameRole = :roleName")
+    fun getAccountsWithNameRole(roleName: String): LiveData<List<AccountDb>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(accounts: List<AccountDb>): List<Long>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(accountDb: AccountDb)

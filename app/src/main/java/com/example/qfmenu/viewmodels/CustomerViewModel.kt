@@ -6,14 +6,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.qfmenu.database.dao.CustomerDao
-import com.example.qfmenu.database.dao.CustomerDishCrossRefDao
+import com.example.qfmenu.database.dao.CustomerDishDao
 import com.example.qfmenu.database.dao.OrderDao
 import com.example.qfmenu.database.dao.ReviewDao
 import com.example.qfmenu.database.entity.CustomerAndOrderDb
 import com.example.qfmenu.database.entity.CustomerDb
-import com.example.qfmenu.database.entity.CustomerDishCrossRef
+import com.example.qfmenu.database.entity.CustomerDishDb
 import com.example.qfmenu.database.entity.OrderDb
-import com.example.qfmenu.database.entity.ReviewCustomerCrossRef
+import com.example.qfmenu.database.entity.ReviewCustomerDb
 import com.example.qfmenu.database.entity.ReviewDb
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -22,7 +22,7 @@ import java.lang.IllegalArgumentException
 
 class CustomerViewModel(
     private val customerDao: CustomerDao,
-    private val customerDishCrossRefDao: CustomerDishCrossRefDao,
+    private val customerDishDao: CustomerDishDao,
     private val reviewDao: ReviewDao,
     private val orderDao: OrderDao,
     private val selectedDishes: List<DishAmountDb>,
@@ -32,8 +32,8 @@ class CustomerViewModel(
         return reviewDao.getReview(reviewId).asLiveData()
     }
 
-    fun getCustomerDishCrossRefDao(): CustomerDishCrossRefDao {
-        return customerDishCrossRefDao
+    fun getCustomerDishCrossRefDao(): CustomerDishDao {
+        return customerDishDao
     }
 
     private var _customerForCreate: CustomerDb? = null
@@ -45,7 +45,7 @@ class CustomerViewModel(
         return orderDao.getOrderCustomerOwner(customerId)
     }
 
-    suspend fun getCustomerDishes(customerId: Long): List<CustomerDishCrossRef> {
+    suspend fun getCustomerDishes(customerId: Long): List<CustomerDishDb> {
         return customerDao.getCustomerDishCrossRefs(customerId)
     }
 
@@ -64,13 +64,13 @@ class CustomerViewModel(
     }
 
 //    fun insertReviewDishCrossRef(
-//        customerDishes: List<CustomerDishCrossRef>,
+//        customerDishes: List<CustomerDishDb>,
 //        reviewsDb: List<ReviewDb>
 //    ) {
 //        viewModelScope.launch {
 //            customerDishes.forEachIndexed { index, it ->
-//                customerDishCrossRefDao.update(
-//                    CustomerDishCrossRef(
+//                customerDishDao.update(
+//                    CustomerDishDb(
 //                        it.customerId,
 //                        it.dishId,
 //                        reviewsDb[index].reviewId,
@@ -86,7 +86,7 @@ class CustomerViewModel(
     fun insertReviewCustomer(customerDb: CustomerDb, reviewDb: ReviewDb) {
         viewModelScope.launch {
             reviewDao.insertReviewCustomerCrossRef(
-                ReviewCustomerCrossRef(
+                ReviewCustomerDb(
                     reviewDb.reviewId,
                     customerDb.customerId
                 )
@@ -120,8 +120,8 @@ class CustomerViewModel(
                 )
             )
             selectedDishes.forEach { dishAmountDb ->
-                customerDishCrossRefDao.insert(
-                    CustomerDishCrossRef(
+                customerDishDao.insert(
+                    CustomerDishDb(
                         customerIdCreated,
                         dishAmountDb.dishDb.dishId,
                         dishAmountDb.amount,
@@ -146,9 +146,9 @@ class CustomerViewModel(
         }
     }
 
-    fun deleteCustomerDish(customerDishCrossRef: CustomerDishCrossRef) {
+    fun deleteCustomerDish(customerDishDb: CustomerDishDb) {
         viewModelScope.launch {
-            customerDishCrossRefDao.delete(customerDishCrossRef)
+            customerDishDao.delete(customerDishDb)
         }
     }
 
@@ -157,7 +157,7 @@ class CustomerViewModel(
 
             async(Dispatchers.IO) { customerDao.getCustomerDishCrossRefs(customerDb.customerId) }.await()
                 .forEach { customerDishCrossRef ->
-                    customerDishCrossRefDao.delete(customerDishCrossRef)
+                    customerDishDao.delete(customerDishCrossRef)
                 }
 
             val orderDeleteDb =
@@ -169,7 +169,7 @@ class CustomerViewModel(
             val reviewCustomerCrossRef =
                 async(Dispatchers.IO) { reviewDao.getCustomerReview(customerDb.customerId) }.await()
             reviewDao.updateReviewCustomerCrossRef(
-                ReviewCustomerCrossRef(
+                ReviewCustomerDb(
                     reviewCustomerCrossRef.reviewId,
                     -1
                 )
@@ -190,7 +190,7 @@ class CustomerViewModel(
 
 class CustomerViewModelFactory(
     private val customerDao: CustomerDao,
-    private val customerDishCrossRefDao: CustomerDishCrossRefDao,
+    private val customerDishDao: CustomerDishDao,
     private val reviewDao: ReviewDao,
     private val orderDao: OrderDao,
     private val selectedDishes: List<DishAmountDb>,
@@ -200,7 +200,7 @@ class CustomerViewModelFactory(
             @Suppress("UNCHECKED_CAST")
             return CustomerViewModel(
                 customerDao,
-                customerDishCrossRefDao,
+                customerDishDao,
                 reviewDao,
                 orderDao,
                 selectedDishes

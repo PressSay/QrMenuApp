@@ -7,26 +7,24 @@ import androidx.room.RoomDatabase
 import com.example.qfmenu.database.dao.AccountDao
 import com.example.qfmenu.database.dao.CategoryDao
 import com.example.qfmenu.database.dao.CustomerDao
-import com.example.qfmenu.database.dao.CustomerDishCrossRefDao
+import com.example.qfmenu.database.dao.CustomerDishDao
 import com.example.qfmenu.database.dao.DishDao
 import com.example.qfmenu.database.dao.InvestmentDao
 import com.example.qfmenu.database.dao.MenuDao
 import com.example.qfmenu.database.dao.OrderDao
 import com.example.qfmenu.database.dao.ReviewDao
-import com.example.qfmenu.database.dao.RoleDao
 import com.example.qfmenu.database.dao.TableDao
 import com.example.qfmenu.database.entity.AccountDb
 import com.example.qfmenu.database.entity.CategoryDb
 import com.example.qfmenu.database.entity.CustomerDb
-import com.example.qfmenu.database.entity.CustomerDishCrossRef
+import com.example.qfmenu.database.entity.CustomerDishDb
 import com.example.qfmenu.database.entity.DishDb
 import com.example.qfmenu.database.entity.InvestmentDb
 import com.example.qfmenu.database.entity.MenuDb
 import com.example.qfmenu.database.entity.OrderDb
-import com.example.qfmenu.database.entity.ReviewCustomerCrossRef
+import com.example.qfmenu.database.entity.ReviewCustomerDb
 import com.example.qfmenu.database.entity.ReviewDb
-import com.example.qfmenu.database.entity.ReviewDishCrossRef
-import com.example.qfmenu.database.entity.RoleDb
+import com.example.qfmenu.database.entity.ReviewDishDb
 import com.example.qfmenu.database.entity.TableDb
 
 @Database(
@@ -34,17 +32,16 @@ import com.example.qfmenu.database.entity.TableDb
         AccountDb::class,
         CategoryDb::class,
         CustomerDb::class,
-        CustomerDishCrossRef::class,
+        CustomerDishDb::class,
         DishDb::class,
         InvestmentDb::class, MenuDb::class,
         OrderDb::class,
-        ReviewCustomerCrossRef::class,
+        ReviewCustomerDb::class,
         ReviewDb::class,
-        ReviewDishCrossRef::class,
-        RoleDb::class,
+        ReviewDishDb::class,
         TableDb::class
     ],
-    version = 4,
+    version = 1,
     exportSchema = true
 )
 abstract class MenuQrRoomDatabase : RoomDatabase() {
@@ -55,7 +52,7 @@ abstract class MenuQrRoomDatabase : RoomDatabase() {
 
     abstract fun customerDao(): CustomerDao
 
-    abstract fun customerDishCrossRefDao(): CustomerDishCrossRefDao
+    abstract fun customerDishCrossRefDao(): CustomerDishDao
 
     abstract fun dishDao(): DishDao
 
@@ -66,8 +63,6 @@ abstract class MenuQrRoomDatabase : RoomDatabase() {
     abstract fun orderDao(): OrderDao
 
     abstract fun reviewDao(): ReviewDao
-
-    abstract fun roleDao(): RoleDao
 
     abstract fun tableDao(): TableDao
 

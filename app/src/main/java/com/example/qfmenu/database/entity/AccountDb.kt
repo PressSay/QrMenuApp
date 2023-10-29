@@ -17,7 +17,7 @@ data class AccountDb(
     val password: String,
     val address: String,
     val avatar: String,
-    val roleCreatorId: String,
+    val nameRole: String,
 )
 
 data class AccountWithCustomers(

@@ -14,6 +14,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DishDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll( dishList: List<DishDb>): List<Long>
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(dishDb: DishDb)
 

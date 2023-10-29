@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qfmenu.R
-import com.example.qfmenu.database.dao.CustomerDishCrossRefDao
+import com.example.qfmenu.database.dao.CustomerDishDao
 import com.example.qfmenu.database.entity.CustomerDb
 import com.example.qfmenu.viewmodels.CustomerOrderQueue
 import com.example.qfmenu.viewmodels.CustomerViewModel
@@ -35,7 +35,7 @@ class OrderUnconfirmedAdapter(
     private val context: Context,
     private val saveStateViewModel: SaveStateViewModel,
     private val customerViewModel: CustomerViewModel,
-    private val customerCrossRefDao: CustomerDishCrossRefDao
+    private val customerCrossRefDao: CustomerDishDao
 ) : ListAdapter<CustomerDb, OrderUnconfirmedAdapter.ItemViewHolder>(DiffCallback) { // cần chuyển sang AdapterList
 
 

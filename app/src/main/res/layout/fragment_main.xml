@@ -4,18 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.MainFragment"
-    android:background="@color/green_background">
+    android:background="@color/green_background"
+    tools:context=".ui.MainFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -37,24 +37,26 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            tools:ignore="UselessParent">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="8dp"
                                 android:text="@string/account"
-                                android:textStyle="bold"
-                                android:textColor="@color/green_primary"/>
+                                android:textColor="@color/green_primary"
+                                android:textStyle="bold" />
 
                             <ImageButton
                                 android:layout_width="64dp"
                                 android:layout_height="64dp"
                                 android:background="@drawable/button_secondary_container_solid"
+                                android:elevation="20dp"
+                                android:padding="10dp"
                                 android:src="@drawable/ic_person"
                                 app:tint="@color/green_primary"
-                                android:padding="10dp"
-                                android:elevation="20dp"/>
+                                android:importantForAccessibility="no" />
 
                         </LinearLayout>
 
@@ -70,9 +72,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/star_of_store"
+                            android:textColor="@color/green_primary"
                             android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/green_primary"/>
+                            android:textStyle="bold" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -84,16 +86,17 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/example_amount_star"
+                                android:textColor="@color/green_primary"
                                 android:textSize="22sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/green_primary"/>
+                                android:textStyle="bold" />
 
                             <ImageView
                                 android:layout_width="28dp"
                                 android:layout_height="28dp"
                                 android:scaleType="fitXY"
                                 android:src="@drawable/ic_star"
-                                app:tint="@color/green_primary" />
+                                app:tint="@color/green_primary"
+                                android:importantForAccessibility="no" />
 
                         </LinearLayout>
 
@@ -110,14 +113,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="130dp"
                             android:layout_marginBottom="20dp"
+
                             android:gravity="center"
                             android:orientation="horizontal">
-
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginRight="38dp"
+                                android:layout_marginEnd="38dp"
                                 android:gravity="center"
                                 android:orientation="vertical">
 
@@ -126,19 +129,30 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="2dp"
                                     android:text="@string/table_unlock"
+                                    android:textColor="@color/green_primary"
                                     android:textSize="14sp"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/green_primary"/>
+                                    android:textStyle="bold" />
 
-                                <androidx.appcompat.widget.AppCompatImageButton
-                                    android:id="@+id/btnTableUnlock"
-                                    android:layout_width="110dp"
-                                    android:layout_height="110dp"
-                                    android:src="@drawable/ic_table_bar"
-                                    android:padding="10dp"
-                                    android:elevation="20dp"
-                                    android:background="@drawable/button_secondary_container_solid"
-                                    android:tint="@color/green_primary"/>
+                                <LinearLayout
+                                    android:layout_width="120dp"
+                                    android:layout_height="120dp"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_horizontal">
+
+                                    <androidx.appcompat.widget.AppCompatImageButton
+                                        android:id="@+id/btnTableUnlock"
+                                        android:layout_width="110dp"
+                                        android:layout_height="110dp"
+                                        android:background="@drawable/button_secondary_container_solid"
+                                        android:elevation="10dp"
+                                        android:padding="10dp"
+                                        android:src="@drawable/ic_table_bar"
+                                        android:tint="@color/green_primary"
+                                        tools:ignore="TooDeepLayout"
+                                        android:importantForAccessibility="no"/>
+
+                                </LinearLayout>
+
 
                             </LinearLayout>
 
@@ -153,19 +167,28 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="2dp"
                                     android:text="@string/online_list"
+                                    android:textColor="@color/green_primary"
                                     android:textSize="14sp"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/green_primary"/>
+                                    android:textStyle="bold" />
 
-                                <androidx.appcompat.widget.AppCompatImageButton
-                                    android:id="@+id/btnOnlineList"
-                                    android:layout_width="110dp"
-                                    android:layout_height="110dp"
-                                    android:src="@drawable/ic_inactive_order"
-                                    android:tint="@color/green_primary"
-                                    android:padding="10dp"
-                                    android:elevation="20dp"
-                                    android:background="@drawable/button_secondary_container_solid"/>
+                                <LinearLayout
+                                    android:layout_width="120dp"
+                                    android:layout_height="120dp"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_horizontal">
+
+                                    <androidx.appcompat.widget.AppCompatImageButton
+                                        android:id="@+id/btnOnlineList"
+                                        android:layout_width="110dp"
+                                        android:layout_height="110dp"
+                                        android:background="@drawable/button_secondary_container_solid"
+                                        android:elevation="10dp"
+                                        android:padding="10dp"
+                                        android:src="@drawable/ic_inactive_order"
+                                        android:tint="@color/green_primary"
+                                        android:importantForAccessibility="no"/>
+
+                                </LinearLayout>
 
                             </LinearLayout>
 
@@ -183,7 +206,7 @@
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginRight="38dp"
+                                android:layout_marginEnd="38dp"
                                 android:gravity="center"
                                 android:orientation="vertical">
 
@@ -192,19 +215,28 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="2dp"
                                     android:text="@string/offline_list"
+                                    android:textColor="@color/green_primary"
                                     android:textSize="14sp"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/green_primary"/>
+                                    android:textStyle="bold" />
 
-                                <androidx.appcompat.widget.AppCompatImageButton
-                                    android:id="@+id/btnOfflineList"
-                                    android:layout_width="110dp"
-                                    android:layout_height="110dp"
-                                    android:src="@drawable/ic_inactive_order"
-                                    android:tint="@color/green_primary"
-                                    android:background="@drawable/button_secondary_container_solid"
-                                    android:padding="10dp"
-                                    android:elevation="20dp"/>
+                                <LinearLayout
+                                    android:layout_width="120dp"
+                                    android:layout_height="120dp"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_horizontal">
+
+                                    <androidx.appcompat.widget.AppCompatImageButton
+                                        android:id="@+id/btnOfflineList"
+                                        android:layout_width="110dp"
+                                        android:layout_height="110dp"
+                                        android:background="@drawable/button_secondary_container_solid"
+                                        android:elevation="10dp"
+                                        android:padding="10dp"
+                                        android:src="@drawable/ic_inactive_order"
+                                        android:tint="@color/green_primary"
+                                        android:importantForAccessibility="no"/>
+
+                                </LinearLayout>
 
                             </LinearLayout>
 
@@ -220,19 +252,28 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="2dp"
                                     android:text="@string/start_order"
+                                    android:textColor="@color/green_primary"
                                     android:textSize="14sp"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/green_primary"/>
+                                    android:textStyle="bold" />
 
-                                <androidx.appcompat.widget.AppCompatImageButton
-                                    android:id="@+id/btnStartOrder"
-                                    android:layout_width="110dp"
-                                    android:layout_height="110dp"
-                                    android:src="@drawable/ic_shopping_bag"
-                                    android:tint="@color/green_primary"
-                                    android:background="@drawable/button_secondary_container_solid"
-                                    android:padding="10dp"
-                                    android:elevation="20dp"/>
+                                <LinearLayout
+                                    android:layout_width="120dp"
+                                    android:layout_height="120dp"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_horizontal">
+
+                                    <androidx.appcompat.widget.AppCompatImageButton
+                                        android:id="@+id/btnStartOrder"
+                                        android:layout_width="110dp"
+                                        android:layout_height="110dp"
+                                        android:background="@drawable/button_secondary_container_solid"
+                                        android:elevation="10dp"
+                                        android:padding="10dp"
+                                        android:src="@drawable/ic_shopping_bag"
+                                        android:tint="@color/green_primary"
+                                        android:importantForAccessibility="no"/>
+
+                                </LinearLayout>
 
                             </LinearLayout>
 
@@ -243,13 +284,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="130dp"
                             android:gravity="center"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            >
 
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginRight="38dp"
+                                android:layout_marginEnd="38dp"
                                 android:gravity="center"
                                 android:orientation="vertical">
 
@@ -258,19 +300,28 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="2dp"
                                     android:text="@string/config_shop"
+                                    android:textColor="@color/green_primary"
                                     android:textSize="14sp"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/green_primary"/>
+                                    android:textStyle="bold" />
 
-                                <androidx.appcompat.widget.AppCompatImageButton
-                                    android:id="@+id/btnConfigShop"
-                                    android:layout_width="110dp"
-                                    android:layout_height="110dp"
-                                    android:src="@drawable/ic_settings"
-                                    android:tint="@color/green_primary"
-                                    android:background="@drawable/button_secondary_container_solid"
-                                    android:padding="10dp"
-                                    android:elevation="20dp"/>
+                                <LinearLayout
+                                    android:layout_width="120dp"
+                                    android:layout_height="120dp"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_horizontal">
+
+                                    <androidx.appcompat.widget.AppCompatImageButton
+                                        android:id="@+id/btnConfigShop"
+                                        android:layout_width="110dp"
+                                        android:layout_height="110dp"
+                                        android:background="@drawable/button_secondary_container_solid"
+                                        android:elevation="10dp"
+                                        android:padding="10dp"
+                                        android:src="@drawable/ic_settings"
+                                        android:tint="@color/green_primary"
+                                        android:importantForAccessibility="no"/>
+
+                                </LinearLayout>
 
                             </LinearLayout>
 
@@ -285,19 +336,28 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="2dp"
                                     android:text="@string/buy_take_away"
+                                    android:textColor="@color/green_primary"
                                     android:textSize="14sp"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/green_primary"/>
+                                    android:textStyle="bold" />
 
-                                <androidx.appcompat.widget.AppCompatImageButton
-                                    android:id="@+id/btnBuyTakeAway"
-                                    android:layout_width="110dp"
-                                    android:layout_height="110dp"
-                                    android:src="@drawable/ic_point_of_sale"
-                                    android:tint="@color/green_primary"
-                                    android:background="@drawable/button_secondary_container_solid"
-                                    android:padding="10dp"
-                                    android:elevation="20dp"/>
+                                <LinearLayout
+                                    android:layout_width="120dp"
+                                    android:layout_height="120dp"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_horizontal">
+
+                                    <androidx.appcompat.widget.AppCompatImageButton
+                                        android:id="@+id/btnBuyTakeAway"
+                                        android:layout_width="110dp"
+                                        android:layout_height="110dp"
+                                        android:background="@drawable/button_secondary_container_solid"
+                                        android:elevation="10dp"
+                                        android:padding="10dp"
+                                        android:src="@drawable/ic_point_of_sale"
+                                        android:tint="@color/green_primary"
+                                        android:importantForAccessibility="no"/>
+
+                                </LinearLayout>
 
                             </LinearLayout>
 
@@ -311,14 +371,14 @@
             </ScrollView>
 
 
+            <androidx.viewpager.widget.ViewPager
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/green_on_primary"
+                android:importantForAccessibility="no"/>
 
-        <androidx.viewpager.widget.ViewPager
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/green_on_primary"/>
-
-    </LinearLayout>
+        </LinearLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

@@ -75,7 +75,7 @@ class MemberProfileFragment : Fragment() {
                     CoroutineScope(Dispatchers.Main).launch {
                         val newAccountDb = AccountDb(
                             id = accountDb.id,
-                            roleCreatorId = accountDb.roleCreatorId,
+                            nameRole = accountDb.nameRole,
                             name = nameAccount.text.toString(),
                             phoneNumber = phoneAccount.text.toString(),
                             level = 0,
@@ -95,12 +95,11 @@ class MemberProfileFragment : Fragment() {
                         .setTitle("Input Invalid")
                         .setMessage("Try Again")
                         .setPositiveButton(android.R.string.ok
-                        ) { _, _ ->
-                        }.show()
+                        ) { _, _ -> }.show()
                 }
             }
         }
-        navGlobal.setIconNav(R.id.backToHome, R.id.homeMenu, R.id.optionOne, R.id.optionTwo)
+        navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, 0, R.drawable.ic_save)
         navGlobal.setVisibleNav(true, width < SCREEN_LARGE, optOne = false, optTwo = true)
         navGlobal.impNav();
         nameAccount.setText(accountDb.name)

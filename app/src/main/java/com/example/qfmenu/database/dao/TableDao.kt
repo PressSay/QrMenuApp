@@ -24,6 +24,9 @@ interface TableDao {
     @Query("SELECT * FROM TableDb")
     fun getTablesLiveData(): LiveData<List<TableDb>>
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(tables: List<TableDb>): List<Long>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(tableDb: TableDb)
 

@@ -42,7 +42,7 @@ class ConfigDishAdapter (
             holder.view.findNavController()
                 .navigate(R.id.action_configDishFragment_to_detailDishFragment)
         }
-        holder.titleDishOrCategory.text = item.dishName
+        holder.titleDishOrCategory.text = item.name
 
         holder.btnTrash.setOnClickListener {
             dishViewModel.deleteDish(item)
@@ -56,7 +56,7 @@ class ConfigDishAdapter (
             }
 
             override fun areContentsTheSame(oldItem: DishDb, newItem: DishDb): Boolean {
-                return oldItem.dishName == newItem.dishName
+                return oldItem.name == newItem.name
             }
         }
     }

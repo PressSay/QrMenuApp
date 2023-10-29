@@ -13,7 +13,7 @@ import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
-import com.example.qfmenu.database.entity.ReviewCustomerCrossRef
+import com.example.qfmenu.database.entity.ReviewCustomerDb
 import com.example.qfmenu.database.entity.ReviewDb
 import com.example.qfmenu.databinding.FragmentReviewCommentBinding
 import com.example.qfmenu.util.NavGlobal
@@ -80,7 +80,7 @@ class ReviewCommentFragment : Fragment() {
                         )
                         val reviewId = reviewDao.insert(reviewDb)
                         reviewDao.insertReviewCustomerCrossRef(
-                            ReviewCustomerCrossRef(
+                            ReviewCustomerDb(
                                 reviewId,
                                 -1
                             )

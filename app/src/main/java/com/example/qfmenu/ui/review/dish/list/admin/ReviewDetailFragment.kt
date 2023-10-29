@@ -71,7 +71,7 @@ class ReviewDetailFragment : Fragment() {
         val costDish = linear1_1_1.getChildAt(0) as TextView
         val descriptionDish = linear1_2_1.getChildAt(1) as TextView
 
-        titleDish.text = dishDb.dishName
+        titleDish.text = dishDb.name
         costDish.text = dishDb.cost.toString()
         descriptionDish.text = dishDb.description
 

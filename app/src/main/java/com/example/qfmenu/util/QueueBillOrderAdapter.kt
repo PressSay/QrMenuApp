@@ -41,7 +41,7 @@ class QueueBillOrderAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = dataset[position]
         holder.img.setImageResource(R.drawable.img_image_4)
-        holder.titleItem.text = item.dishDb.dishName
+        holder.titleItem.text = item.dishDb.name
         holder.cost.text = item.dishDb.cost.toString()
         holder.amount.text = item.amount.toString()
     }

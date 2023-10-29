@@ -16,6 +16,9 @@ interface OrderDao {
     @Query("SELECT * FROM OrderDb WHERE customerOwnerId = :customerOwnerId ")
     suspend fun getOrderCustomerOwner(customerOwnerId: Long): OrderDb
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(orders: List<OrderDb>): List<Long>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(orderDb: OrderDb)
 

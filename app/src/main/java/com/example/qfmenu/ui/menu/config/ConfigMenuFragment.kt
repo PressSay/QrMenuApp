@@ -103,9 +103,9 @@ class ConfigMenuFragment : Fragment() {
             }
             if (it == R.id.optionTwo) {
                 val menuDb = if (configMenuAdapter.currentList.size == 0) {
-                    MenuDb(menuName = menuSubmitString.text.toString(), isUsed = true)
+                    MenuDb(name = menuSubmitString.text.toString(), isUsed = true)
                 } else {
-                    MenuDb(menuName = menuSubmitString.text.toString(), isUsed = false)
+                    MenuDb(name = menuSubmitString.text.toString(), isUsed = false)
                 }
                 menuViewModel.insertMenu(menuDb)
             }
@@ -118,7 +118,7 @@ class ConfigMenuFragment : Fragment() {
         recyclerView.adapter = configMenuAdapter
         icSearch.setOnClickListener {
             menus.observe(this.viewLifecycleOwner) { menuDbs ->
-                val filtered = menuDbs.filter {  it.menuName.contains(textSearch.text.toString(), ignoreCase = true) }
+                val filtered = menuDbs.filter {  it.name.contains(textSearch.text.toString(), ignoreCase = true) }
                 if (filtered.isNotEmpty()) {
                     configMenuAdapter.submitList(filtered)
                 } else {

@@ -9,7 +9,7 @@ import retrofit2.http.POST
 
 interface ImageService {
     @Headers("Accept: application/json")
-    @POST("/api/images")
+    @POST("/api/image")
     suspend fun create(
         @Body requestBody: RequestBody
     ): Response<Image>

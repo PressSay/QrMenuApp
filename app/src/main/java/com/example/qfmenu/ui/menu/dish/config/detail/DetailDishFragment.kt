@@ -97,15 +97,15 @@ class DetailDishFragment : Fragment() {
             append(" $")
         }
 
-        if (dishDb.images != "Empty") {
+        if (dishDb.image != "Empty") {
             imgDish.setImageURI(Uri.EMPTY)
         }
 
-        titleDish.text = dishDb.dishName
+        titleDish.text = dishDb.name
         descriptionDish.text = dishDb.description
         costDish.text = dishCostToString
 
-        dishEditTitle.setText(dishDb.dishName)
+        dishEditTitle.setText(dishDb.name)
         dishDescriptionEdit.setText(dishDb.description)
         dishEditCost.setText(dishDb.cost.toString())
 
@@ -120,16 +120,16 @@ class DetailDishFragment : Fragment() {
                 val newDishDb =
                     DishDb(
                         dishDb.dishId,
-                        dishName = dishEditTitle.text.toString(),
+                        name = dishEditTitle.text.toString(),
                         categoryId = saveStateViewModel.stateCategoryDb.categoryId,
                         description = dishDescriptionEdit.text.toString(),
                         cost = dishEditCost.text.toString().toInt()
                     )
-                if (newDishDb.dishName != dishDb.dishName || newDishDb.description != dishDb.description || newDishDb.cost != dishDb.cost) {
+                if (newDishDb.name != dishDb.name || newDishDb.description != dishDb.description || newDishDb.cost != dishDb.cost) {
                     dishViewModel.updateDish(
                         newDishDb
                     )
-                    titleDish.text = newDishDb.dishName
+                    titleDish.text = newDishDb.name
                     descriptionDish.text = newDishDb.description
                     costDish.text = buildString {
                         append(newDishDb.cost)

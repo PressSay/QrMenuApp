@@ -160,7 +160,7 @@ class ConfigDishFragment : Fragment() {
         icSearch.setOnClickListener {
             dishViewModel.getDishesLiveData(saveStateViewModel.stateCategoryDb.categoryId)
                 .observe(this.viewLifecycleOwner) { dishDbs ->
-                    val filtered = dishDbs.filter {  it.dishName.contains(textSearch.text.toString(), ignoreCase = true) }
+                    val filtered = dishDbs.filter {  it.name.contains(textSearch.text.toString(), ignoreCase = true) }
                     if (filtered.isNotEmpty()) {
                         listAdapter.submitList(filtered)
                     } else {
@@ -206,7 +206,7 @@ class ConfigDishFragment : Fragment() {
             }
             if (it == R.id.optionTwo) {
                 val dishDb = DishDb(
-                    dishName = titleDish.text.toString(),
+                    name = titleDish.text.toString(),
                     categoryId = categoryDb.categoryId,
                     description = descriptionDish.text.toString(),
                     cost = costDish.text.toString().toInt()

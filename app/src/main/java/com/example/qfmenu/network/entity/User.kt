@@ -11,5 +11,6 @@ data class User(
     val phoneNumber: String,
     val exp: Int,
     val address: String,
-    val nameRole: String?
+    val nameRole: String?,
+    val image: Image
 )

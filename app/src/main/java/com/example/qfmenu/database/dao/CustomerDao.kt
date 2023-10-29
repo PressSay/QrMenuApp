@@ -10,9 +10,9 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.example.qfmenu.database.entity.CustomerAndOrderDb
 import com.example.qfmenu.database.entity.CustomerDb
-import com.example.qfmenu.database.entity.CustomerDishCrossRef
+import com.example.qfmenu.database.entity.CustomerDishDb
 import com.example.qfmenu.database.entity.CustomerWithDishes
-import com.example.qfmenu.database.entity.ReviewCustomerCrossRef
+import com.example.qfmenu.database.entity.ReviewCustomerDb
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -38,15 +38,17 @@ interface CustomerDao {
     @Query("SELECT * FROM CustomerDb ORDER BY customerId DESC LIMIT 1")
     fun getLastCustomer(): Flow<CustomerDb>
 
-    @Query("SELECT * FROM CustomerDishCrossRef WHERE customerId = :customerId")
-    suspend fun getCustomerDishCrossRefs(customerId: Long): List<CustomerDishCrossRef>
+    @Query("SELECT * FROM CustomerDishDb WHERE customerId = :customerId")
+    suspend fun getCustomerDishCrossRefs(customerId: Long): List<CustomerDishDb>
 
-    @Query("SELECT * FROM ReviewCustomerCrossRef WHERE customerId = :customerId")
-    fun getReviewCustomerCrossRefs(customerId: Long): Flow<ReviewCustomerCrossRef>
+    @Query("SELECT * FROM ReviewCustomerDb WHERE customerId = :customerId")
+    fun getReviewCustomerCrossRefs(customerId: Long): Flow<ReviewCustomerDb>
 
     @Query("SELECT * FROM CustomerDb WHERE customerId = :customerId")
     suspend fun getCustomer(customerId: Long): CustomerDb
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(customerDishCrossRefs: List<CustomerDb>): List<Long>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE,)
     suspend fun insert(customerDb: CustomerDb) : Long

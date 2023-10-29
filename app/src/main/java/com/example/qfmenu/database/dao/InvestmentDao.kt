@@ -18,6 +18,9 @@ interface InvestmentDao {
     @Query("SELECT * FROM InvestmentDb WHERE name = :investmentNameId")
     fun getInvestments(investmentNameId: String): Flow<InvestmentDb>
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(investments: List<InvestmentDb>): List<Long>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(investmentDb: InvestmentDb)
 

@@ -100,7 +100,7 @@ class ConfigMenuAdapter(
             menuViewModel.deleteMenu(currentList[atPosition])
         }
 
-        holder.titleItemMenu.text = item.menuName
+        holder.titleItemMenu.text = item.name
 
     }
 

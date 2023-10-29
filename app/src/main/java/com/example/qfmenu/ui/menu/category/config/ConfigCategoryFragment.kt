@@ -132,9 +132,9 @@ class ConfigCategoryFragment : Fragment() {
             configCategoryAdapter.submitList(it.categoriesDb)
         }
         recyclerView.adapter = configCategoryAdapter
-        menuEditTextView.setText(menuDb.menuName)
+        menuEditTextView.setText(menuDb.name)
         saveMenuBtn.setOnClickListener {
-            if (menuEditTextView.text.toString() != menuDb.menuName) {
+            if (menuEditTextView.text.toString() != menuDb.name) {
                 GlobalScope.launch {
                     menuDb = MenuDb(
                         menuDb.menuId,

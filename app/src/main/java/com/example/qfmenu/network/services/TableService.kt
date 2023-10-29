@@ -21,7 +21,7 @@ interface TableService {
     @FormUrlEncoded
     @POST("/api/tables")
     suspend fun create(
-        @Field("numberTable") numberTable: String,
+        @Field("numberTable") numberTable: Int,
     ): Response<List<Table>>
     @Headers("Accept: application/json")
     @FormUrlEncoded

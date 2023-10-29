@@ -21,7 +21,7 @@ import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.dao.MenuDao
-import com.example.qfmenu.database.entity.CustomerDishCrossRef
+import com.example.qfmenu.database.entity.CustomerDishDb
 import com.example.qfmenu.database.entity.MenuDb
 import com.example.qfmenu.databinding.FragmentDishMenuBinding
 import com.example.qfmenu.util.DishMenuAdapter
@@ -32,10 +32,8 @@ import com.example.qfmenu.viewmodels.DishViewModelFactory
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.invoke
 import kotlinx.coroutines.launch
 
 
@@ -180,7 +178,7 @@ class DishMenuFragment : Fragment() {
                     }.await()
 
                     saveStateViewModel.stateDishes.forEach { dishAmountDb ->
-                        val customerDishCrossRef = CustomerDishCrossRef(
+                        val customerDishDb = CustomerDishDb(
                             saveStateViewModel.stateCustomerDb.customerId,
                             dishAmountDb.dishDb.dishId,
                             dishAmountDb.amount,
@@ -188,19 +186,19 @@ class DishMenuFragment : Fragment() {
                         )
                         customerDishCrossRefList.forEach {
                             if (it.dishId == dishAmountDb.dishDb.dishId) {
-                                customerDishCrossRefDao.delete(customerDishCrossRef)
+                                customerDishCrossRefDao.delete(customerDishDb)
                             }
                         }
                     }
 
                     dishesDb.forEach { dishAmountDb ->
-                        val customerDishCrossRef = CustomerDishCrossRef(
+                        val customerDishDb = CustomerDishDb(
                             saveStateViewModel.stateCustomerDb.customerId,
                             dishAmountDb.dishDb.dishId,
                             dishAmountDb.amount,
                             0
                         )
-                        customerDishCrossRefDao.insert(customerDishCrossRef)
+                        customerDishCrossRefDao.insert(customerDishDb)
                     }
 
                     findNavController().popBackStack()
@@ -212,7 +210,7 @@ class DishMenuFragment : Fragment() {
             getMenu(menuDao, menuUsed) { dishAmountDbs ->
                 val filtered =
                     dishAmountDbs.filter {
-                        it.dishDb.dishName.contains(
+                        it.dishDb.name.contains(
                             textSearch.text.toString(),
                             ignoreCase = true
                         )

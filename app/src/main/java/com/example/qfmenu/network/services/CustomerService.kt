@@ -1,5 +1,6 @@
 package com.example.qfmenu.network.services
 
+import com.example.qfmenu.network.entity.CustomerDishId
 import com.example.qfmenu.network.entity.CustomerIntegration
 import retrofit2.Response
 import retrofit2.http.DELETE
@@ -22,13 +23,13 @@ interface CustomerService {
     @FormUrlEncoded
     @POST("/api/customers")
     suspend fun create(
-        @Field("userId") userId: String,
+        @Field("userId") userId: Long,
         @Field("name") name: String,
         @Field("code") code: String,
         @Field("phoneNumber") phoneNumber: String,
         @Field("address") address: String,
-        @Field("dishes") dishes: String, // change to Array Object
-        @Field("promotion") promotion: String,
+        @Field("dishes") dishes: List<CustomerDishId>, // change to Array Object
+        @Field("promotion") promotion: Byte,
         @Field("statusOrder") statusOrder: String,
         @Field("payments") payments: String,
         @Field("tableId") tableId: String
@@ -42,8 +43,8 @@ interface CustomerService {
         @Field("code") code: String,
         @Field("phoneNumber") phoneNumber: String,
         @Field("address") address: String,
-        @Field("dishes") dishes: String, // change to Array Object
-        @Field("promotion") promotion: String,
+        @Field("dishes") dishes: List<CustomerDishId>, // change to Array Object
+        @Field("promotion") promotion: Byte,
         @Field("statusOrder") statusOrder: String,
         @Field("payments") payments: String
     ): Response<CustomerIntegration>

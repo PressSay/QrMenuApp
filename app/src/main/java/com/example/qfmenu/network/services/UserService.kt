@@ -30,6 +30,8 @@ interface UserService {
     suspend fun create(
         @Field("name") name: String,
         @Field("email") email: String,
+        @Field("password") password: String,
+        @Field("password_confirmation") password_confirmation: String,
         @Field("level") level: Int,
         @Field("phoneNumber") phoneNumber: String,
         @Field("address") address: String

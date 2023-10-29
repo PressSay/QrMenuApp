@@ -10,8 +10,8 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qfmenu.viewmodels.DishAmountDb
 import com.example.qfmenu.R
-import com.example.qfmenu.database.dao.CustomerDishCrossRefDao
-import com.example.qfmenu.database.entity.CustomerDishCrossRef
+import com.example.qfmenu.database.dao.CustomerDishDao
+import com.example.qfmenu.database.entity.CustomerDishDb
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +24,7 @@ class ConfirmDishAdapter(
     private var total: Int,
     private val dishConfirmTotal: TextView,
     private val saveStateViewModel: SaveStateViewModel,
-    private val customerDishCrossRefDao: CustomerDishCrossRefDao,
+    private val customerDishDao: CustomerDishDao,
     private var dataset: MutableList<DishAmountDb>
 ) : RecyclerView.Adapter<ConfirmDishAdapter.ItemViewHolder>() {
 
@@ -55,19 +55,19 @@ class ConfirmDishAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = dataset[holder.adapterPosition]
         holder.image.setImageResource(R.drawable.img_image_4)
-        holder.title.text = item.dishDb.dishName
+        holder.title.text = item.dishDb.name
         holder.cost.text = item.dishDb.cost.toString()
         holder.amount.text = item.amount.toString()
         holder.btnTrash.setOnClickListener {
             if (saveStateViewModel.stateIsOffOnOrder) {
                 CoroutineScope(Dispatchers.IO).launch {
-                    val customerDishCrossRef = CustomerDishCrossRef(
+                    val customerDishDb = CustomerDishDb(
                         saveStateViewModel.stateCustomerDb.customerId,
                         item.dishDb.dishId,
                         item.amount,
                         0,
                     )
-                    customerDishCrossRefDao.delete(customerDishCrossRef)
+                    customerDishDao.delete(customerDishDb)
                 }
             }
             saveStateViewModel.stateDishesByCategories.forEachIndexed { index1, it ->

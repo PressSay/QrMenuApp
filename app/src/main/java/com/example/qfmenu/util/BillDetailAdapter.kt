@@ -39,7 +39,7 @@ class BillDetailAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = dataset[position]
         holder.imgView.setImageResource(R.drawable.img_image_4)
-        holder.titleItem.text = item.dishDb.dishName
+        holder.titleItem.text = item.dishDb.name
         holder.cost.text = item.dishDb.cost.toString()
         holder.amount.text = item.amount.toString()
 //        if (!item.isReview) {

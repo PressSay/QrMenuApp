@@ -32,6 +32,9 @@ interface MenuDao {
     fun getMenuUsedLiveData(isUsed: Boolean = true): LiveData<MenuDb>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertAll(menus: List<MenuDb>): List<Long>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(menuDb: MenuDb)
 
     @Update
