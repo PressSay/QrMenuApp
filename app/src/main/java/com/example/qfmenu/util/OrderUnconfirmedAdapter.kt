@@ -1,5 +1,6 @@
 package com.example.qfmenu.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.view.LayoutInflater
@@ -8,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.content.ContextCompat
@@ -155,8 +155,8 @@ class OrderUnconfirmedAdapter(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    @OptIn(DelicateCoroutinesApi::class)
+
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = currentList[position]
 
@@ -174,8 +174,11 @@ class OrderUnconfirmedAdapter(
             val it = async(Dispatchers.IO) {
                 customerViewModel.getOrder(item.customerId)
             }.await()
-
-            holder.name.text = it.tableId.toString()
+            try {
+                holder.name.text = "Table: ${it.tableId.toString()} - ${item.customerId}"
+            } catch (e: Exception) {
+                return@launch
+            }
         }
 
 //        holder.name.text = item.tableDb.tableId.toString()

@@ -95,6 +95,7 @@ class DishMenuFragment : Fragment() {
                             if (categories.isNotEmpty()) {
                                 val categoryDb =
                                     categories[saveStateViewModel.stateCategoryPosition]
+                                binding.itemMenuCategoryBtn.text = categoryDb.name
                                 dishViewModel.getDishesAmountDbLiveData(categoryDb.categoryId)
                                     .observe(this.viewLifecycleOwner) { dishAmountDbs ->
                                         handlerFun(dishAmountDbs)
@@ -109,7 +110,6 @@ class DishMenuFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = binding.recyclerViewDishMenu
-        val btnCategory = binding.itemMenuCategoryBtn
         val root = binding.layoutDishMenu
         val slidingPaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
@@ -127,7 +127,7 @@ class DishMenuFragment : Fragment() {
         val dishMenuAdapter =
             DishMenuAdapter(requireContext(), btnBuy, saveStateViewModel)
         var isSearch = false
-        val icSearch = requireActivity().findViewById<AppCompatImageButton>(R.id.icSearch)
+        val icSearchBtn = requireActivity().findViewById<AppCompatImageButton>(R.id.icSearch)
         val textSearch = requireActivity().findViewById<TextView>(R.id.textSearch)
 
         if (width < SCREEN_LARGE && navHostDetail.visibility != View.GONE && saveStateViewModel.isOpenSlide) {
@@ -181,7 +181,7 @@ class DishMenuFragment : Fragment() {
                         val customerDishDb = CustomerDishDb(
                             saveStateViewModel.stateCustomerDb.customerId,
                             dishAmountDb.dishDb.dishId,
-                            dishAmountDb.amount,
+                            dishAmountDb.amount.toInt(),
                             0
                         )
                         customerDishCrossRefList.forEach {
@@ -195,7 +195,7 @@ class DishMenuFragment : Fragment() {
                         val customerDishDb = CustomerDishDb(
                             saveStateViewModel.stateCustomerDb.customerId,
                             dishAmountDb.dishDb.dishId,
-                            dishAmountDb.amount,
+                            dishAmountDb.amount.toInt(),
                             0
                         )
                         customerDishCrossRefDao.insert(customerDishDb)
@@ -206,7 +206,7 @@ class DishMenuFragment : Fragment() {
             }
         }
 
-        icSearch.setOnClickListener {
+        icSearchBtn.setOnClickListener {
             getMenu(menuDao, menuUsed) { dishAmountDbs ->
                 val filtered =
                     dishAmountDbs.filter {
@@ -225,9 +225,9 @@ class DishMenuFragment : Fragment() {
         getMenu(menuDao, menuUsed) {
             dishMenuAdapter.submitList(it)
         }
-
+        val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
         val navGlobal =
-            NavGlobal(navBar, findNavController(), slidingPaneLayout, saveStateViewModel) {
+            NavGlobal(navBar, findNavController(), slidingPaneLayout, saveStateViewModel, searchView) {
                 if (it == R.id.optionOne) {
                     isSearch = !isSearch
                     if (isSearch) {
@@ -245,6 +245,8 @@ class DishMenuFragment : Fragment() {
                             dishMenuAdapter.submitList(it)
                         }
                     }
+                    searchView.visibility =
+                        if (isSearch) View.VISIBLE else View.GONE
                 }
                 if (it == R.id.optionTwo) {
                     if (categoryPos < saveStateViewModel.stateDishesByCategories.size) {
@@ -257,11 +259,15 @@ class DishMenuFragment : Fragment() {
                     }
                     findNavController().navigate(R.id.action_dishMenuFragment_to_categoryFragment)
                 }
-                requireActivity().findViewById<LinearLayout>(R.id.searchView).visibility =
-                    View.GONE
             }
-        navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, R.drawable.ic_search, R.drawable.ic_menu)
-        navGlobal.setVisibleNav(saveStateViewModel.stateIsOffOnOrder, width < SCREEN_LARGE, true,
+        navGlobal.setIconNav(
+            R.drawable.ic_arrow_back,
+            R.drawable.ic_home,
+            R.drawable.ic_search,
+            R.drawable.ic_menu
+        )
+        navGlobal.setVisibleNav(
+            saveStateViewModel.stateIsOffOnOrder, width < SCREEN_LARGE, true,
             optTwo = true
         )
         navGlobal.impNav()

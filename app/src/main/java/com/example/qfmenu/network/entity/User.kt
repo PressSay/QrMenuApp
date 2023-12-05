@@ -14,3 +14,5 @@ data class User(
     val nameRole: String?,
     val image: Image
 )
+
+class Staff() : ArrayList<User>()

@@ -56,7 +56,8 @@
                                 android:padding="10dp"
                                 android:src="@drawable/ic_person"
                                 app:tint="@color/green_primary"
-                                android:importantForAccessibility="no" />
+                                android:importantForAccessibility="no"
+                                android:id="@+id/accountBtn"/>
 
                         </LinearLayout>
 
@@ -88,7 +89,8 @@
                                 android:text="@string/example_amount_star"
                                 android:textColor="@color/green_primary"
                                 android:textSize="22sp"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                android:id="@+id/totalReview"/>
 
                             <ImageView
                                 android:layout_width="28dp"

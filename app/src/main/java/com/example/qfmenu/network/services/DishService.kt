@@ -6,39 +6,38 @@ import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
-import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface DishService {
-    @Headers("Accept: application/json")
-    @GET("/api/dishes")
+
+    @GET("/api/global/dishes")
     suspend fun findALl(): Response<List<Dish>>
-    @Headers("Accept: application/json")
-    @GET("/api/dishes/{id}")
+
+    @GET("/api/global/dishes/{id}")
     suspend fun findOne(@Path("id") id: String): Response<Dish>
-    @Headers("Accept: application/json")
+
     @FormUrlEncoded
-    @POST("/api/dishes")
+    @POST("/api/global/dishes")
     suspend fun create(
         @Field("categoryId") categoryId: String,
         @Field("name") name: String,
         @Field("description") description: String,
         @Field("cost") cost: String,
         @Field("numberOfTimesCalled") numberOfTimesCalled: Int
-    ): Response<List<Dish>>
-    @Headers("Accept: application/json")
+    ): Response<String>
+
     @FormUrlEncoded
-    @PUT("/api/dishes/{id}")
+    @PUT("/api/global/dishes/{id}")
     suspend fun update(
         @Path("id") id: String,
         @Field("name") name: String,
         @Field("description") description: String,
         @Field("cost") cost: String,
         @Field("numberOfTimesCalled") numberOfTimesCalled: String
-    ): Response<Dish>
-    @Headers("Accept: application/json")
-    @DELETE("/api/dishes/{id}")
-    suspend fun delete(@Path("id") id: String): Response<Dish>
+    ): Response<String>
+
+    @DELETE("/api/global/dishes/{id}")
+    suspend fun delete(@Path("id") id: String): Response<String>
 }

@@ -19,14 +19,15 @@ class TableRepository(
     suspend fun fetchTable() {
         val tableNet = networkRetrofit.table().findALl()
         if (tableNet.isSuccessful) {
-            tableNet.body()?.let {
-                tableDao.insertAll(it.map { table ->
-                    TableDb(
-                        tableId = table.nameTable,
-                        status = table.status,
-                    )
-                })
-            }
+            val ListTable = tableNet.body()!!
+            tableDao.deleteAll()
+            tableDao.insertAll(ListTable.map { table ->
+                TableDb(
+                    tableId = table.nameTable,
+                    status = table.status,
+                )
+            })
+
         }
     }
 }

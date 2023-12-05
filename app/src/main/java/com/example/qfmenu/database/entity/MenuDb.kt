@@ -10,7 +10,7 @@ data class MenuDb(
     @PrimaryKey(autoGenerate = true)
     val menuId: Long = 0,
     val name: String,
-    var isUsed: Boolean,
+    var isUsed: Boolean = false,
 )
 
 data class MenuWithCategories(

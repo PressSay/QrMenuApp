@@ -1,10 +1,11 @@
 package com.example.qfmenu.ui.table.config
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
@@ -93,8 +94,8 @@ class ConfigTableFragment : Fragment() {
                 findNavController().popBackStack()
             }
         }
-
-        val navGlobal = NavGlobal(navBar, findNavController(), slidingPaneLayout, saveStateViewModel) {}
+        val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
+        val navGlobal = NavGlobal(navBar, findNavController(), slidingPaneLayout, saveStateViewModel, searchView) {}
         navGlobal.setVisibleNav(true, width < SCREEN_LARGE, false, optTwo = false)
         navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, 0, 0)
         navGlobal.impNav()

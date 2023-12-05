@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -80,9 +81,9 @@ class ConfirmDishFragment : Fragment() {
         saveStateViewModel.stateDishes.forEach {
             total += (it.amount.toInt() * it.dishDb.cost)
         }
-        val totalCurrency = NumberFormat.getNumberInstance(Locale.US).format(total)
-        dishConfirmTotal.text = requireContext().getString(R.string.total, "$totalCurrency\$")
-        dishConfirmDiscount.text = requireContext().getString(R.string.discount, "0%");
+        val totalCurrency = NumberFormat.getCurrencyInstance(Locale("vi", "VN")).format(total)
+        dishConfirmTotal.text = requireContext().getString(R.string.total, totalCurrency)
+        dishConfirmDiscount.text = requireContext().getString(R.string.discount, "0%")
 
         val confirmDishAdapter =
             ConfirmDishAdapter(
@@ -96,8 +97,8 @@ class ConfirmDishFragment : Fragment() {
 
         recyclerView.layoutManager = gridLayoutManager
         recyclerView.adapter = confirmDishAdapter
-
-        val navGlobal = NavGlobal(navBar, findNavController(), slidingPaneLayout, saveStateViewModel) {
+        val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
+        val navGlobal = NavGlobal(navBar, findNavController(), slidingPaneLayout, saveStateViewModel, searchView) {
             if (it == R.id.backToHome) {
                 if (!saveStateViewModel.stateIsOffOnOrder) {
                     saveStateViewModel.setStateDishesDb(confirmDishAdapter.getDataset())
@@ -113,17 +114,20 @@ class ConfirmDishFragment : Fragment() {
                 if (!saveStateViewModel.stateIsOffOnOrder) {
                     val calendar = Calendar.getInstance()
                     calendar.add(Calendar.DATE, 3)
-                    val expired = calendar.get(Calendar.DATE).toString() + "/" + calendar.get(
-                        Calendar.MONTH
-                    ) + "/" + calendar.get(Calendar.YEAR)
+                    val expired = String.format(
+                        "%04d-%02d-%02d",
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DATE)
+                    )
                     val code = (0..1000).random()
                     val customerDb = CustomerDb(
                         accountCreatorId = 1,
                         dateExpireCode = expired,
-                        name = "now",
+                        name = "tableId: 0",
                         code = code.toString(),
-                        phone = "0123456789",
-                        address = "empty"
+                        phone = "Empty",
+                        address = "here"
                     )
                     saveStateViewModel.setStateCustomer(customerDb)
 
@@ -133,7 +137,7 @@ class ConfirmDishFragment : Fragment() {
                         val customerDishDb = CustomerDishDb(
                             customerDb.customerId,
                             dishAmountDb.dishDb.dishId,
-                            dishAmountDb.amount,
+                            dishAmountDb.amount.toInt(),
                             0
                         )
                         customerDishDbs.add(customerDishDb)
@@ -158,6 +162,7 @@ class ConfirmDishFragment : Fragment() {
                 }
             }
         }
+
         navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, R.drawable.ic_qr, R.drawable.ic_active_order)
         navGlobal.setVisibleNav(true, width < SCREEN_LARGE, !saveStateViewModel.stateIsOffOnOrder, true)
         navGlobal.impNav()

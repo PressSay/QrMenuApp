@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -77,8 +78,8 @@ class ConfigInvestmentFragment : Fragment() {
         val costInvestment = layout2FieldInvestment.getChildAt(2)!! as TextInputEditText
         val investmentDao = (activity?.application as QrMenuApplication).database.investmentDao()
 
-
-        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
+        val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
+        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel, searchView) {
             if (it == R.id.optionOne) {
             }
             if (it == R.id.optionTwo) {

@@ -1,6 +1,7 @@
 package com.example.qfmenu.util
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,14 +9,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.recyclerview.widget.RecyclerView
-import com.example.qfmenu.viewmodels.DishAmountDb
 import com.example.qfmenu.R
 import com.example.qfmenu.database.dao.CustomerDishDao
 import com.example.qfmenu.database.entity.CustomerDishDb
+import com.example.qfmenu.network.NetworkRetrofit
+import com.example.qfmenu.viewmodels.DishAmountDb
 import com.example.qfmenu.viewmodels.SaveStateViewModel
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.IOException
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -54,9 +58,18 @@ class ConfirmDishAdapter(
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = dataset[holder.adapterPosition]
-        holder.image.setImageResource(R.drawable.img_image_4)
+        try {
+            Picasso.get().load("${NetworkRetrofit.BASE_URL}/${item.dishDb.image}")
+                .transform(RoundedTransformation(48F, 0))
+                .fit().centerCrop().into(holder.image)
+        } catch (networkError: IOException) {
+            Log.d("NoInternet", true.toString())
+            holder.image.setImageResource(R.drawable.img_image_4)
+        }
+
         holder.title.text = item.dishDb.name
-        holder.cost.text = item.dishDb.cost.toString()
+        val costVND = NumberFormat.getCurrencyInstance(Locale("vi", "VN")).format(item.dishDb.cost)
+        holder.cost.text = costVND
         holder.amount.text = item.amount.toString()
         holder.btnTrash.setOnClickListener {
             if (saveStateViewModel.stateIsOffOnOrder) {
@@ -64,7 +77,7 @@ class ConfirmDishAdapter(
                     val customerDishDb = CustomerDishDb(
                         saveStateViewModel.stateCustomerDb.customerId,
                         item.dishDb.dishId,
-                        item.amount,
+                        item.amount.toInt(),
                         0,
                     )
                     customerDishDao.delete(customerDishDb)
@@ -79,8 +92,8 @@ class ConfirmDishAdapter(
             }
 
             total -= (item.dishDb.cost * item.amount.toInt())
-            val totalCurrency = NumberFormat.getNumberInstance(Locale.US).format(total)
-            dishConfirmTotal.text = context.getString(R.string.total, "$totalCurrency\$")
+            val totalCurrency = NumberFormat.getCurrencyInstance(Locale("vi", "VN")).format(total)
+            dishConfirmTotal.text = context.getString(R.string.total, totalCurrency)
 
             dataset.removeAt(holder.adapterPosition)
             notifyItemRemoved(holder.adapterPosition)

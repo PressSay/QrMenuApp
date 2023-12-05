@@ -15,19 +15,12 @@
             app:destination="@id/mainFragment" />
     </fragment>
 
-    <fragment
-        android:id="@+id/profileFragment"
-        android:name="com.example.qfmenu.ui.user.profile.ProfileFragment"
-        tools:layout="@layout/fragment_profile"
-        android:label="ProfileFragment" />
+
+
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.example.qfmenu.ui.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" >
-        <action
-            android:id="@+id/action_mainFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_main" />
 
 </navigation>

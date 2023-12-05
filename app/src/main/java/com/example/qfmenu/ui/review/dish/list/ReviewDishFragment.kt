@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.content.ContextCompat
@@ -129,7 +130,8 @@ class ReviewDishFragment : Fragment() {
                 )
             )
         }
-        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
+        val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
+        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel, searchView) {
             if (it == R.id.optionTwo) {
                 Log.d("DishReview", "True")
                 if (editInputDishReview.text?.isNotBlank() == true) {

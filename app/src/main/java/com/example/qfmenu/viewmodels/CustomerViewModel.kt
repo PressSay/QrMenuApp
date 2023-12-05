@@ -3,7 +3,6 @@ package com.example.qfmenu.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.qfmenu.database.dao.CustomerDao
 import com.example.qfmenu.database.dao.CustomerDishDao
@@ -15,10 +14,10 @@ import com.example.qfmenu.database.entity.CustomerDishDb
 import com.example.qfmenu.database.entity.OrderDb
 import com.example.qfmenu.database.entity.ReviewCustomerDb
 import com.example.qfmenu.database.entity.ReviewDb
+import com.example.qfmenu.repository.CustomerRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import java.lang.IllegalArgumentException
 
 class CustomerViewModel(
     private val customerDao: CustomerDao,
@@ -27,9 +26,9 @@ class CustomerViewModel(
     private val orderDao: OrderDao,
     private val selectedDishes: List<DishAmountDb>,
 ) : ViewModel() {
-    val reviews get() = reviewDao.getReviews().asLiveData()
+    val reviews get() = reviewDao.getReviewListLiveData()
     fun getReview(reviewId: Long): LiveData<ReviewDb> {
-        return reviewDao.getReview(reviewId).asLiveData()
+        return reviewDao.getReviewLiveData(reviewId)
     }
 
     fun getCustomerDishCrossRefDao(): CustomerDishDao {
@@ -39,7 +38,7 @@ class CustomerViewModel(
     private var _customerForCreate: CustomerDb? = null
     val customerForCreate get() = _customerForCreate!!
 
-    val customerList get() = customerDao.getCustomersUnConfirmed().asLiveData()
+    val customerList get() = customerDao.getCustomersUnConfirmed()
 
     suspend fun getOrder(customerId: Long): OrderDb {
         return orderDao.getOrderCustomerOwner(customerId)
@@ -100,16 +99,13 @@ class CustomerViewModel(
         payment: String,
         status: String,
         promotion: Byte,
-        tableId: Long
-
+        tableId: Long,
+        customerRepository: CustomerRepository
     ) {
-
         viewModelScope.launch {
-
             val customerIdCreated = customerDao.insert(
                 customerDb
             )
-
             orderDao.insert(
                 OrderDb(
                     customerOwnerId = customerIdCreated,
@@ -129,8 +125,7 @@ class CustomerViewModel(
                     )
                 )
             }
-
-
+            customerRepository.createCustomer(customerDb.copy(customerId = customerIdCreated))
         }
 
     }
@@ -170,7 +165,7 @@ class CustomerViewModel(
                 async(Dispatchers.IO) { reviewDao.getCustomerReview(customerDb.customerId) }.await()
             reviewDao.updateReviewCustomerCrossRef(
                 ReviewCustomerDb(
-                    reviewCustomerCrossRef.reviewId,
+                    reviewCustomerCrossRef?.reviewId ?: -1,
                     -1
                 )
             )
@@ -179,7 +174,7 @@ class CustomerViewModel(
     }
 
     suspend fun getCustomer(customerId: Long): CustomerDb {
-        return customerDao.getCustomer(customerId)
+        return customerDao.getCustomer(customerId)!!
     }
 
     suspend fun getAllCustomerAndOrder(): List<CustomerAndOrderDb> {

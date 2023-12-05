@@ -13,20 +13,30 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class NetworkRetrofit(private val token: String = "") {
-    private val BASE_URL =
-        "http://192.168.1.3"
+    companion object {
+        const val BASE_URL =
+            "http://192.168.1.6"
+        const val BASE_URL_SOCKET =
+            "ws://192.168.1.6:6001/app/qrmenuKey"
+    }
 
     private val retrofitBuilder = Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(ScalarsConverterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
 
     private val client =
         retrofitBuilder.client(OkHttpClient.Builder().addInterceptor(Interceptor { chain ->
             val request = chain.request().newBuilder()
             request.addHeader("Authorization", "Bearer $token")
+                .addHeader("Accept", "application/json")
             chain.proceed(request.build())
-        }).build()).baseUrl(BASE_URL).build()
+        }).build()).build()
+
+
 
     fun image(): ImageService {
         return client.create(ImageService::class.java)

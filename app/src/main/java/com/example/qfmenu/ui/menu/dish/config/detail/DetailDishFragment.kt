@@ -1,28 +1,42 @@
 package com.example.qfmenu.ui.menu.dish.config.detail
 
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
-import com.example.qfmenu.viewmodels.DishViewModel
-import com.example.qfmenu.viewmodels.DishViewModelFactory
 import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.entity.DishDb
 import com.example.qfmenu.databinding.FragmentDetailDishBinding
+import com.example.qfmenu.network.NetworkRetrofit
+import com.example.qfmenu.repository.MenuRepository
 import com.example.qfmenu.util.NavGlobal
+import com.example.qfmenu.util.RoundedTransformation
+import com.example.qfmenu.viewmodels.DishViewModel
+import com.example.qfmenu.viewmodels.DishViewModelFactory
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputEditText
+import com.squareup.picasso.Picasso
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.io.IOException
+import java.text.NumberFormat
+import java.util.Locale
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -44,13 +58,6 @@ class DetailDishFragment : Fragment() {
 
     private val saveStateViewModel: SaveStateViewModel by activityViewModels()
 
-    private val dishViewModel: DishViewModel by viewModels {
-        DishViewModelFactory(
-            (activity?.application as QrMenuApplication).database.dishDao(),
-            (activity?.application as QrMenuApplication).database.categoryDao(),
-        )
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -70,6 +77,20 @@ class DetailDishFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val menuDao = (activity?.application as QrMenuApplication).database.menuDao()
+        val categoryDao = (activity?.application as QrMenuApplication).database.categoryDao()
+        val dishDao = (activity?.application as QrMenuApplication).database.dishDao()
+        val dishViewModel: DishViewModel by viewModels {
+            DishViewModelFactory(
+                (activity?.application as QrMenuApplication).database.dishDao(),
+                (activity?.application as QrMenuApplication).database.categoryDao(),
+            )
+        }
+        val sharePref = requireActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val token = sharePref.getString("token", "") ?: ""
+        val networkRetrofit = NetworkRetrofit(token)
+        val menuRepository = MenuRepository(networkRetrofit, menuDao, categoryDao, dishDao)
+
         val linear1 = binding.linear1EditCreateDetailDish as ViewGroup
         val linearDishView = linear1.getChildAt(0) as ViewGroup
         val includeDishItem = linearDishView.getChildAt(0) as ViewGroup
@@ -92,18 +113,48 @@ class DetailDishFragment : Fragment() {
         val dishEditCost = linearDishTitleEdit.getChildAt(3) as TextInputEditText
 
         val dishDb = saveStateViewModel.stateDishDb
-        val dishCostToString = buildString {
-            append(dishDb.cost.toString())
-            append(" $")
+        val formattedAmount =
+            NumberFormat.getCurrencyInstance(Locale("vi", "VN")).format(dishDb.cost)
+        val dishCostToString = formattedAmount
+
+        val btnUploadImage = binding.btnUploadImage
+        val imageViewUpload = binding.imageRev
+
+        var curUri: Uri? = null
+        val registry = requireActivity()
+            .activityResultRegistry.register(
+                "key",
+                this,
+                ActivityResultContracts.GetContent()
+            ) { uri ->
+                // Handle the returned Uri
+                uri?.let {
+                    imageViewUpload.setImageURI(it)
+                    imageViewUpload.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                    curUri = it
+                }
+            }
+
+        btnUploadImage.setOnClickListener {
+            registry.launch("image/*")
         }
 
         if (dishDb.image != "Empty") {
-            imgDish.setImageURI(Uri.EMPTY)
+            try {
+                Picasso.get().load("${NetworkRetrofit.BASE_URL}/${dishDb.image}")
+                    .transform(RoundedTransformation(48F, 0))
+                    .fit().centerCrop().into(imgDish)
+            } catch (networkError: IOException) {
+                Log.d("NoInternet", true.toString())
+                imgDish.setImageResource(R.drawable.img_image_6)
+            }
+        } else {
+            imgDish.setImageResource(R.drawable.img_image_6)
         }
 
         titleDish.text = dishDb.name
         descriptionDish.text = dishDb.description
-        costDish.text = dishCostToString
+        costDish.text = dishDb.cost.toString()
 
         dishEditTitle.setText(dishDb.name)
         dishDescriptionEdit.setText(dishDb.description)
@@ -114,34 +165,49 @@ class DetailDishFragment : Fragment() {
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
 
-
-        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
+        val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
+        val navGlobal = NavGlobal(
+            navBar,
+            findNavController(),
+            slidePaneLayout,
+            saveStateViewModel,
+            searchView
+        ) {
             if (it == R.id.optionTwo) {
-                val newDishDb =
-                    DishDb(
-                        dishDb.dishId,
+                if (dishEditTitle.text?.isNotEmpty() == true &&
+                    dishDescriptionEdit.text?.isNotEmpty() == true && dishEditCost.text?.isNotEmpty() == true
+                ) {
+                    val newDishDb = DishDb(
+                        dishId = dishDb.dishId,
                         name = dishEditTitle.text.toString(),
                         categoryId = saveStateViewModel.stateCategoryDb.categoryId,
                         description = dishDescriptionEdit.text.toString(),
                         cost = dishEditCost.text.toString().toInt()
                     )
-                if (newDishDb.name != dishDb.name || newDishDb.description != dishDb.description || newDishDb.cost != dishDb.cost) {
-                    dishViewModel.updateDish(
-                        newDishDb
-                    )
-                    titleDish.text = newDishDb.name
-                    descriptionDish.text = newDishDb.description
-                    costDish.text = buildString {
-                        append(newDishDb.cost)
-                        append(" $")
+                    CoroutineScope(Dispatchers.Main).launch {
+                        menuRepository.updateDishNet(newDishDb)
+                        dishViewModel.updateDish(newDishDb)
                     }
-
+                    if (imageViewUpload.drawable != null) {
+                        dishViewModel.updateDishWithImg(
+                            newDishDb,
+                            curUri,
+                            requireContext(),
+                            requireActivity(),
+                            networkRetrofit
+                        )
+                        Log.d("Uri", curUri.toString())
+                    } else {
+                        Log.d("Uri", "null")
+                    }
+                    findNavController().popBackStack()
                 }
             }
         }
         navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, 0, R.drawable.ic_save)
         navGlobal.setVisibleNav(true, width < SCREEN_LARGE, false, optTwo = true)
         navGlobal.impNav()
+        searchView.visibility = View.GONE
 
     }
 

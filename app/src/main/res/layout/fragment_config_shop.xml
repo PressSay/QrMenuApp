@@ -45,6 +45,12 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:padding="8dp"
+                        android:maxLines="1"
+                        android:lines="1"
+                        android:singleLine="true"
+                        android:maxLength="128"
+                        android:inputType="text"
                         android:background="@drawable/shape_rounded_border"
                         android:textColor="@color/green_secondary" />
 
@@ -69,8 +75,13 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/shopAddress"
                         android:layout_width="0dp"
+                        android:padding="8dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:maxLines="1"
+                        android:lines="1"
+                        android:singleLine="true"
+                        android:maxLength="128"
                         android:background="@drawable/shape_rounded_border"
                         android:textColor="@color/green_secondary" />
 
@@ -133,6 +144,12 @@
                         android:layout_height="match_parent"
                         android:layout_marginEnd="4dp"
                         android:layout_weight="1"
+                        android:padding="8dp"
+                        android:inputType="number"
+                        android:maxLines="1"
+                        android:lines="1"
+                        android:singleLine="true"
+                        android:maxLength="128"
                         android:background="@drawable/shape_rounded_border"
                         android:textColor="@color/green_secondary" />
 
@@ -167,6 +184,12 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:padding="8dp"
+                        android:inputType="number"
+                        android:maxLines="1"
+                        android:lines="1"
+                        android:singleLine="true"
+                        android:maxLength="128"
                         android:background="@drawable/shape_rounded_border"
                         android:textColor="@color/green_secondary" />
 
@@ -193,6 +216,12 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:padding="8dp"
+                        android:inputType="number"
+                        android:maxLines="1"
+                        android:lines="1"
+                        android:singleLine="true"
+                        android:maxLength="128"
                         android:background="@drawable/shape_rounded_border"
                         android:textColor="@color/green_secondary" />
 

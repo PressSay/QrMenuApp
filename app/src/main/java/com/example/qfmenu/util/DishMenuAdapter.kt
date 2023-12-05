@@ -1,6 +1,13 @@
 package com.example.qfmenu.util
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapShader
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.RectF
+import android.graphics.Shader
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,10 +20,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qfmenu.R
+import com.example.qfmenu.network.NetworkRetrofit
 import com.example.qfmenu.viewmodels.DishAmountDb
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.squareup.picasso.Picasso
+import com.squareup.picasso.Transformation
 import java.io.IOException
+import java.text.NumberFormat
+import java.util.Locale
+
 
 class DishMenuAdapter(
     private val context: Context,
@@ -70,7 +82,7 @@ class DishMenuAdapter(
                     _listSelected.add(item)
                     currentList[position].selected = true
                     currentList[position].amount = it.amount
-                    item = currentList[position];
+                    item = currentList[position]
                 }
             }
         }
@@ -84,15 +96,17 @@ class DishMenuAdapter(
         ))
         // Image get api here!
         try {
-            Picasso.get().load("http://192.168.1.3/image-dish/6e94d3b654e3785cd10e994ce8385270.jpg")
-                .resize(50, 50).centerCrop().into(holder.img)
+            holder.img.background = null
+            Picasso.get().load("${NetworkRetrofit.BASE_URL}/${item.dishDb.image}")
+                .transform(RoundedTransformation(48F, 0))
+                .fit().centerCrop().into(holder.img)
         } catch (networkError: IOException) {
-            holder.img.setImageResource(R.drawable.img_image_6)
             Log.d("NoInternet", true.toString())
         }
 
+        val formattedAmount = NumberFormat.getCurrencyInstance(Locale("vi", "VN")).format(item.dishDb.cost)
         holder.title.text = item.dishDb.name
-        holder.cost.text = item.dishDb.cost.toString()
+        holder.cost.text = formattedAmount
         holder.amount.text = item.amount.toString()
         holder.description.text = item.dishDb.description
 
@@ -199,5 +213,48 @@ class DishMenuAdapter(
 
     override fun getItemCount(): Int {
         return currentList.size
+    }
+}
+
+class RoundedTransformation(
+    private val radius: Float, // dp
+    private var margin: Int
+) : Transformation {
+
+    override fun transform(source: Bitmap): Bitmap {
+        val paint = Paint()
+        paint.isAntiAlias = true
+        paint.shader = BitmapShader(
+            source, Shader.TileMode.CLAMP,
+            Shader.TileMode.CLAMP
+        )
+        val output = Bitmap.createBitmap(
+            source.width,
+            source.height, Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(output)
+
+        val corners = floatArrayOf(
+            0f, 0f,  // Top left radius in px
+            radius, radius,  // Top right radius in px
+            0f, 0f,  // Bottom right radius in px
+            radius, radius // Bottom left radius in px
+        )
+        val path = Path()
+        val rect = RectF(margin.toFloat(), margin.toFloat(), (source.width - margin).toFloat(), (source.height - margin).toFloat())
+        path.addRoundRect(rect, corners, Path.Direction.CW)
+        canvas.drawPath(path, paint)
+
+//        canvas.drawRoundRect(
+//            RectF(margin.toFloat(), margin.toFloat(), (source.width - margin).toFloat(), (source.height - margin).toFloat()), radius.toFloat(), radius.toFloat(), paint
+//        )
+        if (source != output) {
+            source.recycle()
+        }
+        return output
+    }
+
+    override fun key(): String {
+        return "rounded"
     }
 }

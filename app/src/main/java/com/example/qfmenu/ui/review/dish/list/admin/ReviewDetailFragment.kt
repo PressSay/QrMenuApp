@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -71,6 +72,9 @@ class ReviewDetailFragment : Fragment() {
         val costDish = linear1_1_1.getChildAt(0) as TextView
         val descriptionDish = linear1_2_1.getChildAt(1) as TextView
 
+        val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
+        searchView.visibility = View.GONE
+
         titleDish.text = dishDb.name
         costDish.text = dishDb.cost.toString()
         descriptionDish.text = dishDb.description
@@ -89,8 +93,8 @@ class ReviewDetailFragment : Fragment() {
 
         val layoutDishDbReview = binding.layoutDishDbReview.root
         setProDishDbReview(layoutDishDbReview, saveStateViewModel.stateDishDb)
-
-        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
+        val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
+        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel, searchView) {
             if (it == R.id.optionOne) {
             }
             if (it == R.id.optionTwo) {

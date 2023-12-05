@@ -10,15 +10,21 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.qfmenu.viewmodels.CategoryViewModel
 import com.example.qfmenu.R
 import com.example.qfmenu.database.entity.CategoryDb
+import com.example.qfmenu.network.entity.Category
+import com.example.qfmenu.repository.MenuRepository
+import com.example.qfmenu.viewmodels.CategoryViewModel
 import com.example.qfmenu.viewmodels.SaveStateViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ConfigCategoryAdapter(
     private val categoryViewModel: CategoryViewModel,
     private val context: Context,
-    private val stateViewCategoryModel: SaveStateViewModel
+    private val stateViewCategoryModel: SaveStateViewModel,
+    private val menuRepository: MenuRepository
 ) : ListAdapter<CategoryDb, ConfigCategoryAdapter.ItemViewHolder>(DiffCallback) {
     class ItemViewHolder(val view: View): RecyclerView.ViewHolder(view) {
         val btnConfig = view.findViewById<AppCompatImageButton>(R.id.btnConfigItemEditCategoryOrDish)!!
@@ -41,7 +47,16 @@ class ConfigCategoryAdapter(
 
         holder.titleDishOrCategory.text = item.name
         holder.btnTrash.setOnClickListener {
-            categoryViewModel.deleteCategoryWithDishes(item)
+            CoroutineScope(Dispatchers.IO).launch {
+                menuRepository.deleteCategoryNet(
+                    Category(
+                        item.categoryId,
+                        item.menuId,
+                        item.name
+                    )
+                )
+                categoryViewModel.deleteCategoryWithDishes(item)
+            }
         }
     }
 

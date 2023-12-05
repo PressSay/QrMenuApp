@@ -11,14 +11,14 @@ class InvestmentRepository(
     suspend fun fetchInvestment() {
         val investmentNet = networkRetrofit.investment().findALl()
         if (investmentNet.isSuccessful) {
-            investmentNet.body()?.let {
-                investmentDao.insertAll(it.map { investment ->
-                    com.example.qfmenu.database.entity.InvestmentDb(
-                        name = investment.name,
-                        cost = investment.cost.toInt(),
-                    )
-                })
-            }
+            investmentDao.deleteAll()
+            val ListInvestment = investmentNet.body()!!
+            investmentDao.insertAll(ListInvestment.map { investment ->
+                InvestmentDb(
+                    name = investment.name,
+                    cost = investment.cost.toInt(),
+                )
+            })
         }
     }
 

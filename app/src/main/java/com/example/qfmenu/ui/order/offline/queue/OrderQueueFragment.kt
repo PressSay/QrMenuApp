@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -23,6 +24,10 @@ import com.example.qfmenu.viewmodels.DishAmountDb
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.text.NumberFormat
+import java.util.Locale
+
+
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -72,8 +77,8 @@ class OrderQueueFragment : Fragment() {
         dishesAmountDb.forEach {
             total += (it.amount.toInt() * it.dishDb.cost)
         }
-        val totalCurrency = NumberFormat.getCurrencyInstance().format(total)
-        totalTextView.text = requireContext().getString(R.string.total, "$total\$")
+        val formattedAmount = NumberFormat.getCurrencyInstance(Locale("vi", "VN")).format(total)
+        totalTextView.text = requireContext().getString(R.string.total, "$formattedAmount")
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -139,9 +144,9 @@ class OrderQueueFragment : Fragment() {
             recyclerViewQueue.adapter = adapterOrderQueue
             recyclerViewDish.adapter = adapterOrderQueueBill
 
-
+            val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
             val navGlobal =
-                NavGlobal(navBar, findNavController(), slidingPaneLayout, saveStateViewModel) {
+                NavGlobal(navBar, findNavController(), slidingPaneLayout, saveStateViewModel, searchView) {
                     if (it == R.id.backToHome) {
                         saveStateViewModel.isOpenSlide = !saveStateViewModel.isOpenSlide
                         saveStateViewModel.stateCustomerOrderQueues = mutableListOf()

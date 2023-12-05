@@ -1,7 +1,6 @@
 package com.example.qfmenu.network.services
 
-import com.example.qfmenu.network.entity.CustomerDishId
-import com.example.qfmenu.network.entity.CustomerIntegration
+import com.example.qfmenu.network.entity.Customer
 import retrofit2.Response
 import retrofit2.http.DELETE
 import retrofit2.http.Field
@@ -13,42 +12,43 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface CustomerService {
-    @Headers("Accept: application/json")
-    @GET("/api/customers")
-    suspend fun findALl(): Response<List<CustomerIntegration>>
-    @Headers("Accept: application/json")
-    @GET("/api/customers/{id}")
-    suspend fun findOne(@Path("id") id: String): Response<CustomerIntegration>
-    @Headers("Accept: application/json")
+
+    @GET("/api/global/customers")
+    suspend fun findALl(): Response<ArrayList<Customer>>
+
+    @GET("/api/global/customers/{id}")
+    suspend fun findOne(@Path("id") id: String): Response<Customer>
+
     @FormUrlEncoded
-    @POST("/api/customers")
+    @POST("/api/global/customers")
     suspend fun create(
         @Field("userId") userId: Long,
         @Field("name") name: String,
         @Field("code") code: String,
         @Field("phoneNumber") phoneNumber: String,
         @Field("address") address: String,
-        @Field("dishes") dishes: List<CustomerDishId>, // change to Array Object
+        @Field("dishes") dishes: String, // change to Array Object
         @Field("promotion") promotion: Byte,
         @Field("statusOrder") statusOrder: String,
         @Field("payments") payments: String,
         @Field("tableId") tableId: String
-    ): Response<CustomerIntegration>
-    @Headers("Accept: application/json")
+    ): Response<String>
+
     @FormUrlEncoded
-    @PUT("/api/customers/{id}")
+    @PUT("/api/global/customers/{id}")
     suspend fun update(
         @Path("id") id: String,
         @Field("name") name: String,
         @Field("code") code: String,
         @Field("phoneNumber") phoneNumber: String,
         @Field("address") address: String,
-        @Field("dishes") dishes: List<CustomerDishId>, // change to Array Object
+        @Field("dishes") dishes: String, // change to Array Object
         @Field("promotion") promotion: Byte,
         @Field("statusOrder") statusOrder: String,
-        @Field("payments") payments: String
-    ): Response<CustomerIntegration>
+        @Field("payments") payments: String,
+    ): Response<String>
+
     @Headers("Accept: application/json")
-    @DELETE("/api/customers/{id}")
-    suspend fun delete(@Path("id") id: String): Response<CustomerIntegration>
+    @DELETE("/api/global/customers/{id}")
+    suspend fun delete(@Path("id") id: String)
 }

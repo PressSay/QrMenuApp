@@ -55,9 +55,11 @@
                         android:layout_width="110dp"
                         android:layout_height="match_parent"
                         android:layout_marginEnd="16dp"
-                        android:scaleType="fitXY"
+                        android:scaleType="fitCenter"
                         android:padding="4dp"
-                        android:background="@drawable/shape_impression_rounded_border"/>
+                        android:src="@drawable/qr_image"
+                        android:background="@drawable/shape_impression_rounded_border"
+                        android:id="@+id/imageRev"/>
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:layout_width="132dp"
@@ -65,7 +67,8 @@
                         android:text="@string/upload"
                         android:background="@drawable/button_secondary_container_solid"
                         android:textColor="@color/green_primary"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:id="@+id/btnUploadImage"/>
 
                 </LinearLayout>
 
@@ -119,6 +122,7 @@
                     android:layout_height="92dp"
                     android:layout_marginStart="32dp"
                     android:layout_marginEnd="32dp"
+                    android:padding="8dp"
                     android:background="@drawable/shape_rounded_border"
                     android:textColor="@color/green_secondary"/>
 

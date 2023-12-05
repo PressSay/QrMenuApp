@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -12,10 +14,15 @@ import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
+import com.example.qfmenu.database.dao.CategoryDao
+import com.example.qfmenu.database.dao.MenuDao
+import com.example.qfmenu.database.entity.CategoryWidthDishes
 import com.example.qfmenu.databinding.FragmentReviewBinding
+import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.util.ReviewAdapter
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.textfield.TextInputEditText
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,7 +41,6 @@ class ReviewFragment : Fragment() {
 
     private var _binding: FragmentReviewBinding? = null
     private val binding get() = _binding!!
-
 
     private val saveStateViewModel: SaveStateViewModel by activityViewModels()
 
@@ -55,6 +61,18 @@ class ReviewFragment : Fragment() {
         return binding.root
     }
 
+    private fun formatNumRev(number: Int): String {
+        if (number > 1000000000) {
+            return "${number / 1000000000}B"
+        } else if (number > 1000000) {
+            return "${number / 1000000}M"
+        } else if (number > 1000) {
+            return "${number / 1000}K"
+        } else {
+            return number.toString()
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
@@ -64,77 +82,81 @@ class ReviewFragment : Fragment() {
         val recyclerView = binding.recyclerViewReviewList
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
-
-        val backMenu = navBar.menu.findItem(R.id.backToHome)
-        val homeMenu = navBar.menu.findItem(R.id.homeMenu)
-        val optionOne = navBar.menu.findItem(R.id.optionOne)
-        val optionTwo = navBar.menu.findItem(R.id.optionTwo)
-
-        homeMenu.isVisible = width < SCREEN_LARGE
-        backMenu.isVisible = true
-        optionOne.isVisible = true
-        optionTwo.isVisible = true
-
-        homeMenu.setIcon(R.drawable.ic_home)
-        backMenu.setIcon(R.drawable.ic_arrow_back)
-        optionOne.setIcon(R.drawable.ic_search)
-        optionTwo.setIcon(R.drawable.ic_menu)
-
-        navBar.setOnItemSelectedListener {
-            if (it.itemId == R.id.backToHome) {
-                findNavController().popBackStack()
-            }
-            if (it.itemId == R.id.homeMenu) {
-                slidePaneLayout.closePane()
-                saveStateViewModel.isOpenSlide = !saveStateViewModel.isOpenSlide
-                navBar.visibility = View.GONE
-            }
-            if (it.itemId == R.id.optionOne) {
-
-            }
-            if (it.itemId == R.id.optionTwo) {
-                findNavController().navigate(R.id.action_reviewFragment_to_categoryFragment)
-            }
-            true
-        }
+        var isSearch = false
+        val icSearch = requireActivity().findViewById<AppCompatImageButton>(R.id.icSearch)
+        val textSearch = requireActivity().findViewById<TextInputEditText>(R.id.textSearch)
+        val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
 
         btnReviewStore.setOnClickListener {
             findNavController().navigate(R.id.action_reviewFragment_to_reviewStoreFragment)
         }
 
+        val reviewDao = (activity?.application as QrMenuApplication).database.reviewDao()
         val reviewAdapter = ReviewAdapter(
             requireContext(),
-            saveStateViewModel
+            saveStateViewModel,
+            reviewDao
         )
-
-//        val customerDishCrossRefDao =
-//            (activity?.application as QrMenuApplication).database.customerDishCrossRefDao()
         val menuDao = (activity?.application as QrMenuApplication).database.menuDao()
         val categoryDao = (activity?.application as QrMenuApplication).database.categoryDao()
 
+        reviewDao.countCustRev().observe(this.viewLifecycleOwner) { it ->
+            if (it != null) {
+                val formatted = formatNumRev(it)
+                "$formatted reviews".also { btnReviewStore.text = it }
+            }
+        }
 
         recyclerView.adapter = reviewAdapter
         recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
 
-//        menuDao.getMenuUsedLiveData().observe(this.viewLifecycleOwner) {
-//            if (it != null) {
-//                menuDao.getMenuWithCategoriesLiveData(it.menuId)
-//                    .observe(this.viewLifecycleOwner) { menuWithCategories ->
-//                        if (menuWithCategories != null) {
-//                            if (menuWithCategories.categoriesDb.isNotEmpty()) {
-//                                val posCategory = saveStateViewModel.stateCategoryPositionMenu
-//                                customerDishCrossRefDao.getDishReviewByCategoryId(menuWithCategories.categoriesDb[posCategory].categoryId)
-//                                    .observe(this.viewLifecycleOwner) { dishesDb ->
-//                                        dishesDb.let {
-//                                            reviewListAdapter.submitList(dishesDb)
-//                                        }
-//                                    }
-//                            }
-//                        }
-//                    }
-//            }
-//        }
 
+        getReviewLive(menuDao, categoryDao) {
+            val reviewList = it.dishesDb
+            if (reviewList.isNotEmpty()) {
+                reviewAdapter.submitList(reviewList)
+            }
+        }
+
+        icSearch.setOnClickListener {
+            getReviewLive(menuDao, categoryDao) { it ->
+                val filtered = it.dishesDb.filter { it.name.contains(textSearch.text.toString()) }
+                if (filtered.isNotEmpty()) {
+                    reviewAdapter.submitList(filtered)
+                }
+            }
+        }
+
+        val navGlobal =
+            NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel, searchView) {
+                if (it == R.id.optionOne) {
+                    isSearch = !isSearch
+                    if (isSearch) {
+                        getReviewLive(menuDao, categoryDao) { it ->
+                            val reviewList = it.dishesDb
+                            if (reviewList.isNotEmpty()) {
+                                reviewAdapter.submitList(reviewList)
+                            }
+                        }
+                    }
+                    searchView.visibility = if (isSearch) View.VISIBLE else View.GONE
+                }
+                if (it == R.id.optionTwo) {
+                    findNavController().navigate(R.id.action_reviewFragment_to_categoryFragment)
+                }
+            }
+        navGlobal.setVisibleNav(true, width < SCREEN_LARGE, true, optTwo = true)
+        navGlobal.setIconNav(
+            R.drawable.ic_arrow_back,
+            R.drawable.ic_home,
+            R.drawable.ic_search,
+            R.drawable.ic_menu
+        )
+        navGlobal.impNav()
+
+    }
+
+    private fun getReviewLive(menuDao: MenuDao, categoryDao: CategoryDao, handler: (CategoryWidthDishes) -> Unit) {
         menuDao.getMenuUsedLiveData().observe(this.viewLifecycleOwner) { menuDb ->
             if (menuDb != null) {
                 menuDao.getMenuWithCategoriesLiveData(menuId = menuDb.menuId)
@@ -146,10 +168,7 @@ class ReviewFragment : Fragment() {
                                     categories[saveStateViewModel.stateCategoryPosition]
                                 categoryDao.getCategoryWithDishesLiveData(categoryDb.categoryId)
                                     .observe(this.viewLifecycleOwner) {
-                                        it.let {
-                                            if (it.dishesDb.isNotEmpty())
-                                                reviewAdapter.submitList(it.dishesDb)
-                                        }
+                                        handler(it)
                                     }
                             }
                         }
@@ -157,8 +176,6 @@ class ReviewFragment : Fragment() {
                     }
             }
         }
-
-
     }
 
     companion object {

@@ -1,6 +1,7 @@
 package com.example.qfmenu.util
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +10,12 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qfmenu.R
+import com.example.qfmenu.network.NetworkRetrofit
 import com.example.qfmenu.viewmodels.DishAmountDb
+import com.squareup.picasso.Picasso
+import java.io.IOException
+import java.text.NumberFormat
+import java.util.Locale
 
 class QueueBillOrderAdapter(
     private val context: Context,
@@ -40,9 +46,17 @@ class QueueBillOrderAdapter(
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = dataset[position]
-        holder.img.setImageResource(R.drawable.img_image_4)
+        try {
+            Picasso.get().load("${NetworkRetrofit.BASE_URL}/${item.dishDb.image}")
+                .transform(RoundedTransformation(48F, 0))
+                .fit().centerCrop().into(holder.img)
+        } catch (networkError: IOException) {
+            Log.d("NoInternet", true.toString())
+            holder.img.setImageResource(R.drawable.img_image_4)
+        }
         holder.titleItem.text = item.dishDb.name
-        holder.cost.text = item.dishDb.cost.toString()
+        val formattedAmount = NumberFormat.getCurrencyInstance(Locale("vi", "VN")).format(item.dishDb.cost)
+        holder.cost.text = formattedAmount
         holder.amount.text = item.amount.toString()
     }
 }

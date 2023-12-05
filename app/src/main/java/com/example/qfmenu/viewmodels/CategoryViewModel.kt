@@ -3,16 +3,12 @@ package com.example.qfmenu.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.qfmenu.database.dao.CategoryDao
 import com.example.qfmenu.database.dao.DishDao
 import com.example.qfmenu.database.dao.MenuDao
 import com.example.qfmenu.database.entity.CategoryDb
 import com.example.qfmenu.database.entity.MenuWithCategories
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class CategoryViewModel(
@@ -46,7 +42,7 @@ class CategoryViewModel(
     }
 
     fun getCategory(categoryId: Long): LiveData<CategoryDb> {
-        return categoryDao.getCategory(categoryId).asLiveData()
+        return categoryDao.getCategoryLiveData(categoryId)
     }
 
     suspend fun getCategories(menuId: Long): MenuWithCategories {

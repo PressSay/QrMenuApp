@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -12,13 +15,14 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
-import com.example.qfmenu.viewmodels.MenuViewModel
 import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
+import com.example.qfmenu.database.entity.CategoryDb
 import com.example.qfmenu.databinding.FragmentCategoryBinding
 import com.example.qfmenu.util.CategoryAdapter
 import com.example.qfmenu.util.NavGlobal
+import com.example.qfmenu.viewmodels.MenuViewModel
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -74,6 +78,25 @@ class CategoryFragment : Fragment() {
         navController.navigate(startDestination, null, navOptions)
     }
 
+    private fun getMenuLive(
+        handlerFun: (List<CategoryDb>) -> Unit
+    ) {
+        val menuDao = (activity?.application as QrMenuApplication).database.menuDao()
+        menuDao.getMenuUsedLiveData().observe(this.viewLifecycleOwner) { menuDb ->
+            if (menuDb != null) {
+                menuDao.getMenuWithCategoriesLiveData(menuId = menuDb.menuId)
+                    .observe(this.viewLifecycleOwner) { menuWithCategories ->
+                        if (menuWithCategories != null) {
+                            val categories = menuWithCategories.categoriesDb
+                            if (categories.isNotEmpty()) {
+                                handlerFun(categories)
+                            }
+                        }
+                    }
+            }
+        }
+    }
+
     @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -85,37 +108,53 @@ class CategoryFragment : Fragment() {
         val spanCount = if (width < SCREEN_LARGE) 1 else 2
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
-        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
-            if (it == R.id.optionTwo) {
-               findNavController().popBackStack()
-            }
-        }
-        navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, R.drawable.ic_search, R.drawable.ic_check_fill)
-        navGlobal.setVisibleNav(true, width < SCREEN_LARGE, optOne = true, optTwo = true)
-        navGlobal.impNav()
+        var isSearch = false
+        val icSearch = requireActivity().findViewById<AppCompatImageButton>(R.id.icSearch)
+        val textSearch = requireActivity().findViewById<TextView>(R.id.textSearch)
+
 
         recycler.layoutManager = GridLayoutManager(requireContext(), spanCount)
         val categoryAdapter = CategoryAdapter(
             requireContext(), saveStateViewModel
         )
-
-        val menuDao = (activity?.application as QrMenuApplication).database.menuDao()
-        menuDao.getMenuUsedLiveData().observe(this.viewLifecycleOwner) { menuDb ->
-            if (menuDb != null) {
-                menuDao.getMenuWithCategoriesLiveData(menuId = menuDb.menuId)
-                    .observe(this.viewLifecycleOwner) { menuWithCategories ->
-                        if (menuWithCategories != null) {
-                            val categories = menuWithCategories.categoriesDb
-                            if (categories.isNotEmpty()) {
-                                categoryAdapter.submitList(categories)
-                                recycler.adapter = categoryAdapter
-                            }
-                        }
+        recycler.adapter = categoryAdapter
+        getMenuLive { arrCategoryDb ->
+            categoryAdapter.submitList(arrCategoryDb) }
+        icSearch.setOnClickListener{
+            this.getMenuLive() { arrCategoryDb ->
+                recycler.adapter = categoryAdapter
+                val filtered =
+                    arrCategoryDb.filter {
+                        it.name.contains(
+                            textSearch.text.toString(),
+                            ignoreCase = true
+                        )
                     }
+                if (filtered.isNotEmpty()) {
+                    categoryAdapter.submitList(filtered)
+                } else {
+                    categoryAdapter.submitList(arrCategoryDb)
+                }
             }
         }
+        val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
+        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel, searchView) {
+            if (it == R.id.optionTwo) {
+                findNavController().popBackStack()
+            }
+            if (it == R.id.optionOne) {
+                isSearch = !isSearch
+                if (isSearch) {
+                    getMenuLive { arrCategoryDb -> categoryAdapter.submitList(arrCategoryDb) }
+                }
+                searchView.visibility =
+                    if (isSearch) View.VISIBLE else View.GONE
+            }
 
-
+        }
+        navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, R.drawable.ic_search, R.drawable.ic_check_fill)
+        navGlobal.setVisibleNav(true, width < SCREEN_LARGE, optOne = true, optTwo = true)
+        navGlobal.impNav()
     }
 
     companion object {

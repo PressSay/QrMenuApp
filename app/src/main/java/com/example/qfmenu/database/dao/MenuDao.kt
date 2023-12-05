@@ -10,7 +10,6 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.example.qfmenu.database.entity.MenuDb
 import com.example.qfmenu.database.entity.MenuWithCategories
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MenuDao {
@@ -22,8 +21,14 @@ interface MenuDao {
     @Query("SELECT * FROM MenuDb WHERE menuId = :menuId")
     fun getMenuWithCategoriesLiveData(menuId: Long): LiveData<MenuWithCategories>
 
+    @Query("SELECT * FROM MenuDb WHERE menuId = :menuId")
+    suspend fun getMenu(menuId: Long): MenuDb?
+
     @Query("SELECT * FROM MenuDb")
-    fun getMenus(): Flow<List<MenuDb>>
+    fun getMenusLiveData(): LiveData<List<MenuDb>>
+
+    @Query("SELECT * FROM MenuDb")
+    fun getMenus(): List<MenuDb>
 
     @Query("SELECT * FROM MenuDb WHERE isUsed = :isUsed")
     suspend fun getMenuUsed(isUsed: Boolean = true): MenuDb
@@ -31,10 +36,10 @@ interface MenuDao {
     @Query("SELECT * FROM MenuDb WHERE isUsed = :isUsed")
     fun getMenuUsedLiveData(isUsed: Boolean = true): LiveData<MenuDb>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(menus: List<MenuDb>): List<Long>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(menuDb: MenuDb)
 
     @Update
@@ -43,10 +48,25 @@ interface MenuDao {
     @Delete
     suspend fun delete(menuDb: MenuDb)
 
+    @Delete
+    suspend fun deleteAll(menus: List<MenuDb>)
+
     @Query("DELETE FROM DishDb WHERE categoryId IN (SELECT categoryId FROM CategoryDb WHERE menuId = :menuId)")
     suspend fun deleteMenuDishes(menuId: Long)
 
     @Query("DELETE FROM CategoryDb WHERE menuId = :menuId")
     suspend fun deleteMenuCategories(menuId: Long)
+
+    @Query("SELECT * FROM MenuDb ORDER BY menuId DESC LIMIT 1")
+    suspend fun getLastMenu(): MenuDb?
+
+    @Query("UPDATE sqlite_sequence SET seq = 0 WHERE name=\"MenuDb\"\n")
+    suspend fun resetKey()
+
+    @Query("UPDATE sqlite_sequence SET seq = (SELECT MAX(menuId) FROM MenuDb) WHERE name=\"MenuDb\"\n")
+    suspend fun resetLastKey()
+
+    @Query("SELECT seq FROM sqlite_sequence WHERE name=\"MenuDb\"")
+    suspend fun getLastKey(): Long
 
 }

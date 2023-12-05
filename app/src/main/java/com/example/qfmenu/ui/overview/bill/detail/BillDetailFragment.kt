@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
@@ -85,14 +86,6 @@ class BillDetailFragment : Fragment() {
             findNavController().navigate(R.id.action_billDetailFragment_to_billCodeFragment)
         }
 
-        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
-            if (it == R.id.optionTwo) {
-
-            }
-        }
-        navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, 0, R.drawable.ic_search)
-        navGlobal.setVisibleNav(true, width < SCREEN_LARGE, false, optTwo = true)
-        navGlobal.impNav()
 
         val recyclerView = binding.recyclerViewBillListDetail
         recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
@@ -105,12 +98,13 @@ class BillDetailFragment : Fragment() {
         discountTextView.text = requireContext().getString(R.string.discount, "0%")
         taxTextView.text = requireContext().getString(R.string.tax, "5%")
 
-        val dishAmountDbList = saveStateViewModel.stateCustomerOrderQueue?.dishesAmountDb ?: listOf()
+        val dishAmountDbList =
+            saveStateViewModel.stateCustomerOrderQueue?.dishesAmountDb ?: listOf()
         dishAmountDbList.forEach {
             totalInt += (it.amount.toInt() * it.dishDb.cost)
         }
-        val totalCurrency = NumberFormat.getNumberInstance(Locale.US).format(totalInt)
-        totalTextView.text = requireContext().getString(R.string.total, "$totalCurrency\$")
+        val totalCurrency = NumberFormat.getCurrencyInstance(Locale("vi", "VN")).format(totalInt)
+        totalTextView.text = requireContext().getString(R.string.total, totalCurrency)
 
         val billAdapter = BillDetailAdapter(
             requireContext(),
@@ -118,6 +112,38 @@ class BillDetailFragment : Fragment() {
         )
 
         recyclerView.adapter = billAdapter
+        var isSearch = false
+        val icSearch = requireActivity().findViewById<ImageView>(R.id.icSearch)
+        val textSearch = requireActivity().findViewById<TextView>(R.id.textSearch)
+        val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
+
+        icSearch.setOnClickListener {
+            val filtered = dishAmountDbList.filter {
+                it.dishDb.name.contains(textSearch.text.toString(), true)
+            }
+            billAdapter.submitList(filtered)
+        }
+
+        val navGlobal = NavGlobal(
+            navBar,
+            findNavController(),
+            slidePaneLayout,
+            saveStateViewModel,
+            searchView
+        ) {
+            if (it == R.id.optionTwo) {
+                isSearch = !isSearch
+                if (isSearch) {
+                    billAdapter.submitList(dishAmountDbList)
+                    searchView.visibility = View.VISIBLE
+                } else {
+                    searchView.visibility = View.GONE
+                }
+            }
+        }
+        navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, 0, R.drawable.ic_search)
+        navGlobal.setVisibleNav(true, width < SCREEN_LARGE, false, optTwo = true)
+        navGlobal.impNav()
     }
 
     companion object {

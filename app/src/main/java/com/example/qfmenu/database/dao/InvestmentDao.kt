@@ -30,4 +30,7 @@ interface InvestmentDao {
     @Delete
     suspend fun delete(investmentDb: InvestmentDb)
 
+    @Query("DELETE FROM InvestmentDb")
+    suspend fun deleteAll()
+
 }

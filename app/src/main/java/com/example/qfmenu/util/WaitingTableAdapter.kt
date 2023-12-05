@@ -13,16 +13,21 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.qfmenu.viewmodels.CustomerViewModel
 import com.example.qfmenu.R
 import com.example.qfmenu.database.entity.TableDb
+import com.example.qfmenu.repository.CustomerRepository
+import com.example.qfmenu.viewmodels.CustomerViewModel
 import com.example.qfmenu.viewmodels.SaveStateViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class WaitingTableAdapter(
     private val customerViewModel: CustomerViewModel,
     private val saveStateViewModel: SaveStateViewModel,
-    private val context: Context
+    private val context: Context,
+    private val customerRepository: CustomerRepository
 ) : ListAdapter<TableDb, WaitingTableAdapter.ItemViewHolder>(DiffCallback) {
 
     companion object {
@@ -53,7 +58,8 @@ class WaitingTableAdapter(
         "${item.tableId}.${item.status}".also { holder.btnTable.text = it }
 
         if (item.status == context.getString(R.string.lock)) {
-            holder.btnTable.setBackgroundColor(
+            holder.btnTable.setBackgroundResource(R.drawable.button_err)
+            holder.btnTable.setTextColor(
                 ContextCompat.getColor(
                     context,
                     R.color.green_error
@@ -64,9 +70,12 @@ class WaitingTableAdapter(
         holder.btnTable.setOnClickListener {
             /*don't forget setup for save then navigate*/
             if (!saveStateViewModel.stateIsTableUnClock) {
-                customerViewModel.insertCustomer(
-                    saveStateViewModel.stateCustomerDb, "Cash", "Bill Not Paid", 0, item.tableId
-                )
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    customerViewModel.insertCustomer(
+                        saveStateViewModel.stateCustomerDb.copy(name = "tableId: ${item.tableId}"), "Cash", "normal", 0, item.tableId, customerRepository
+                    )
+                }
 
                 saveStateViewModel.stateDishesByCategories = mutableListOf()
                 saveStateViewModel.stateCategoryPosition = 0
@@ -100,7 +109,6 @@ class WaitingTableAdapter(
                 saveStateViewModel.stateTableDb = item
                 holder.view.findNavController().navigate(R.id.action_tableOrderFragment_to_configTableFragment)
             }
-
         }
     }
 }

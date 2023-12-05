@@ -23,80 +23,62 @@
                 android:gravity="center">
 
                 <ImageView
-                    android:layout_width="182dp"
-                    android:layout_height="182dp"
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
                     android:background="@drawable/shape_rounded_border"
                     android:layout_marginBottom="16dp"
-                    android:elevation="18dp"/>
+                    android:layout_marginTop="28dp"
+                    android:elevation="18dp"
+                    android:id="@+id/imgProfile"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="John Doe"
+                    android:text="@string/app_name"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp"
-                    android:textColor="@color/green_primary"/>
+                    android:textColor="@color/green_primary"
+                    android:id="@+id/profileName"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:gravity="start">
+                    android:gravity="start"
+                    android:padding="8dp"
+                    android:layout_marginBottom="8dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Username: Hello"
+                        android:text="@string/phone_profile"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="28dp"
-                        android:textColor="@color/green_primary"/>
+                        android:textColor="@color/green_primary"
+                        android:id="@+id/phoneProfile"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Phone: 0123456789"
+                        android:text="@string/role_profile"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="28dp"
-                        android:textColor="@color/green_primary"/>
+                        android:textColor="@color/green_primary"
+                        android:id="@+id/role"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Role: Hello"
+                        android:text="@string/exp_profile"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="28dp"
-                        android:textColor="@color/green_primary"/>
+                        android:textColor="@color/green_primary"
+                        android:id="@+id/exp"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Exp: 1237441"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="28dp"
-                        android:textColor="@color/green_primary"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Notification: 123"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="28dp"
-                        android:textColor="@color/green_primary"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Receive messages: 123"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="28dp"
-                        android:textColor="@color/green_primary"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -105,15 +87,17 @@
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="28dp"
-                        android:textColor="@color/green_primary"/>
+                        android:textColor="@color/green_primary"
+                        android:id="@+id/emailProfile"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Address: IOJAOIJFOIJOIOIFJOJAOFJOAJOFJOAJFOJIOASFJIOj"
+                        android:text="@string/address_profile"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/green_primary"/>
+                        android:textColor="@color/green_primary"
+                        android:id="@+id/addressProfile"/>
 
                 </LinearLayout>
 

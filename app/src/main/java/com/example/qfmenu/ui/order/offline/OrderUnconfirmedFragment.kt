@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -13,6 +15,7 @@ import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
+import com.example.qfmenu.database.entity.CustomerDb
 import com.example.qfmenu.databinding.FragmentOrderUnconfirmedBinding
 import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.util.OrderUnconfirmedAdapter
@@ -20,6 +23,7 @@ import com.example.qfmenu.viewmodels.CustomerViewModel
 import com.example.qfmenu.viewmodels.CustomerViewModelFactory
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.textfield.TextInputEditText
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -83,9 +87,52 @@ class OrderUnconfirmedFragment : Fragment() {
             customerViewModel,
             (activity?.application as QrMenuApplication).database.customerDishCrossRefDao()
         )
-        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
-            if (it == R.id.optionOne) {
+        var isSearch = false
+        val icSearch = requireActivity().findViewById<AppCompatImageButton>(R.id.icSearch)
+        val textSearch = requireActivity().findViewById<TextInputEditText>(R.id.textSearch)
 
+
+        saveStateViewModel.stateCustomerOrderQueues = mutableListOf()
+        if (saveStateViewModel.isOpenSlide)
+            navBar.visibility = View.VISIBLE
+
+//        val orderListAdapter = OrderUnconfirmedAdapter(true, requireContext(), saveStateViewModel, saveStateViewModel.stateCustomerWithSelectDishes, this.viewLifecycleOwner)
+//        Not Use Ram
+        getOrderLive(customerViewModel) {
+            orderUnconfirmedAdapter.submitList(it)
+            if (it.isEmpty())
+                saveStateViewModel.stateCustomerOrderQueuesPos = mutableListOf()
+        }
+
+        icSearch.setOnClickListener {
+            val text = textSearch.text.toString()
+            if (text.isNotEmpty()) {
+                getOrderLive(customerViewModel) { arrCus ->
+                    val arrCusFilter = arrCus.filter {
+                        it.name.contains(text, true)
+                    }
+                    orderUnconfirmedAdapter.submitList(arrCusFilter)
+                }
+            } else {
+                getOrderLive(customerViewModel) { arrCus ->
+                    orderUnconfirmedAdapter.submitList(arrCus)
+                }
+            }
+        }
+
+        recyclerView.adapter = orderUnconfirmedAdapter
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
+        val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
+        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel, searchView) {
+            if (it == R.id.optionOne) {
+                isSearch = !isSearch
+                if (isSearch) {
+                    this.getOrderLive(customerViewModel) { arrCus ->
+                        orderUnconfirmedAdapter.submitList(arrCus)
+                    }
+                }
+                searchView.visibility =
+                    if (isSearch) View.VISIBLE else View.GONE
             }
             if (it == R.id.optionTwo) {
                 if (saveStateViewModel.stateCustomerOrderQueues.isNotEmpty()) {
@@ -96,22 +143,12 @@ class OrderUnconfirmedFragment : Fragment() {
         navGlobal.setIconNav(0, R.drawable.ic_home, R.drawable.ic_search, R.drawable.ic_approve_order)
         navGlobal.setVisibleNav(false, width < SCREEN_LARGE, true, optTwo = true)
         navGlobal.impNav()
+    }
 
-        saveStateViewModel.stateCustomerOrderQueues = mutableListOf()
-        if (saveStateViewModel.isOpenSlide)
-            navBar.visibility = View.VISIBLE
-
-//        val orderListAdapter = OrderUnconfirmedAdapter(true, requireContext(), saveStateViewModel, saveStateViewModel.stateCustomerWithSelectDishes, this.viewLifecycleOwner)
-//        Not Use Ram
+    private fun getOrderLive(customerViewModel: CustomerViewModel, handler: (List<CustomerDb>) -> Unit) {
         customerViewModel.customerList.observe(this.viewLifecycleOwner) {
-            it.apply {
-                orderUnconfirmedAdapter.submitList(it)
-            }
-            if (it.isEmpty())
-                saveStateViewModel.stateCustomerOrderQueuesPos = mutableListOf()
+            handler(it)
         }
-        recyclerView.adapter = orderUnconfirmedAdapter
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
     }
 
     companion object {

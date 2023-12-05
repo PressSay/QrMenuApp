@@ -1,5 +1,6 @@
 package com.example.qfmenu.ui.menu.config
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,18 +14,23 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
-import com.example.qfmenu.viewmodels.MenuViewModel
-import com.example.qfmenu.viewmodels.MenuViewModelFactory
 import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.entity.MenuDb
 import com.example.qfmenu.databinding.FragmentConfigMenuBinding
+import com.example.qfmenu.network.NetworkRetrofit
+import com.example.qfmenu.repository.MenuRepository
 import com.example.qfmenu.util.ConfigMenuAdapter
 import com.example.qfmenu.util.NavGlobal
+import com.example.qfmenu.viewmodels.MenuViewModel
+import com.example.qfmenu.viewmodels.MenuViewModelFactory
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -47,13 +53,6 @@ class ConfigMenuFragment : Fragment() {
 
     private val saveStateViewModel: SaveStateViewModel by activityViewModels()
 
-    private val menuViewModel: MenuViewModel by viewModels {
-        MenuViewModelFactory(
-            (activity?.application as QrMenuApplication).database.dishDao(),
-            (activity?.application as QrMenuApplication).database.categoryDao(),
-            (activity?.application as QrMenuApplication).database.menuDao()
-        )
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +73,16 @@ class ConfigMenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val menuDao = (activity?.application as QrMenuApplication).database.menuDao()
+        val categoryDao = (activity?.application as QrMenuApplication).database.categoryDao()
+        val dishDao = (activity?.application as QrMenuApplication).database.dishDao()
+        val menuViewModel: MenuViewModel by viewModels {
+            MenuViewModelFactory(
+                dishDao,
+                categoryDao,
+                menuDao
+            )
+        }
         val menuSubmitParent = binding.menuSubmit as ViewGroup
         val menuSubmitString =
             (menuSubmitParent.getChildAt(0) as ViewGroup).getChildAt(2) as TextInputEditText
@@ -83,31 +92,45 @@ class ConfigMenuFragment : Fragment() {
         val width = resources.displayMetrics.widthPixels / resources.displayMetrics.density
         val recyclerView = binding.recyclerViewEditCreateMenu
         val spanCount = if (width < SCREEN_LARGE) 1 else 2
+        var isSearch = false
+        val icSearch = requireActivity().findViewById<AppCompatImageButton>(R.id.icSearch)
+        val textSearch = requireActivity().findViewById<TextView>(R.id.textSearch)
+        val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
+        val sharePref = requireActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val token = sharePref.getString("token", "") ?: ""
+        val networkRetrofit = NetworkRetrofit(token)
+        val menuRepository = MenuRepository(networkRetrofit, menuDao, categoryDao, dishDao)
         val menus = menuViewModel.menus
         val configMenuAdapter = ConfigMenuAdapter(
             menuViewModel,
             requireContext(),
             saveStateViewModel,
+            menuRepository
         )
-        var isSearch = false
-        val icSearch = requireActivity().findViewById<AppCompatImageButton>(R.id.icSearch)
-        val textSearch = requireActivity().findViewById<TextView>(R.id.textSearch)
-        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) { it ->
+
+
+
+        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel, searchView) { it ->
             if (it == R.id.optionOne) {
                 menus.observe(this.viewLifecycleOwner) {
                     configMenuAdapter.submitList(it)
                 }
                 isSearch = !isSearch
-                requireActivity().findViewById<LinearLayout>(R.id.searchView).visibility =
+                searchView.visibility =
                     if (isSearch) View.VISIBLE else View.GONE
             }
             if (it == R.id.optionTwo) {
-                val menuDb = if (configMenuAdapter.currentList.size == 0) {
-                    MenuDb(name = menuSubmitString.text.toString(), isUsed = true)
-                } else {
-                    MenuDb(name = menuSubmitString.text.toString(), isUsed = false)
+                if (menuSubmitString.text.toString().isNotEmpty()) {
+                    val menuDb = if (configMenuAdapter.currentList.size == 0) {
+                        MenuDb(name = menuSubmitString.text.toString(), isUsed = true)
+                    } else {
+                        MenuDb(name = menuSubmitString.text.toString(), isUsed = false)
+                    }
+                    CoroutineScope(Dispatchers.IO).launch {
+                        menuRepository.createMenu(menuDb)
+                        menuViewModel.insertMenu(menuDb)
+                    }
                 }
-                menuViewModel.insertMenu(menuDb)
             }
         }
         navGlobal.setVisibleNav(true, width < SCREEN_LARGE, true, optTwo = true)

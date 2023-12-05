@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.qfmenu.R
@@ -14,7 +14,6 @@ import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.databinding.FragmentExportBillBinding
 import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.viewmodels.SaveStateViewModel
-
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 // TODO: Rename parameter arguments, choose names that match
@@ -58,15 +57,19 @@ class ExportBillFragment : Fragment() {
         val slidingPaneLayout = requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val width = resources.displayMetrics.widthPixels / resources.displayMetrics.density
-
-        val navGlobal = NavGlobal(navBar, findNavController(), slidingPaneLayout, saveStateViewModel) {
+        val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
+        val navGlobal = NavGlobal(navBar, findNavController(), slidingPaneLayout, saveStateViewModel, searchView) {
             if (it == R.id.optionOne) {}
             if (it == R.id.optionTwo) {}
+            if (it == R.id.backToHome) {
+                findNavController().popBackStack()
+            }
         }
         navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, R.drawable.ic_save, R.drawable.ic_print)
         navGlobal.setVisibleNav(true, width < SCREEN_LARGE, true, optTwo = true)
         navGlobal.impNav()
     }
+
 
     companion object {
         /**

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -167,8 +168,9 @@ class ConfigShopFragment : Fragment() {
 
         if (saveStateViewModel.isOpenSlide)
             navBar.visibility = View.VISIBLE
+        val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
         val navGlobal =
-            NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
+            NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel, searchView) {
                 if (it == R.id.optionTwo) {
                     file.writeText(
                         shopName.text.toString() + "_" +

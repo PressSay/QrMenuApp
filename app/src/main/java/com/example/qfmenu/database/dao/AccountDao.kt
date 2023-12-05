@@ -18,7 +18,13 @@ interface AccountDao {
     suspend fun getAccountWithCustomers(accountId: Long): AccountWithCustomers
 
     @Query("SELECT * FROM AccountDb WHERE id = :accountId")
-    suspend fun getAccount(accountId: Long): AccountDb
+    suspend fun getAccount(accountId: Long): AccountDb?
+
+    @Query("SELECT * FROM AccountDb WHERE nameRole = \"staff\"")
+    suspend fun getAllStaff(): List<AccountDb>
+
+    @Query("SELECT * FROM AccountDb WHERE nameRole = \"staff\" ORDER BY id DESC LIMIT 1")
+    suspend fun getLastStaff(): AccountDb?
 
     @Transaction
     @Query("SELECT * FROM AccountDb WHERE nameRole = :roleName")
@@ -35,4 +41,7 @@ interface AccountDao {
 
     @Delete
     suspend fun delete(accountDb: AccountDb)
+
+    @Delete
+    suspend fun deleteAll(accountDbList: List<AccountDb>)
 }

@@ -74,9 +74,13 @@ dependencies {
 
     // JSON Converter
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
+
+
 
     // define a BOM and its version
     implementation(platform("com.squareup.okhttp3:okhttp-bom:4.10.0"))
+    implementation("com.squareup.okhttp3:okhttp:4.0.1")
 
     // define any required OkHttp artifacts without version
     implementation("com.squareup.okhttp3:okhttp")
@@ -87,6 +91,8 @@ dependencies {
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
+    implementation("com.squareup.okhttp3:okhttp:4.2.1")
+
 
 
 }

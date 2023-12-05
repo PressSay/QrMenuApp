@@ -2,6 +2,6 @@ package com.example.qfmenu.network.entity
 
 data class Menu (
     val menuId: Long,
-    val isUsed: Boolean,
+    val isUsed: Int,
     val name: String
 )

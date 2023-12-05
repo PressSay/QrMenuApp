@@ -12,15 +12,21 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.qfmenu.viewmodels.MenuViewModel
 import com.example.qfmenu.R
 import com.example.qfmenu.database.entity.MenuDb
+import com.example.qfmenu.network.entity.Menu
+import com.example.qfmenu.repository.MenuRepository
+import com.example.qfmenu.viewmodels.MenuViewModel
 import com.example.qfmenu.viewmodels.SaveStateViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ConfigMenuAdapter(
     private val menuViewModel: MenuViewModel,
     private val context: Context,
-    private val stateViewModel: SaveStateViewModel
+    private val stateViewModel: SaveStateViewModel,
+    private val menuRepository: MenuRepository
 ) : ListAdapter<MenuDb, ConfigMenuAdapter.MenuEditViewHolder>(DiffCallback) {
 
     class MenuEditViewHolder(val view: View) :
@@ -69,14 +75,19 @@ class ConfigMenuAdapter(
         }
 
         holder.btnUse.setOnClickListener {
-            currentList[this.selectedLocation].isUsed = false
-            currentList[holder.adapterPosition].isUsed = true
+            val selectedP = this.selectedLocation
+            val adapterP = holder.adapterPosition
+            currentList[selectedP].isUsed = false
+            currentList[adapterP].isUsed = true
 //
 //            notifyItemChanged(this.selectedLocation)
 //            notifyItemChanged(holder.adapterPosition)
-
-            menuViewModel.updateMenu(currentList[this.selectedLocation])
-            menuViewModel.updateMenu(currentList[holder.adapterPosition])
+            CoroutineScope(Dispatchers.IO).launch {
+                menuRepository.updateMenuNet(currentList[selectedP])
+                menuRepository.updateMenuNet(currentList[adapterP])
+                menuViewModel.updateMenu(currentList[selectedP])
+                menuViewModel.updateMenu(currentList[adapterP])
+            }
             this.selectedLocation = holder.adapterPosition
         }
 
@@ -97,7 +108,16 @@ class ConfigMenuAdapter(
                 this.selectedLocation = 0
             }
 
-            menuViewModel.deleteMenu(currentList[atPosition])
+            CoroutineScope(Dispatchers.IO).launch {
+                menuViewModel.deleteMenu(currentList[atPosition])
+                menuRepository.deleteMenuNet(
+                    Menu(
+                        currentList[atPosition].menuId,
+                        if (currentList[atPosition].isUsed)  1 else 0,
+                        currentList[atPosition].name
+                    )
+                )
+            }
         }
 
         holder.titleItemMenu.text = item.name

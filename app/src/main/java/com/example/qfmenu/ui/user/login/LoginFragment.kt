@@ -132,6 +132,7 @@ class LoginFragment : Fragment() {
                                     )
                                 }.show()
                         }
+
                         DialogInterface.BUTTON_NEGATIVE -> {}
                     }
                 }
@@ -198,7 +199,6 @@ class LoginFragment : Fragment() {
                                     navHostLogin,
                                     true
                                 )
-
                             } else {
                                 AlertDialog.Builder(context)
                                     .setTitle("Login")

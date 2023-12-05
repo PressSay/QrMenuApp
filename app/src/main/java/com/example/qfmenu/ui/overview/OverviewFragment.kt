@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
@@ -79,8 +80,9 @@ class OverviewFragment : Fragment() {
         val sevenDayAgo = Calendar.getInstance()
         val threeDayAgo = Calendar.getInstance()
         val oneDayAgo = Calendar.getInstance()
+        val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
         val navGlobal =
-            NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {}
+            NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel, searchView) {}
         navGlobal.setVisibleNav(true, width < SCREEN_LARGE, false, optTwo = false)
         navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, 0, 0)
         navGlobal.impNav()
@@ -97,7 +99,7 @@ class OverviewFragment : Fragment() {
         }
         btnChooseDate.setOnClickListener {
             if (editTextChooseDate.text.isBlank() || !Pattern.matches(
-                    "(^(((0[1-9]|1[0-9]|2[0-8])/(0[1-9]|1[012]))|((29|30|31)/(0[13578]|1[02]))|((29|30)/(0[4,6,9]|11)))/(19|[2-9][0-9])\\d\\d\$)|(^29/02/(19|[2-9][0-9])(00|04|08|12|16|20|24|28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96)\$)",
+                    "^\\d{4}-\\d{2}-\\d{2}\$",
                     editTextChooseDate.text.toString()
                 )
             ) {

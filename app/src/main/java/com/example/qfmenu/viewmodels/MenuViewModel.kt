@@ -3,15 +3,14 @@ package com.example.qfmenu.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.qfmenu.database.dao.CategoryDao
 import com.example.qfmenu.database.dao.DishDao
-import kotlinx.coroutines.launch
 import com.example.qfmenu.database.dao.MenuDao
 import com.example.qfmenu.database.entity.MenuDb
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 class MenuViewModel(
     private val dishDao: DishDao,
@@ -21,7 +20,7 @@ class MenuViewModel(
     private var _menuForCreate: MenuDb? = null
     val menuForCreate: MenuDb get() = _menuForCreate!!
 
-    val menus: LiveData<List<MenuDb>> get() = menuDao.getMenus().asLiveData()
+    val menus: LiveData<List<MenuDb>> get() = menuDao.getMenusLiveData()
 
     fun createMenu(menuDb: MenuDb) {
         _menuForCreate = menuDb
@@ -41,11 +40,9 @@ class MenuViewModel(
 
     fun deleteMenu(menuDb: MenuDb) {
         viewModelScope.launch {
-
             async(Dispatchers.IO) { menuDao.deleteMenuDishes(menuDb.menuId) }.await()
             menuDao.deleteMenuCategories(menuDb.menuId)
             menuDao.delete(menuDb)
-
         }
     }
 

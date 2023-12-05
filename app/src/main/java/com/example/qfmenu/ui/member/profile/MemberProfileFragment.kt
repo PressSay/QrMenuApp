@@ -1,11 +1,15 @@
 package com.example.qfmenu.ui.member.profile
 
 import android.app.AlertDialog
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
@@ -69,7 +73,29 @@ class MemberProfileFragment : Fragment() {
         val addressAccount = binding.addressAccount
         val emailAccount = binding.emailAccount
         val accountDb = saveStateViewModel.stateAccountDb!!
-        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
+        val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
+        val uploadBtn = binding.memberUpload
+        val delBtn = binding.memberDel
+        val imgMem = binding.imageMember
+        var curUri: Uri? = null
+        val registry = requireActivity()
+            .activityResultRegistry.register(
+                "key",
+                this,
+                ActivityResultContracts.GetContent()
+            ) { uri ->
+                // Handle the returned Uri
+                uri?.let {
+                    imgMem.setImageURI(it)
+                    imgMem.scaleType = ImageView.ScaleType.FIT_XY
+                    curUri = it
+                }
+            }
+        uploadBtn.setOnClickListener {
+            registry.launch("image/*")
+        }
+
+        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel, searchView) {
             if (it == R.id.optionTwo) {
                 if (!(nameAccount.text.isNullOrBlank() && phoneAccount.text.isNullOrBlank() && addressAccount.text.isNullOrBlank() && emailAccount.text.isNullOrBlank())) {
                     CoroutineScope(Dispatchers.Main).launch {

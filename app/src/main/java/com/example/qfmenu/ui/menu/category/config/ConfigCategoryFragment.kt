@@ -1,5 +1,6 @@
 package com.example.qfmenu.ui.menu.category.config
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,21 +15,23 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
-import com.example.qfmenu.viewmodels.CategoryViewModel
-import com.example.qfmenu.viewmodels.CategoryViewModelFactory
 import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.entity.CategoryDb
 import com.example.qfmenu.database.entity.MenuDb
 import com.example.qfmenu.databinding.FragmentConfigCategoryBinding
+import com.example.qfmenu.network.NetworkRetrofit
+import com.example.qfmenu.repository.MenuRepository
 import com.example.qfmenu.util.ConfigCategoryAdapter
 import com.example.qfmenu.util.NavGlobal
+import com.example.qfmenu.viewmodels.CategoryViewModel
+import com.example.qfmenu.viewmodels.CategoryViewModelFactory
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
@@ -50,13 +53,7 @@ class ConfigCategoryFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val saveStateViewModel: SaveStateViewModel by activityViewModels()
-    private val categoryViewModel: CategoryViewModel by viewModels {
-        CategoryViewModelFactory(
-            (activity?.application as QrMenuApplication).database.dishDao(),
-            (activity?.application as QrMenuApplication).database.categoryDao(),
-            (activity?.application as QrMenuApplication).database.menuDao(),
-        )
-    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,9 +72,23 @@ class ConfigCategoryFragment : Fragment() {
         return binding.root
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val categoryDao = (activity?.application as QrMenuApplication).database.categoryDao()
+        val dishDao = (activity?.application as QrMenuApplication).database.dishDao()
+        val menuDao = (activity?.application as QrMenuApplication).database.menuDao()
+        val categoryViewModel: CategoryViewModel by viewModels {
+            CategoryViewModelFactory(
+                dishDao,
+                categoryDao,
+                menuDao,
+            )
+        }
+        val sharePref = requireActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val token = sharePref.getString("token", "") ?: ""
+        val networkRetrofit = NetworkRetrofit(token)
+        val menuRepository = MenuRepository(networkRetrofit, menuDao, categoryDao, dishDao)
+
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
@@ -90,60 +101,87 @@ class ConfigCategoryFragment : Fragment() {
         val saveMenuBtn = linearTextField1.getChildAt(3) as ImageButton
         val linearTextField2 = saveMenuEditCategory.getChildAt(1) as ViewGroup
         val categoryEditTextView = linearTextField2.getChildAt(2) as TextInputEditText
-        val menuDao = (activity?.application as QrMenuApplication).database.menuDao()
         var menuDb = saveStateViewModel.stateMenuDb
-        val configCategoryAdapter = ConfigCategoryAdapter(categoryViewModel, requireContext(), saveStateViewModel)
+        val configCategoryAdapter = ConfigCategoryAdapter(
+            categoryViewModel,
+            requireContext(),
+            saveStateViewModel,
+            menuRepository
+        )
         var isSearch = false
         val icSearch = requireActivity().findViewById<AppCompatImageButton>(R.id.icSearch)
         val textSearch = requireActivity().findViewById<TextView>(R.id.textSearch)
-        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
+        val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
+        val navGlobal = NavGlobal(
+            navBar,
+            findNavController(),
+            slidePaneLayout,
+            saveStateViewModel,
+            searchView
+        ) {
             if (it == R.id.optionOne) {
-                categoryViewModel.getCategoriesLiveData(saveStateViewModel.stateMenuDb.menuId).observe(this.viewLifecycleOwner) { menuWithCategories ->
-                    configCategoryAdapter.submitList(menuWithCategories.categoriesDb)
-                }
+                categoryViewModel.getCategoriesLiveData(saveStateViewModel.stateMenuDb.menuId)
+                    .observe(this.viewLifecycleOwner) { menuWithCategories ->
+                        configCategoryAdapter.submitList(menuWithCategories.categoriesDb)
+                    }
                 isSearch = !isSearch
-                requireActivity().findViewById<LinearLayout>(R.id.searchView).visibility =
+                searchView.visibility =
                     if (isSearch) View.VISIBLE else View.GONE
             }
             if (it == R.id.optionTwo) {
-                GlobalScope.launch {
-                    categoryViewModel.insertCategory(
-                        CategoryDb(
-                            name = categoryEditTextView.text.toString(),
-                            menuId = menuDb.menuId
-                        )
+                if (categoryEditTextView.text.toString().isNotEmpty()) {
+                    val categoryDb = CategoryDb(
+                        name = categoryEditTextView.text.toString(),
+                        menuId = menuDb.menuId
                     )
+                    CoroutineScope(Dispatchers.IO).launch {
+                        menuRepository.createCategory(categoryDb)
+                        categoryViewModel.insertCategory(
+                            categoryDb
+                        )
+                    }
                 }
             }
         }
         navGlobal.setVisibleNav(true, width < SCREEN_LARGE, optOne = true, optTwo = true)
-        navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, R.drawable.ic_search, R.drawable.ic_plus)
+        navGlobal.setIconNav(
+            R.drawable.ic_arrow_back,
+            R.drawable.ic_home,
+            R.drawable.ic_search,
+            R.drawable.ic_plus
+        )
         navGlobal.impNav()
 
         recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
         icSearch.setOnClickListener {
-            categoryViewModel.getCategoriesLiveData(saveStateViewModel.stateMenuDb.menuId).observe(this.viewLifecycleOwner) { menuWithCategories ->
-                val filtered = menuWithCategories.categoriesDb.filter { it.name.contains(textSearch.text.toString(), ignoreCase = true) }
-                configCategoryAdapter.submitList(filtered)
-            }
+            categoryViewModel.getCategoriesLiveData(saveStateViewModel.stateMenuDb.menuId)
+                .observe(this.viewLifecycleOwner) { menuWithCategories ->
+                    val filtered = menuWithCategories.categoriesDb.filter {
+                        it.name.contains(
+                            textSearch.text.toString(),
+                            ignoreCase = true
+                        )
+                    }
+                    configCategoryAdapter.submitList(filtered)
+                }
         }
 
-        categoryViewModel.getCategoriesLiveData(saveStateViewModel.stateMenuDb.menuId).observe(this.viewLifecycleOwner) {
-            configCategoryAdapter.submitList(it.categoriesDb)
-        }
+        categoryViewModel.getCategoriesLiveData(saveStateViewModel.stateMenuDb.menuId)
+            .observe(this.viewLifecycleOwner) {
+                configCategoryAdapter.submitList(it.categoriesDb)
+            }
         recyclerView.adapter = configCategoryAdapter
         menuEditTextView.setText(menuDb.name)
         saveMenuBtn.setOnClickListener {
             if (menuEditTextView.text.toString() != menuDb.name) {
-                GlobalScope.launch {
-                    menuDb = MenuDb(
-                        menuDb.menuId,
-                        menuEditTextView.text.toString(),
-                        menuDb.isUsed
-                    )
-                    menuDao.update(
-                        menuDb
-                    )
+                menuDb = MenuDb(
+                    menuDb.menuId,
+                    menuEditTextView.text.toString(),
+                    menuDb.isUsed
+                )
+                CoroutineScope(Dispatchers.IO).launch {
+                    menuRepository.updateMenuNet(menuDb)
+                    menuDao.update(menuDb)
                 }
             }
 

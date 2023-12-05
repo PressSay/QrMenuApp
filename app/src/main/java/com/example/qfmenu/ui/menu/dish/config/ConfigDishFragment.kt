@@ -1,16 +1,17 @@
 package com.example.qfmenu.ui.menu.dish.config
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -25,6 +26,7 @@ import com.example.qfmenu.database.entity.CategoryDb
 import com.example.qfmenu.database.entity.DishDb
 import com.example.qfmenu.databinding.FragmentConfigDishBinding
 import com.example.qfmenu.network.NetworkRetrofit
+import com.example.qfmenu.repository.MenuRepository
 import com.example.qfmenu.util.ConfigDishAdapter
 import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.viewmodels.DishViewModel
@@ -35,13 +37,7 @@ import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
+import java.io.ByteArrayOutputStream
 
 /**
  * A simple [Fragment] subclass.
@@ -61,13 +57,7 @@ class ConfigDishFragment : Fragment() {
 
     private val saveStateViewModel: SaveStateViewModel by activityViewModels()
 
-    private val dishViewModel: DishViewModel by viewModels {
-        DishViewModelFactory(
-            (activity?.application as QrMenuApplication).database.dishDao(),
-            (activity?.application as QrMenuApplication).database.categoryDao(),
 
-            )
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,7 +80,20 @@ class ConfigDishFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val menuDao = (activity?.application as QrMenuApplication).database.menuDao()
+        val categoryDao = (activity?.application as QrMenuApplication).database.categoryDao()
+        val dishDao = (activity?.application as QrMenuApplication).database.dishDao()
+        val dishViewModel: DishViewModel by viewModels {
+            DishViewModelFactory(
+                dishDao,
+                categoryDao
+            )
+        }
         val sharePref = requireActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val token = sharePref.getString("token", "") ?: ""
+        val networkRetrofit = NetworkRetrofit(token)
+        val menuRepository = MenuRepository(networkRetrofit, menuDao, categoryDao, dishDao)
+
         val recyclerView = binding.recyclerViewEditCreateDish
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val width: Float = (resources.displayMetrics.widthPixels / resources.displayMetrics.density)
@@ -98,61 +101,19 @@ class ConfigDishFragment : Fragment() {
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
         val linearTextField0 = binding.linearEditTextEditCreateDish as ViewGroup
-        val linearTextField1 = linearTextField0.getChildAt(1) as ViewGroup
+        // first linear
+        val linearTextField1 = linearTextField0.getChildAt(0) as ViewGroup
         val categoryEditText = linearTextField1.getChildAt(2) as TextInputEditText
         val categorySaveBtn = linearTextField1.getChildAt(3) as ImageButton
-        val linearTextField2 = linearTextField0.getChildAt(2) as ViewGroup
+        // second linear
+        val linearTextField2 = linearTextField0.getChildAt(1) as ViewGroup
         val titleDish = linearTextField2.getChildAt(2) as TextInputEditText
         val costDish = linearTextField2.getChildAt(3) as TextInputEditText
-        val descriptionDish = linearTextField0.getChildAt(3) as TextInputEditText
+        // description
+        val descriptionDish = linearTextField0.getChildAt(2) as TextInputEditText
+
         var categoryDb = saveStateViewModel.stateCategoryDb
-        val categoryDao = (activity?.application as QrMenuApplication).database.categoryDao()
         val listAdapter = ConfigDishAdapter(dishViewModel, requireContext(), saveStateViewModel)
-        val linearUploadImage = linearTextField0.getChildAt(0) as ViewGroup
-        val imageViewUpload = linearUploadImage.getChildAt(0) as ImageView
-        val btnUploadImage = linearUploadImage.getChildAt(1) as AppCompatButton
-        val token = sharePref.getString("token", "") ?: ""
-        val networkRetrofit = NetworkRetrofit(token)
-
-        val imageNet = ImageNet(
-            requireActivity().activityResultRegistry
-        ) {
-            val curUri = it
-            imageViewUpload.setImageURI(curUri)
-            btnUploadImage.setOnClickListener {
-                val filesDir = requireContext().filesDir
-                val file = File(filesDir, "image.jpg")
-
-                val inputStream = requireActivity().contentResolver.openInputStream(curUri)
-                val outputStream = FileOutputStream(file)
-                inputStream!!.copyTo(outputStream)
-                inputStream.close()
-
-                CoroutineScope(Dispatchers.IO).launch {
-                    try {
-                        val requestBody: RequestBody = MultipartBody.Builder()
-                            .setType(MultipartBody.FORM)
-                            .addFormDataPart("forWhat", "dish")
-                            .addFormDataPart("dishId", "1")
-                            .addFormDataPart(
-                                "image",
-                                file.name,
-                                file.asRequestBody("image/*".toMediaTypeOrNull())
-                            ).build()
-                        val response = networkRetrofit.image().create(requestBody)
-
-                        Log.d("ImageRetrofit", response.toString())
-                    } catch (networkError: IOException) {
-                        Log.d("NoInternet", true.toString())
-                    }
-                }
-            }
-        }
-        lifecycle.addObserver(imageNet)
-
-        imageViewUpload.setOnClickListener {
-            imageNet.selectImage()
-        }
 
         var isSearch = false
         val icSearch = requireActivity().findViewById<AppCompatImageButton>(R.id.icSearch)
@@ -160,7 +121,12 @@ class ConfigDishFragment : Fragment() {
         icSearch.setOnClickListener {
             dishViewModel.getDishesLiveData(saveStateViewModel.stateCategoryDb.categoryId)
                 .observe(this.viewLifecycleOwner) { dishDbs ->
-                    val filtered = dishDbs.filter {  it.name.contains(textSearch.text.toString(), ignoreCase = true) }
+                    val filtered = dishDbs.filter {
+                        it.name.contains(
+                            textSearch.text.toString(),
+                            ignoreCase = true
+                        )
+                    }
                     if (filtered.isNotEmpty()) {
                         listAdapter.submitList(filtered)
                     } else {
@@ -168,55 +134,71 @@ class ConfigDishFragment : Fragment() {
                     }
                 }
         }
-
         dishViewModel.getDishesLiveData(saveStateViewModel.stateCategoryDb.categoryId)
             .observe(this.viewLifecycleOwner) {
                 listAdapter.submitList(it)
             }
-
-
         categoryEditText.setText(saveStateViewModel.stateCategoryDb.name)
-
         categorySaveBtn.setOnClickListener {
             if (categoryEditText.text.toString() != categoryDb.name) {
+                categoryDb = CategoryDb(
+                    categoryDb.categoryId,
+                    categoryEditText.text.toString(),
+                    categoryDb.menuId
+                )
                 CoroutineScope(Dispatchers.IO).launch {
-                    categoryDb = CategoryDb(
-                        categoryDb.categoryId,
-                        categoryEditText.text.toString(),
-                        categoryDb.menuId
-                    )
+                    menuRepository.updateCategoryNet(categoryDb)
                     categoryDao.update(categoryDb)
                 }
             }
         }
-
         recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
         recyclerView.adapter = listAdapter
-
-
-        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) { it ->
-            if (it == R.id.optionOne) {
-                dishViewModel.getDishesLiveData(saveStateViewModel.stateCategoryDb.categoryId)
-                    .observe(this.viewLifecycleOwner) {
-                        listAdapter.submitList(it)
+        val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
+        val navGlobal =
+            NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel, searchView) { it ->
+                if (it == R.id.optionOne) {
+                    dishViewModel.getDishesLiveData(saveStateViewModel.stateCategoryDb.categoryId)
+                        .observe(this.viewLifecycleOwner) {
+                            listAdapter.submitList(it)
+                        }
+                    isSearch = !isSearch
+                    searchView.visibility =
+                        if (isSearch) View.VISIBLE else View.GONE
+                }
+                if (it == R.id.optionTwo) {
+                    if (titleDish.text.toString().isNotEmpty() && costDish.text.toString()
+                            .isNotEmpty() && descriptionDish.text.toString().isNotEmpty()) {
+                        val dishDb = DishDb(
+                            name = titleDish.text.toString(),
+                            cost = costDish.text.toString().toInt(),
+                            description = descriptionDish.text.toString(),
+                            categoryId = saveStateViewModel.stateCategoryDb.categoryId
+                        )
+                        CoroutineScope(Dispatchers.IO).launch {
+                            menuRepository.createDish(dishDb)
+                            dishViewModel.insertDish(dishDb)
+                        }
                     }
-                isSearch = !isSearch
-                requireActivity().findViewById<LinearLayout>(R.id.searchView).visibility =
-                    if (isSearch) View.VISIBLE else View.GONE
+                    Log.d("optionTwo", "optionTwo")
+                }
             }
-            if (it == R.id.optionTwo) {
-                val dishDb = DishDb(
-                    name = titleDish.text.toString(),
-                    categoryId = categoryDb.categoryId,
-                    description = descriptionDish.text.toString(),
-                    cost = costDish.text.toString().toInt()
-                )
-                dishViewModel.insertDish(dishDb)
-            }
-        }
-        navGlobal.setVisibleNav(true, width <  SCREEN_LARGE, true, optTwo = true)
-        navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, R.drawable.ic_search, R.drawable.ic_check_fill)
+        navGlobal.setVisibleNav(true, width < SCREEN_LARGE, true, optTwo = true)
+        navGlobal.setIconNav(
+            R.drawable.ic_arrow_back,
+            R.drawable.ic_home,
+            R.drawable.ic_search,
+            R.drawable.ic_check_fill
+        )
         navGlobal.impNav()
+    }
+
+    fun getImageUriFromBitmap(context: Context, bitmap: Bitmap): Uri {
+        val bytes = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path =
+            MediaStore.Images.Media.insertImage(context.contentResolver, bitmap, "Title", null)
+        return Uri.parse(path.toString())
     }
 
     companion object {

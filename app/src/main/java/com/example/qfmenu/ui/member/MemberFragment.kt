@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -81,7 +82,8 @@ class MemberFragment : Fragment() {
                 requireContext(),
                 saveStateViewModel
             )
-        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
+        val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
+        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel, searchView) {
             if (it == R.id.optionTwo) {
                 if (!(editInputName.text.isNullOrBlank() && editInputPass.text.isNullOrBlank())) {
                     CoroutineScope(Dispatchers.IO).launch {

@@ -1,9 +1,12 @@
 package com.example.qfmenu.ui.table
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -12,16 +15,21 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
-import com.example.qfmenu.viewmodels.CustomerViewModel
-import com.example.qfmenu.viewmodels.CustomerViewModelFactory
 import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
+import com.example.qfmenu.database.dao.TableDao
+import com.example.qfmenu.database.entity.TableDb
 import com.example.qfmenu.databinding.FragmentTableOrderBinding
+import com.example.qfmenu.network.NetworkRetrofit
+import com.example.qfmenu.repository.CustomerRepository
 import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.util.WaitingTableAdapter
+import com.example.qfmenu.viewmodels.CustomerViewModel
+import com.example.qfmenu.viewmodels.CustomerViewModelFactory
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.textfield.TextInputEditText
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -42,15 +50,7 @@ class TableOrderFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val saveStateViewModel: SaveStateViewModel by activityViewModels()
-    private val customerViewModel: CustomerViewModel by viewModels {
-        CustomerViewModelFactory(
-            (activity?.application as QrMenuApplication).database.customerDao(),
-            (activity?.application as QrMenuApplication).database.customerDishCrossRefDao(),
-            (activity?.application as QrMenuApplication).database.reviewDao(),
-            (activity?.application as QrMenuApplication).database.orderDao(),
-            saveStateViewModel.stateDishes
-        )
-    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,8 +81,29 @@ class TableOrderFragment : Fragment() {
         navController.navigate(startDestination, null, navOptions)
     }
 
+    private fun getTableLive(tableDao: TableDao, handler: (List<TableDb>) -> Unit) {
+        tableDao.getTablesLiveData().observe(this.viewLifecycleOwner) {
+            handler(it)
+        }
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val customerDao = (activity?.application as QrMenuApplication).database.customerDao()
+        val customerDishCrossRefDao =
+            (activity?.application as QrMenuApplication).database.customerDishCrossRefDao()
+        val reviewDao = (activity?.application as QrMenuApplication).database.reviewDao()
+        val orderDao = (activity?.application as QrMenuApplication).database.orderDao()
+
+        val customerViewModel: CustomerViewModel by viewModels {
+            CustomerViewModelFactory(
+                customerDao,
+                customerDishCrossRefDao,
+                reviewDao,
+                orderDao,
+                saveStateViewModel.stateDishes
+            )
+        }
+
         val isStartOrder = false
         val slidingPaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
@@ -92,35 +113,69 @@ class TableOrderFragment : Fragment() {
         val recyclerView = binding.tableRecyclerView
         val gridLayoutManager = GridLayoutManager(requireContext(), spanCount)
         val tableDao = (activity?.application as QrMenuApplication).database.tableDao()
+        val sharePref = requireActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val token = sharePref.getString("token", "") ?: ""
+        val networkRetrofit = NetworkRetrofit(token)
+        val customerRepository = CustomerRepository(
+            networkRetrofit,
+            customerDao,
+            customerDishCrossRefDao,
+            orderDao
+        )
         val waitingTableAdapter = WaitingTableAdapter(
             customerViewModel,
             saveStateViewModel,
-            requireContext()
+            requireContext(),
+            customerRepository
         )
-        val navGlobal = NavGlobal(navBar, findNavController(), slidingPaneLayout, saveStateViewModel) {
-            if (it == R.id.homeMenu) {
-                saveStateViewModel.setStateDishesDb(listOf())
-                saveStateViewModel.stateDishesByCategories = mutableListOf()
-            }
-            if (it == R.id.optionTwo) {
-            }
-        }
+        var isSearch = false
+        val icSearch = requireActivity().findViewById<AppCompatImageButton>(R.id.icSearch)
+        val textSearch = requireActivity().findViewById<TextInputEditText>(R.id.textSearch)
 
-        navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, 0, R.drawable.ic_search)
-        navGlobal.setVisibleNav(isStartOrder, width < SCREEN_LARGE, false, optTwo = true)
-        navGlobal.impNav()
+
 
         if (saveStateViewModel.isOpenSlide)
             navBar.visibility = View.VISIBLE
         recyclerView.layoutManager = gridLayoutManager
         recyclerView.adapter = waitingTableAdapter
 
-        tableDao.getTablesLiveData().observe(this.viewLifecycleOwner) {
-            it.let {
-                waitingTableAdapter.submitList(it)
+        getTableLive(tableDao) { tables ->
+            waitingTableAdapter.submitList(tables)
+        }
+        icSearch.setOnClickListener {
+            getTableLive(tableDao) { tables ->
+                val filtered = tables.filter {
+                    it.tableId == textSearch.text.toString().toLong()
+                }
+                if (filtered.isNotEmpty()) {
+                    waitingTableAdapter.submitList(filtered)
+                } else {
+                    waitingTableAdapter.submitList(tables)
+                }
             }
         }
+        val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
+        val navGlobal =
+            NavGlobal(navBar, findNavController(), slidingPaneLayout, saveStateViewModel, searchView) {
+                if (it == R.id.homeMenu) {
+                    saveStateViewModel.setStateDishesDb(listOf())
+                    saveStateViewModel.stateDishesByCategories = mutableListOf()
+                }
+                if (it == R.id.optionTwo) {
+                    isSearch = !isSearch
+                    if (isSearch) {
+                        getTableLive(tableDao) { tables ->
+                            waitingTableAdapter.submitList(tables)
+                        }
+                    }
+                    requireActivity().findViewById<View>(R.id.searchView).visibility =
+                        if (isSearch) View.VISIBLE else View.GONE
+                }
+            }
 
+        navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, 0, R.drawable.ic_search)
+        navGlobal.setVisibleNav(isStartOrder, width < SCREEN_LARGE, false, optTwo = true)
+        navGlobal.impNav()
     }
 
     companion object {

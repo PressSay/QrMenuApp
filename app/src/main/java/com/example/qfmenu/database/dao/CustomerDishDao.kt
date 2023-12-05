@@ -30,6 +30,16 @@ interface CustomerDishDao {
     @Update
     suspend fun update(customerDishDb: CustomerDishDb)
 
+    @Update
+    suspend fun  updateAll(customerDishDb: List<CustomerDishDb>)
+
     @Delete
     suspend fun delete(customerDishDb: CustomerDishDb)
+
+    @Delete
+    suspend fun deleteAll(customerDishDb: List<CustomerDishDb>)
+
+    @Query("DELETE FROM CustomerDishDb")
+    suspend fun deleteAll()
+
 }

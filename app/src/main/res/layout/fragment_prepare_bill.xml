@@ -48,6 +48,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tableName"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
                 android:text="@string/table_name"
@@ -59,6 +60,7 @@
                 android:textColor="@color/green_primary"/>
 
             <TextView
+                android:id="@+id/taxPreBill"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
                 android:text="@string/tax"
@@ -70,6 +72,7 @@
                 android:textColor="@color/green_primary"/>
 
             <TextView
+                android:id="@+id/totalPreBill"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
                 android:text="@string/total"
@@ -100,6 +103,9 @@
                     android:layout_marginStart="4dp"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:maxLines="1"
+                    android:lines="1"
+                    android:singleLine="true"
                     android:layout_height="match_parent"
                     android:id="@+id/customerMoney"
                     android:textColor="@color/green_secondary"/>
@@ -107,6 +113,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/changeMoneyPreBill"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
                 android:text="@string/change_money"
@@ -134,6 +141,7 @@
                     android:textColor="@color/green_primary"/>
 
                 <TextView
+                    android:id="@+id/billCodePreCode"
                     android:layout_width="match_parent"
                     android:layout_height="32dp"
                     android:text="@string/lorem"
@@ -148,6 +156,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/phonePreBill"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
                 android:text="@string/phone_customer"
@@ -159,6 +168,7 @@
                 android:textColor="@color/green_primary"/>
 
             <TextView
+                android:id="@+id/orderIdPreBill"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
                 android:text="@string/order_id"

@@ -5,12 +5,8 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import androidx.room.Update
 import com.example.qfmenu.database.entity.DishDb
-import com.example.qfmenu.database.entity.DishWithCustomers
-import com.example.qfmenu.database.entity.DishWithReviews
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DishDao {
@@ -26,4 +22,24 @@ interface DishDao {
     @Delete
     suspend fun delete(dishDb: DishDb)
 
+    @Delete
+    suspend fun deleteAll(dishDb: List<DishDb>)
+
+    @Query("SELECT * FROM DishDb")
+    suspend fun getDishes(): List<DishDb>
+
+    @Query("SELECT * FROM DishDb WHERE dishId = :dishId")
+    fun getDish(dishId: Long): DishDb?
+
+    @Query("SELECT * FROM DishDb ORDER BY dishId DESC LIMIT 1")
+    suspend fun getLastDish(): DishDb?
+
+    @Query("UPDATE sqlite_sequence SET seq = (SELECT MAX(dishId) FROM DishDb) WHERE name=\"DishDb\"\n")
+    suspend fun resetLastKey()
+
+    @Query("UPDATE sqlite_sequence SET seq = 0 WHERE name=\"DishDb\"\n")
+    suspend fun resetKey()
+
+    @Query("SELECT seq FROM sqlite_sequence WHERE name=\"DishDb\"\n")
+    suspend fun getLastKey(): Long
 }

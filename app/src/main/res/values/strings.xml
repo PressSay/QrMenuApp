@@ -2,7 +2,7 @@
     <string name="app_name">QFMenu</string>
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="account">Account</string>
-    <string name="star_of_store">Amount Start Of Store</string>
+    <string name="star_of_store">Amount Of Review</string>
     <string name="table_unlock">Table Unlock</string>
     <string name="confirm_unlock_table">Confirm Unlock Table</string>
     <string name="lock">Lock</string>
@@ -82,4 +82,11 @@
     <string name="upload_image_qr">Upload Image QR</string>
     <string name="confirm_the_code">Cofirm the code</string>
     <string name="back">Back</string>
+    <string name="phone_profile">Phone: %s</string>
+    <string name="role_profile">Role: %s</string>
+    <string name="email_profile">Email: %s</string>
+    <string name="address_profile">Address: %s</string>
+    <string name="exp_profile">Exp: %s</string>
+    <string name="have_new_customer">Have new customer at table %s</string>
+    <string name="notification">Notification</string>
 </resources>

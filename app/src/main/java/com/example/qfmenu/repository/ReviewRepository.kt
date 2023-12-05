@@ -5,108 +5,78 @@ import com.example.qfmenu.database.entity.ReviewCustomerDb
 import com.example.qfmenu.database.entity.ReviewDb
 import com.example.qfmenu.database.entity.ReviewDishDb
 import com.example.qfmenu.network.NetworkRetrofit
-import retrofit2.http.Field
 
 class ReviewRepository(
     private val networkRetrofit: NetworkRetrofit,
     private val reviewDao: ReviewDao,
 ) {
-    suspend fun createListDish(reviewDishDbList: List<ReviewDishDb>) {
-        reviewDishDbList.forEach { reviewDishDb ->
-            val reviewDb = reviewDao.getReview(reviewDishDb.reviewId)
-            val reviewNet = networkRetrofit.review().create(
-                "1",
-                reviewDishDb.dishId.toString(),
-                reviewDishDb.customerId.toString(),
-                reviewDb.isThumbUp.toString(),
-                reviewDb.description
+
+    suspend fun createDishRev(reviewDishDb: ReviewDishDb) {
+        val reviewDb = reviewDao.getReview(reviewDishDb.reviewId)!!
+        val reviewNet = networkRetrofit.review().create(
+            "1",
+            reviewDishDb.dishId.toString(),
+            reviewDishDb.customerId.toString(),
+            reviewDb.isThumbUp.toString(),
+            reviewDb.description
+        )
+    }
+
+    suspend fun createCustomerRev(reviewCustomerDb: ReviewCustomerDb) {
+        val reviewDb = reviewDao.getReview(reviewCustomerDb.reviewId)!!
+        val reviewNet = networkRetrofit.review().create(
+            "0",
+            "-1",
+            reviewCustomerDb.customerId.toString(),
+            reviewDb.isThumbUp.toString(),
+            reviewDb.description
+        )
+    }
+
+    suspend fun fetchReview() {
+        val reviewListNet = networkRetrofit.review().findAll()
+        val reviewDishNet = networkRetrofit.review().findAllDish()
+        val reviewCustomerNet = networkRetrofit.review().findAllCustomer()
+
+        if (!reviewListNet.isSuccessful || !reviewDishNet.isSuccessful || !reviewCustomerNet.isSuccessful) {
+            return
+        }
+        val review = reviewListNet.body()!!
+        val reviewDish = reviewDishNet.body()!!
+        val reviewCustomer = reviewCustomerNet.body()!!
+
+        if (review.isEmpty() || reviewDish.isEmpty() || reviewCustomer.isEmpty()) {
+            return
+        }
+        reviewDao.deleteAll()
+        reviewDao.deleteAllReviewDish()
+        reviewDao.deleteAllReviewCustomer()
+        reviewDao.resetKey();
+        reviewDao.insertAll(review.map {
+            ReviewDb(
+                reviewId = it.reviewId.toLong(),
+                isThumbUp = it.star,
+                description = it.description
+            )
+        })
+        for (revDish in reviewDish) {
+            reviewDao.insertReviewDishCrossRef(
+                ReviewDishDb(
+                    dishId = revDish.reviewDish.dishId,
+                    reviewId = revDish.review.reviewId.toLong(),
+                    customerId = revDish.reviewDish.customerId
+                )
             )
         }
-    }
-
-    suspend fun createListCustomer(reviewCustomerDbList: List<ReviewCustomerDb>) {
-        reviewCustomerDbList.forEach { reviewCustomerDb ->
-            val reviewDb = reviewDao.getReview(reviewCustomerDb.reviewId)
-            val reviewNet = networkRetrofit.review().create(
-                "0",
-                "-1",
-                reviewCustomerDb.customerId.toString(),
-                reviewDb.isThumbUp.toString(),
-                reviewDb.description
+        for (revCust in reviewCustomer) {
+            reviewDao.insertReviewCustomerCrossRef(
+                ReviewCustomerDb(
+                    customerId = revCust.reviewCustomer.customerId,
+                    reviewId = revCust.review.reviewId.toLong()
+                )
             )
         }
+
     }
 
-    suspend fun updateListDish(reviewDishDbList: List<ReviewDishDb>) {
-        reviewDishDbList.forEach { reviewDishDb ->
-            val reviewDb = reviewDao.getReview(reviewDishDb.reviewId)
-            val reviewNet = networkRetrofit.review().update(
-                reviewDishDb.reviewId.toString(),
-                reviewDb.description,
-                reviewDb.isThumbUp.toString()
-
-            )
-        }
-    }
-
-    suspend fun updateListCustomer(reviewCustomerDbList: List<ReviewCustomerDb>) {
-        reviewCustomerDbList.forEach { reviewCustomerDb ->
-            val reviewDb = reviewDao.getReview(reviewCustomerDb.reviewId)
-            val reviewNet = networkRetrofit.review().update(
-                reviewCustomerDb.reviewId.toString(),
-                reviewDb.description,
-                reviewDb.isThumbUp.toString()
-            )
-        }
-    }
-
-    suspend fun deleteListDish(reviewDishDbList: List<ReviewDishDb>) {
-        reviewDishDbList.forEach { reviewDishDb ->
-            val reviewDb = reviewDao.getReview(reviewDishDb.reviewId)
-            val reviewNet = networkRetrofit.review().delete(reviewDishDb.reviewId.toString())
-        }
-    }
-
-    suspend fun deleteListCustomer(reviewCustomerDbList: List<ReviewCustomerDb>) {
-        reviewCustomerDbList.forEach { reviewCustomerDb ->
-            val reviewDb = reviewDao.getReview(reviewCustomerDb.reviewId)
-            val reviewNet = networkRetrofit.review().delete(reviewCustomerDb.reviewId.toString())
-        }
-    }
-
-    suspend fun fetchReviewDish() {
-        val reviewNet = networkRetrofit.review().findALlDish()
-        if (reviewNet.isSuccessful) {
-            reviewNet.body()?.let {
-                reviewDao.insertAllReviewDishCrossRef(it.map { review ->
-                    ReviewDishDb(
-                        dishId = review.dish.dishId,
-                        reviewId = review.review.reviewId.toLong(),
-                        customerId = review.customerId
-                    )
-                })
-            }
-        }
-    }
-
-    suspend fun fetchReviewCustomer() {
-        val reviewNet = networkRetrofit.review().findALlCustomer()
-        if (reviewNet.isSuccessful) {
-            reviewNet.body()?.let {
-                reviewDao.insertAll(it.map { review ->
-                    ReviewDb(
-                        reviewId = review.review.reviewId.toLong(),
-                        description = review.review.description,
-                        isThumbUp = review.review.star,
-                    )
-                })
-                reviewDao.insertAllReviewCustomerCrossRef(it.map { review ->
-                    ReviewCustomerDb(
-                        customerId = review.customer.customerId,
-                        reviewId = review.review.reviewId.toLong(),
-                    )
-                })
-            }
-        }
-    }
 }

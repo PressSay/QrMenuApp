@@ -38,10 +38,6 @@ class MemberViewModel(
         }
     }
 
-    suspend fun getMember(accountId: Long): AccountDb {
-        return accountDao.getAccount(accountId)
-    }
-
 }
 
 class MemberViewModelFactory(

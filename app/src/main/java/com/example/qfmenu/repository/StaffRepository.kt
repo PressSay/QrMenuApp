@@ -8,57 +8,54 @@ class StaffRepository(
     private val networkRetrofit: NetworkRetrofit,
     private val accountDao: AccountDao,
 ) {
-    suspend fun createListStaff(accountDbList: List<AccountDb>) {
-        accountDbList.forEach { accountDb ->
-            val userNet = networkRetrofit.user().create(
-                name = accountDb.name,
-                email = accountDb.email,
-                password = accountDb.password,
-                password_confirmation = accountDb.password,
-                level = accountDb.level,
-                address = accountDb.address,
-                phoneNumber = accountDb.phoneNumber,
-            )
-        }
+    suspend fun createStaff(accountDb: AccountDb) {
+        val userNet = networkRetrofit.user().create(
+            name = accountDb.name,
+            email = accountDb.email,
+            password = accountDb.password,
+            password_confirmation = accountDb.password,
+            level = accountDb.level,
+            address = accountDb.address,
+            phoneNumber = accountDb.phoneNumber,
+        )
     }
 
-    suspend fun updateListStaff(accountDbList: List<AccountDb>) {
-        accountDbList.forEach { accountDb ->
-            val userNet = networkRetrofit.user().update(
-                id = accountDb.id.toString(),
-                name = accountDb.name,
-                email = accountDb.email,
-                level = accountDb.level,
-                address = accountDb.address,
-                phoneNumber = accountDb.phoneNumber,
-            )
-        }
+    suspend fun updateStaff(accountDb: AccountDb) {
+        val userNet = networkRetrofit.user().update(
+            id = accountDb.id.toString(),
+            name = accountDb.name,
+            email = accountDb.email,
+            level = accountDb.level,
+            address = accountDb.address,
+            phoneNumber = accountDb.phoneNumber,
+        )
     }
 
-    suspend fun deleteStaff(accountDbList: List<AccountDb>) {
-        accountDbList.forEach { accountDb ->
-            val userNet = networkRetrofit.user().delete(accountDb.id.toString())
-        }
+    suspend fun deleteStaff(accountDb: AccountDb) {
+        val userNet = networkRetrofit.user().delete(accountDb.id.toString())
     }
 
     suspend fun fetchStaff() {
-        val userNet = networkRetrofit.user().findAllStaff()
-        if (userNet.isSuccessful) {
-            userNet.body()?.let {
-                accountDao.insertAll(it.map { user ->
+        val staffListNet = networkRetrofit.user().findAllStaff()
+        if (staffListNet.isSuccessful) {
+            val staffSr = staffListNet.body()!!
+//                this.createListStaff(staffDbList)
+            accountDao.insertAll(
+                staffSr.map {
                     AccountDb(
-                        name = user.name,
-                        email = user.email,
-                        exp = user.exp,
-                        phoneNumber = user.phoneNumber,
-                        level = user.level,
-                        password = "empty",
-                        address = user.address,
-                        avatar = user.image.source,
-                        nameRole = user.nameRole!!
+                        it.id.toLong(),
+                        it.name,
+                        it.email,
+                        it.exp,
+                        it.phoneNumber,
+                        it.level,
+                        "Have been hash",
+                        it.address,
+                        "empty",
+                        it.nameRole ?: "staff"
                     )
-                })
-            }
+                }
+            )
         }
     }
 }

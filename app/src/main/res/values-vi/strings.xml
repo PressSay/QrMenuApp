@@ -33,7 +33,7 @@
     <string name="guest_money">Tiền Khách:</string>
     <string name="change_money">Tiền Thối: %s</string>
     <string name="code_bill">Mã Bill:</string>
-    <string name="star_of_store">Lượng Sao Của Shop</string>
+    <string name="star_of_store">Số Lượt Đánh Giá</string>
     <string name="title_dish">Tiêu Đề Món</string>
     <string name="description_dish">Mô Tả:</string>
     <string name="review_of_shop">Review Của Hàng</string>
@@ -78,4 +78,11 @@
     <string name="upload_image_qr">Tải ảnh QR</string>
     <string name="confirm_the_code">Xác nhận mã</string>
     <string name="back">Trở lại</string>
+    <string name="phone_profile">Số ĐT: %s</string>
+    <string name="role_profile">Vai Trò: %s</string>
+    <string name="email_profile">Email: %s</string>
+    <string name="address_profile">Địa Chỉ: %s</string>
+    <string name="exp_profile">Exp: %s</string>
+    <string name="have_new_customer">Có đợn mới tại bàn %s</string>
+    <string name="notification">Thông báo</string>
 </resources>

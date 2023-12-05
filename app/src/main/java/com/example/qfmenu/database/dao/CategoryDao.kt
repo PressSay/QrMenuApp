@@ -14,6 +14,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CategoryDao {
+    @Query("SELECT * FROM CategoryDb")
+    suspend fun getCategories(): List<CategoryDb>
     @Transaction
     @Query("SELECT * FROM CategoryDb")
     fun getCategoriesWithDishes(): Flow<List<CategoryWidthDishes>>
@@ -27,7 +29,10 @@ interface CategoryDao {
     fun getCategoryWithDishesLiveData(categoryId: Long): LiveData<CategoryWidthDishes>
 
     @Query("SELECT * FROM CategoryDb WHERE categoryId = :categoryId")
-    fun getCategory(categoryId: Long): Flow<CategoryDb>
+    suspend fun getCategory(categoryId: Long): CategoryDb?
+
+    @Query("SELECT * FROM CategoryDb WHERE categoryId = :categoryId")
+    fun getCategoryLiveData(categoryId: Long): LiveData<CategoryDb>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(categoryList: List<CategoryDb>): List<Long>
@@ -41,6 +46,21 @@ interface CategoryDao {
     @Delete
     suspend fun delete(categoryDb: CategoryDb)
 
+    @Delete
+    suspend fun deleteAll(categoryDbList: List<CategoryDb>)
+
     @Query("DELETE FROM DishDb WHERE categoryId = :categoryId")
     suspend fun deleteDishes(categoryId: Long)
+
+    @Query("SELECT * FROM CategoryDb ORDER BY categoryId DESC LIMIT 1")
+    suspend fun getLastCategory(): CategoryDb?
+
+    @Query("UPDATE sqlite_sequence SET seq = (SELECT MAX(categoryId) FROM CategoryDb) WHERE name=\"CategoryDb\"")
+    suspend fun resetLastKey()
+
+    @Query("UPDATE sqlite_sequence SET seq = 0 WHERE name=\"CategoryDb\"")
+    suspend fun resetKey()
+
+    @Query("SELECT seq FROM sqlite_sequence WHERE name=\"CategoryDb\"")
+    suspend fun getLastKey(): Long
 }

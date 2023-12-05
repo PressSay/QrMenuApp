@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -13,6 +16,7 @@ import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
+import com.example.qfmenu.database.entity.CustomerDb
 import com.example.qfmenu.databinding.FragmentBillBinding
 import com.example.qfmenu.util.BillAdapter
 import com.example.qfmenu.util.NavGlobal
@@ -67,6 +71,12 @@ class BillFragment : Fragment() {
         return binding.root
     }
 
+    fun getBillLive(handler: (List<CustomerDb>) -> Unit) {
+        customerViewModel.getCustomersByCalendar(saveStateViewModel.stateCalendar).observe(this.viewLifecycleOwner) {
+            handler(it)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
@@ -76,21 +86,41 @@ class BillFragment : Fragment() {
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
         val billAdapter = BillAdapter(requireContext(), saveStateViewModel, customerViewModel)
-        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel) {
+
+
+        recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
+        getBillLive {
+            billAdapter.submitList(it)
+        }
+
+        recyclerView.adapter = billAdapter
+
+        var isSearch = false
+        val icSearch = requireActivity().findViewById<AppCompatImageButton>(R.id.icSearch)
+        val textSearch = requireActivity().findViewById<TextView>(R.id.textSearch)
+
+        icSearch.setOnClickListener {
+            getBillLive {
+                val filltered = it.filter { it.customerId.toString().contains(textSearch.text) }
+                billAdapter.submitList(filltered)
+            }
+        }
+
+        val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
+        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel, searchView) {
             if (it == R.id.optionTwo) {
+                isSearch = !isSearch
+                if (isSearch) {
+                    getBillLive {
+                        billAdapter.submitList(it)
+                    }
+                }
+                searchView.visibility = if (isSearch) View.VISIBLE else View.GONE
             }
         }
         navGlobal.setVisibleNav(true, width < SCREEN_LARGE, false, optTwo = true)
         navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, 0, R.drawable.ic_search)
         navGlobal.impNav()
-
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
-        customerViewModel.getCustomersByCalendar(saveStateViewModel.stateCalendar).observe(this.viewLifecycleOwner) {
-            it.let {
-                billAdapter.submitList(it)
-            }
-        }
-        recyclerView.adapter = billAdapter
     }
 
     companion object {

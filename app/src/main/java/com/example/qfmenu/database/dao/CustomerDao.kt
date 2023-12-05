@@ -25,18 +25,20 @@ interface CustomerDao {
     @Query("SELECT * FROM CustomerDb WHERE customerId = :customerId")
     suspend fun getCustomerWithDishes(customerId: Long): CustomerWithDishes
 
-    @Transaction
+    @Query("SELECT * FROM CustomerDb")
+    suspend fun getAllCustomer(): List<CustomerDb>
+
     @Query("SELECT * FROM CustomerDb")
     suspend fun getAllCustomerAndOrder(): List<CustomerAndOrderDb>
 
-    @Query("SELECT * FROM CustomerDb JOIN OrderDb ON CustomerDb.customerId = OrderDb.customerOwnerId WHERE OrderDb.status = 'Bill Not Paid'")
-    fun getCustomersUnConfirmed(): Flow<List<CustomerDb>>
+    @Query("SELECT * FROM CustomerDb JOIN OrderDb ON CustomerDb.customerId = OrderDb.customerOwnerId WHERE OrderDb.status = 'normal'")
+    fun getCustomersUnConfirmed(): LiveData<List<CustomerDb>>
 
     @Query("SELECT * FROM CustomerDb WHERE created = :calendarPaid")
     fun getCustomersByCalendar(calendarPaid: String): LiveData<List<CustomerDb>>
 
     @Query("SELECT * FROM CustomerDb ORDER BY customerId DESC LIMIT 1")
-    fun getLastCustomer(): Flow<CustomerDb>
+    fun getLastCustomer(): CustomerDb?
 
     @Query("SELECT * FROM CustomerDishDb WHERE customerId = :customerId")
     suspend fun getCustomerDishCrossRefs(customerId: Long): List<CustomerDishDb>
@@ -44,13 +46,13 @@ interface CustomerDao {
     @Query("SELECT * FROM ReviewCustomerDb WHERE customerId = :customerId")
     fun getReviewCustomerCrossRefs(customerId: Long): Flow<ReviewCustomerDb>
 
-    @Query("SELECT * FROM CustomerDb WHERE customerId = :customerId")
-    suspend fun getCustomer(customerId: Long): CustomerDb
+    @Query("SELECT * FROM CustomerDb WHERE customerId = :customerId LIMIT 1")
+    suspend fun getCustomer(customerId: Long): CustomerDb?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(customerDishCrossRefs: List<CustomerDb>): List<Long>
+    suspend fun insertAll(customerDbArr: List<CustomerDb>): List<Long>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE,)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(customerDb: CustomerDb) : Long
 
     @Update
@@ -59,4 +61,15 @@ interface CustomerDao {
     @Delete
     suspend fun delete(customerDb: CustomerDb)
 
+    @Query("DELETE FROM CustomerDb")
+    suspend fun deleteAll()
+
+    @Query("UPDATE sqlite_sequence SET seq = 0 WHERE name=\"CustomerDb\"")
+    suspend fun resetKey()
+
+    @Query("UPDATE sqlite_sequence SET seq = (SELECT MAX(customerId) FROM CustomerDb) WHERE name=\"CustomerDb\"")
+    suspend fun resetLastKey()
+
+    @Query("SELECT seq FROM sqlite_sequence WHERE name=\"CustomerDb\"")
+    suspend fun getLastKey(): Long
 }

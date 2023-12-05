@@ -36,4 +36,7 @@ interface TableDao {
     @Delete
     suspend fun delete(tableDb: TableDb)
 
+    @Query("DELETE FROM TableDb")
+    suspend fun deleteAll()
+
 }
