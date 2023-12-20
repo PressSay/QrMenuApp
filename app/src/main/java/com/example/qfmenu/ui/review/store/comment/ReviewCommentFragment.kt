@@ -11,11 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
-import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
-import com.example.qfmenu.database.entity.ReviewCustomerDb
-import com.example.qfmenu.database.entity.ReviewDb
 import com.example.qfmenu.databinding.FragmentReviewCommentBinding
 import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.viewmodels.SaveStateViewModel
@@ -74,19 +71,19 @@ class ReviewCommentFragment : Fragment() {
             if (it == R.id.optionTwo) {
                 if (editInputStoreReview.text?.isNotBlank() == true) {
                     GlobalScope.async {
-                        val reviewDao =
-                            (activity?.application as QrMenuApplication).database.reviewDao()
-                        val reviewDb = ReviewDb(
-                            isThumbUp = saveStateViewModel.stateReviewDb,
-                            description = editInputStoreReview.text.toString()
-                        )
-                        val reviewId = reviewDao.insert(reviewDb)
-                        reviewDao.insertReviewCustomerCrossRef(
-                            ReviewCustomerDb(
-                                reviewId,
-                                -1
-                            )
-                        )
+//                        val reviewDao =
+//                            (activity?.application as QrMenuApplication).database.reviewDao()
+//                        val reviewDb = ReviewDb(
+//                            isThumbUp = saveStateViewModel.stateReviewDb,
+//                            description = editInputStoreReview.text.toString()
+//                        )
+//                        val reviewId = reviewDao.insert(reviewDb)
+//                        reviewDao.insertReviewCustomerCrossRef(
+//                            ReviewCustomerDb(
+//                                reviewId,
+//                                -1
+//                            )
+//                        )
                         findNavController().popBackStack()
                         findNavController().popBackStack()
                     }

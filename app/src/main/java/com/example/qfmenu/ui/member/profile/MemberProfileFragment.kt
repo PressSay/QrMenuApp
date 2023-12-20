@@ -1,6 +1,7 @@
 package com.example.qfmenu.ui.member.profile
 
 import android.app.AlertDialog
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,6 +19,8 @@ import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.entity.AccountDb
 import com.example.qfmenu.databinding.FragmentMemberProfileBinding
+import com.example.qfmenu.network.NetworkRetrofit
+import com.example.qfmenu.repository.StaffRepository
 import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -64,6 +67,13 @@ class MemberProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val sharePref = requireActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val token =
+            sharePref.getString("token", "1|1TudhRqXy7ebTzelqlme0rD6uRAxlZVHDdROWKmW9f480231")!!
+        val networkRetrofit = NetworkRetrofit(token)
+        val accountDao = (activity?.application as QrMenuApplication).database.accountDao()
+        val accountRepository = StaffRepository(networkRetrofit, accountDao)
+
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
@@ -77,7 +87,13 @@ class MemberProfileFragment : Fragment() {
         val uploadBtn = binding.memberUpload
         val delBtn = binding.memberDel
         val imgMem = binding.imageMember
+        val levelEditText = binding.levelAccount
+        val expEditText = binding.expAccount
+
+
+
         var curUri: Uri? = null
+
         val registry = requireActivity()
             .activityResultRegistry.register(
                 "key",
@@ -95,26 +111,42 @@ class MemberProfileFragment : Fragment() {
             registry.launch("image/*")
         }
 
+        delBtn.setOnClickListener {
+            CoroutineScope(Dispatchers.Main).launch {
+                try {
+                    accountRepository.deleteStaff(accountDb)
+                    accountDao.delete(accountDb)
+                } catch (e: Exception) {
+                    accountDao.delete(accountDb)
+                }
+                findNavController().popBackStack()
+            }
+        }
+
         val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel, searchView) {
             if (it == R.id.optionTwo) {
-                if (!(nameAccount.text.isNullOrBlank() && phoneAccount.text.isNullOrBlank() && addressAccount.text.isNullOrBlank() && emailAccount.text.isNullOrBlank())) {
-                    CoroutineScope(Dispatchers.Main).launch {
+                if (!(nameAccount.text.isNullOrBlank() && phoneAccount.text.isNullOrBlank()
+                            && addressAccount.text.isNullOrBlank() && emailAccount.text.isNullOrBlank())
+                    && levelEditText.text.toString().toInt() >= 0 && expEditText.text.toString().toInt() >= 0) {
+                    CoroutineScope(Dispatchers.IO).launch {
                         val newAccountDb = AccountDb(
                             id = accountDb.id,
                             nameRole = accountDb.nameRole,
                             name = nameAccount.text.toString(),
                             phoneNumber = phoneAccount.text.toString(),
-                            level = 0,
-                            exp = 0,
+                            level = levelEditText.text.toString().toInt(),
+                            exp = expEditText.text.toString().toInt(),
                             email = emailAccount.text.toString(),
                             password = accountDb.password,
                             avatar = "empty",
                             address = addressAccount.text.toString()
                         )
-                        val accountDao =
-                            (activity?.application as QrMenuApplication).database.accountDao()
-                        accountDao.update(newAccountDb)
-                        findNavController().popBackStack()
+                        try {
+                            accountRepository.updateStaff(newAccountDb)
+                            accountDao.update(newAccountDb)
+                        } catch (e: Exception) {
+                            accountDao.update(newAccountDb)
+                        }
                     }
                 } else {
                     AlertDialog.Builder(context)
@@ -132,6 +164,8 @@ class MemberProfileFragment : Fragment() {
         phoneAccount.setText(accountDb.phoneNumber)
         addressAccount.setText(accountDb.address)
         emailAccount.setText(accountDb.email)
+        levelEditText.setText(accountDb.level.toString())
+        expEditText.setText(accountDb.exp.toString())
     }
 
     companion object {

@@ -43,6 +43,19 @@
                 android:textColor="@color/green_primary"/>
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/seeDetailTableBtn"
+                android:layout_width="230dp"
+                android:layout_height="80dp"
+                android:text="@string/see_detail_order"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/button_secondary_container_solid"
+                android:padding="10dp"
+                android:elevation="20dp"
+                android:textColor="@color/green_primary"/>
+
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/unlockTableBtn"
                 android:layout_width="230dp"
                 android:layout_height="80dp"

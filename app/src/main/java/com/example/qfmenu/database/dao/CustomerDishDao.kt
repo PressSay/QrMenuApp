@@ -8,7 +8,6 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.qfmenu.database.entity.CustomerDishDb
 import com.example.qfmenu.database.entity.DishDb
-import com.example.qfmenu.database.entity.ReviewDb
 
 @Dao
 interface CustomerDishDao {
@@ -17,9 +16,6 @@ interface CustomerDishDao {
 
     @Query("SELECT * FROM DishDb WHERE dishId = :dishCreatorId")
     suspend fun getDish(dishCreatorId: Long): DishDb
-
-    @Query("SELECT * FROM ReviewDb WHERE reviewId = :reviewCreatorId")
-    suspend fun getReview(reviewCreatorId: Int): ReviewDb
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(customerDishCrossRefs: List<CustomerDishDb>): List<Long>

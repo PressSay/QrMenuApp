@@ -61,15 +61,15 @@ class ReviewFragment : Fragment() {
         return binding.root
     }
 
-    private fun formatNumRev(number: Int): String {
-        if (number > 1000000000) {
-            return "${number / 1000000000}B"
+    private fun formatNumRev(number: Long): String {
+        return if (number > 1000000000) {
+            "${number / 1000000000}B"
         } else if (number > 1000000) {
-            return "${number / 1000000}M"
+            "${number / 1000000}M"
         } else if (number > 1000) {
-            return "${number / 1000}K"
+            "${number / 1000}K"
         } else {
-            return number.toString()
+            number.toString()
         }
     }
 
@@ -100,7 +100,7 @@ class ReviewFragment : Fragment() {
         val menuDao = (activity?.application as QrMenuApplication).database.menuDao()
         val categoryDao = (activity?.application as QrMenuApplication).database.categoryDao()
 
-        reviewDao.countCustRev().observe(this.viewLifecycleOwner) { it ->
+        reviewDao.countRevBill().observe(this.viewLifecycleOwner) { it ->
             if (it != null) {
                 val formatted = formatNumRev(it)
                 "$formatted reviews".also { btnReviewStore.text = it }
@@ -119,8 +119,8 @@ class ReviewFragment : Fragment() {
         }
 
         icSearch.setOnClickListener {
-            getReviewLive(menuDao, categoryDao) { it ->
-                val filtered = it.dishesDb.filter { it.name.contains(textSearch.text.toString()) }
+            getReviewLive(menuDao, categoryDao) { it1 ->
+                val filtered = it1.dishesDb.filter { it.name.contains(textSearch.text.toString()) }
                 if (filtered.isNotEmpty()) {
                     reviewAdapter.submitList(filtered)
                 }
@@ -128,11 +128,17 @@ class ReviewFragment : Fragment() {
         }
 
         val navGlobal =
-            NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel, searchView) {
+            NavGlobal(
+                navBar,
+                findNavController(),
+                slidePaneLayout,
+                saveStateViewModel,
+                searchView
+            ) { it ->
                 if (it == R.id.optionOne) {
                     isSearch = !isSearch
                     if (isSearch) {
-                        getReviewLive(menuDao, categoryDao) { it ->
+                        getReviewLive(menuDao, categoryDao) {
                             val reviewList = it.dishesDb
                             if (reviewList.isNotEmpty()) {
                                 reviewAdapter.submitList(reviewList)
@@ -156,24 +162,37 @@ class ReviewFragment : Fragment() {
 
     }
 
-    private fun getReviewLive(menuDao: MenuDao, categoryDao: CategoryDao, handler: (CategoryWidthDishes) -> Unit) {
+    private fun getReviewLive(
+        menuDao: MenuDao,
+        categoryDao: CategoryDao,
+        handler: (CategoryWidthDishes) -> Unit
+    ) {
         menuDao.getMenuUsedLiveData().observe(this.viewLifecycleOwner) { menuDb ->
             if (menuDb != null) {
-                menuDao.getMenuWithCategoriesLiveData(menuId = menuDb.menuId)
-                    .observe(this.viewLifecycleOwner) { menuWithCategories ->
-                        if (menuWithCategories != null) {
-                            val categories = menuWithCategories.categoriesDb
-                            if (categories.isNotEmpty()) {
-                                val categoryDb =
-                                    categories[saveStateViewModel.stateCategoryPosition]
-                                categoryDao.getCategoryWithDishesLiveData(categoryDb.categoryId)
-                                    .observe(this.viewLifecycleOwner) {
-                                        handler(it)
-                                    }
+                if (saveStateViewModel.stateCategoryPosition == 0L) {
+                    menuDao.getMenuWithCategoriesLiveData(menuId = menuDb.menuId)
+                        .observe(this.viewLifecycleOwner) { menuWithCategories ->
+                            if (menuWithCategories != null) {
+                                val categories = menuWithCategories.categoriesDb
+                                if (categories.isNotEmpty()) {
+                                    saveStateViewModel.stateCategoryPosition =
+                                        categories[0].categoryId
+                                    categoryDao.getCategoryWithDishesLiveData(saveStateViewModel.stateCategoryPosition)
+                                        .observe(this.viewLifecycleOwner) {
+                                            handler(it)
+                                        }
+                                }
                             }
                         }
-
+                } else {
+                    val categoryDbLiveData =
+                        categoryDao.getCategoryWithDishesLiveData(saveStateViewModel.stateCategoryPosition)
+                    categoryDbLiveData.observe(this.viewLifecycleOwner) {
+                        if (it != null) {
+                            handler(it)
+                        }
                     }
+                }
             }
         }
     }

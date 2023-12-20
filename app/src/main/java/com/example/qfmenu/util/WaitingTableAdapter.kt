@@ -77,7 +77,7 @@ class WaitingTableAdapter(
                     )
                 }
 
-                saveStateViewModel.stateDishesByCategories = mutableListOf()
+                saveStateViewModel.stateDishesByCategories.clear()
                 saveStateViewModel.stateCategoryPosition = 0
 
 //                saveStateViewModel.stateCustomerWithSelectDishes.add(

@@ -1,6 +1,7 @@
 package com.example.qfmenu.ui.member
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,6 +18,9 @@ import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.entity.AccountDb
 import com.example.qfmenu.databinding.FragmentMemberBinding
+import com.example.qfmenu.network.NetworkRetrofit
+import com.example.qfmenu.repository.CustomerRepository
+import com.example.qfmenu.repository.StaffRepository
 import com.example.qfmenu.util.MemberAdapter
 import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.viewmodels.SaveStateViewModel
@@ -65,6 +69,13 @@ class MemberFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val sharePref = requireActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val token =
+            sharePref.getString("token", "1|1TudhRqXy7ebTzelqlme0rD6uRAxlZVHDdROWKmW9f480231")!!
+        val networkRetrofit = NetworkRetrofit(token)
+        val accountDao = (activity?.application as QrMenuApplication).database.accountDao()
+        val accountRepository = StaffRepository(networkRetrofit, accountDao)
+
         val recyclerView = binding.recyclerViewMemberManager
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val width: Float = resources.displayMetrics.widthPixels / resources.displayMetrics.density
@@ -76,7 +87,6 @@ class MemberFragment : Fragment() {
         val layoutInputPass = layoutInputMemberManager.getChildAt(1) as ViewGroup
         val editInputName = layoutInputName.getChildAt(2) as TextInputEditText
         val editInputPass = layoutInputPass.getChildAt(2) as TextInputEditText
-        val accountDao = (activity?.application as QrMenuApplication).database.accountDao()
         val memberAdapter =
             MemberAdapter(
                 requireContext(),
@@ -98,7 +108,12 @@ class MemberFragment : Fragment() {
                             address = "default",
                             avatar = "default",
                         )
-                        accountDao.insert(accountDb)
+                        try {
+                            accountDao.insert(accountDb)
+                            accountRepository.createStaff(accountDb)
+                        } catch (e: Exception) {
+                            accountDao.insert(accountDb)
+                        }
                     }
                 } else {
                     AlertDialog.Builder(context)

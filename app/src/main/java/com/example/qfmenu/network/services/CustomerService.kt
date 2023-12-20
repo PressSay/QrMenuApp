@@ -31,7 +31,8 @@ interface CustomerService {
         @Field("promotion") promotion: Byte,
         @Field("statusOrder") statusOrder: String,
         @Field("payments") payments: String,
-        @Field("tableId") tableId: String
+        @Field("tableId") tableId: String,
+        @Field("created") created: String,
     ): Response<String>
 
     @FormUrlEncoded

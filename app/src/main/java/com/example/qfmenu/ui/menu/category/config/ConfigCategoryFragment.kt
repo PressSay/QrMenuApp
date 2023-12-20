@@ -135,10 +135,12 @@ class ConfigCategoryFragment : Fragment() {
                         menuId = menuDb.menuId
                     )
                     CoroutineScope(Dispatchers.IO).launch {
-                        menuRepository.createCategory(categoryDb)
-                        categoryViewModel.insertCategory(
-                            categoryDb
-                        )
+                        try {
+                            menuRepository.createCategory(categoryDb)
+                            categoryViewModel.insertCategory(categoryDb)
+                        } catch (e: Exception) {
+                            categoryViewModel.insertCategory(categoryDb)
+                        }
                     }
                 }
             }
@@ -180,8 +182,12 @@ class ConfigCategoryFragment : Fragment() {
                     menuDb.isUsed
                 )
                 CoroutineScope(Dispatchers.IO).launch {
-                    menuRepository.updateMenuNet(menuDb)
-                    menuDao.update(menuDb)
+                    try {
+                        menuRepository.updateMenuNet(menuDb)
+                        menuDao.update(menuDb)
+                    } catch (e: Exception) {
+                        menuDao.update(menuDb)
+                    }
                 }
             }
 

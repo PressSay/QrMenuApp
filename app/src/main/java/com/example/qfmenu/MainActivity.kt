@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.statusBarColor = ContextCompat.getColor(this.baseContext, R.color.green_surface_variant)
-        val colorDrawable = ColorDrawable(Color.parseColor("#0F9D58"))
+        val colorDrawable = ColorDrawable(Color.parseColor("#FDFDF5"))
         actionBar?.setBackgroundDrawable(colorDrawable)
         val saveStateViewModel: SaveStateViewModel by viewModels()
 

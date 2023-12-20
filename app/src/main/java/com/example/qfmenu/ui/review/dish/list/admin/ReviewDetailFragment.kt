@@ -1,5 +1,6 @@
 package com.example.qfmenu.ui.review.dish.list.admin
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,8 +18,10 @@ import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.entity.DishDb
 import com.example.qfmenu.databinding.FragmentReviewDetailBinding
+import com.example.qfmenu.network.NetworkRetrofit
+import com.example.qfmenu.repository.ReviewRepository
 import com.example.qfmenu.util.NavGlobal
-import com.example.qfmenu.util.StoDisReviewAdapter
+import com.example.qfmenu.util.RevDishAdapter
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -84,6 +87,12 @@ class ReviewDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val reviewDao = (activity?.application as QrMenuApplication).database.reviewDao()
+        val sharePref = requireActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val token = sharePref.getString("token", "") ?: ""
+        val networkRetrofit = NetworkRetrofit(token)
+        val reviewRepository = ReviewRepository(networkRetrofit,  reviewDao)
+
         val recyclerViewReviewListDetail = binding.recyclerViewReviewListDetail
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val width: Float = resources.displayMetrics.widthPixels / resources.displayMetrics.density
@@ -95,22 +104,21 @@ class ReviewDetailFragment : Fragment() {
         setProDishDbReview(layoutDishDbReview, saveStateViewModel.stateDishDb)
         val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
         val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel, searchView) {
-            if (it == R.id.optionOne) {
-            }
-            if (it == R.id.optionTwo) {
-                findNavController().navigate(R.id.action_reviewDetailFragment_to_reviewDishFragment)
-            }
+//            if (it == R.id.optionOne) {
+//            }
+//            if (it == R.id.optionTwo) {
+//                findNavController().navigate(R.id.action_reviewDetailFragment_to_reviewDishFragment)
+//            }
         }
         navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, R.drawable.ic_thumb_down, R.drawable.ic_plus)
-        navGlobal.setVisibleNav(true, width < SCREEN_LARGE, true, optTwo = true)
+        navGlobal.setVisibleNav(true, width < SCREEN_LARGE, false, optTwo = false)
         navGlobal.impNav()
 
-        val reviewDao = (activity?.application as QrMenuApplication).database.reviewDao()
-
-        val stoDisReviewAdapter = StoDisReviewAdapter(
+        val stoDisReviewAdapter = RevDishAdapter(
             false,
             reviewDao,
             saveStateViewModel,
+            reviewRepository,
             requireContext()
         )
 

@@ -74,26 +74,33 @@ class DishMenuAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         var item = currentList[position]
 
-        if (saveStateViewModel.stateCategoryPosition < saveStateViewModel.stateDishesByCategories.size) {
-            Log.d("Adapter", "${saveStateViewModel.stateCategoryPosition} ${saveStateViewModel.stateDishesByCategories.size}")
-            _listSelected = mutableListOf()
-            saveStateViewModel.stateDishesByCategories[saveStateViewModel.stateCategoryPosition].forEach {
-                if (it.dishDb.dishId == item.dishDb.dishId) {
-                    _listSelected.add(item)
-                    currentList[position].selected = true
-                    currentList[position].amount = it.amount
-                    item = currentList[position]
-                }
+//        if (saveStateViewModel.stateCategoryPosition < saveStateViewModel.stateDishesByCategories.size) {
+        val positionId = saveStateViewModel.stateCategoryPosition
+
+//        Log.d(
+//            "Adapter",
+//            "$positionId ${saveStateViewModel.stateDishesByCategories[positionId]}"
+//        )
+        saveStateViewModel.stateDishesByCategories[positionId]?.forEach {
+            if (it.dishDb.dishId == item.dishDb.dishId) {
+                _listSelected.add(item)
+                currentList[position].selected = true
+                currentList[position].amount = it.amount
+                item = currentList[position]
             }
         }
 
-        holder.btnMinus.isEnabled = item.selected
-        var colorIconMinus = if (item.selected) R.color.green_error else R.color.green_surface_variant
 
-        holder.iconMinus.setColorFilter(ContextCompat.getColor(
-            context,
-            colorIconMinus
-        ))
+        holder.btnMinus.isEnabled = item.selected
+        var colorIconMinus =
+            if (item.selected) R.color.green_error else R.color.green_surface_variant
+
+        holder.iconMinus.setColorFilter(
+            ContextCompat.getColor(
+                context,
+                colorIconMinus
+            )
+        )
         // Image get api here!
         try {
             holder.img.background = null
@@ -104,7 +111,8 @@ class DishMenuAdapter(
             Log.d("NoInternet", true.toString())
         }
 
-        val formattedAmount = NumberFormat.getCurrencyInstance(Locale("vi", "VN")).format(item.dishDb.cost)
+        val formattedAmount =
+            NumberFormat.getCurrencyInstance(Locale("vi", "VN")).format(item.dishDb.cost)
         holder.title.text = item.dishDb.name
         holder.cost.text = formattedAmount
         holder.amount.text = item.amount.toString()
@@ -123,7 +131,7 @@ class DishMenuAdapter(
             holder.btnMinus.isEnabled = currentList[position].selected
 
             val colorBtnBuy = if (btnBuy.isEnabled) R.color.green_primary
-                else R.color.green_secondary
+            else R.color.green_secondary
 
             btnBuy.setTextColor(
                 ContextCompat.getColor(
@@ -132,16 +140,19 @@ class DishMenuAdapter(
                 )
             )
 
-            colorIconMinus = if (currentList[position].selected) R.color.green_error else R.color.green_surface_variant
-            holder.iconMinus.setColorFilter(ContextCompat.getColor(
-                context,
-                colorIconMinus
-            ))
+            colorIconMinus =
+                if (currentList[position].selected) R.color.green_error else R.color.green_surface_variant
+            holder.iconMinus.setColorFilter(
+                ContextCompat.getColor(
+                    context,
+                    colorIconMinus
+                )
+            )
         }
 
         var isBtnEnable = false
         for (it in saveStateViewModel.stateDishesByCategories) {
-            if (it.size != 0) {
+            if (it.value.size != 0) {
                 isBtnEnable = true
                 break
             }
@@ -150,7 +161,7 @@ class DishMenuAdapter(
         btnBuy.isEnabled = isBtnEnable
 
         var colorBtnBuy = if (btnBuy.isEnabled) R.color.green_primary
-            else R.color.green_secondary
+        else R.color.green_secondary
 
         btnBuy.setTextColor(
             ContextCompat.getColor(
@@ -166,7 +177,7 @@ class DishMenuAdapter(
                     currentList[position].selected = false
                     currentList[position].amount = 0
 
-                    for (i in 0..<_listSelected.size){
+                    for (i in 0..<_listSelected.size) {
                         if (_listSelected[i].dishDb.dishId == currentList[position].dishDb.dishId) {
                             _listSelected.removeAt(i)
                             break
@@ -178,10 +189,9 @@ class DishMenuAdapter(
 
             if (_listSelected.isEmpty()) {
                 isBtnEnable = false
-                val sizeCategoriesDishes = saveStateViewModel.stateDishesByCategories.size
-                for (i in 0..<sizeCategoriesDishes) {
-                    val dishAmountDbList = saveStateViewModel.stateDishesByCategories[i]
-                    if (dishAmountDbList.size != 0 && i != saveStateViewModel.stateCategoryPosition) {
+                for (it1 in saveStateViewModel.stateDishesByCategories) {
+                    val dishAmountDbList = it1.value
+                    if (dishAmountDbList.size != 0 && it1.key != saveStateViewModel.stateCategoryPosition) {
                         isBtnEnable = true
                         break
                     }
@@ -192,14 +202,17 @@ class DishMenuAdapter(
             btnBuy.isEnabled = _listSelected.isNotEmpty() || isBtnEnable
 
             holder.btnMinus.isEnabled = currentList[position].selected
-            colorIconMinus = if (holder.btnMinus.isEnabled) R.color.green_error else R.color.green_surface_variant
-            holder.iconMinus.setColorFilter(ContextCompat.getColor(
-                context,
-                colorIconMinus
-            ))
+            colorIconMinus =
+                if (holder.btnMinus.isEnabled) R.color.green_error else R.color.green_surface_variant
+            holder.iconMinus.setColorFilter(
+                ContextCompat.getColor(
+                    context,
+                    colorIconMinus
+                )
+            )
 
             colorBtnBuy = if (btnBuy.isEnabled) R.color.green_primary
-                else R.color.green_secondary
+            else R.color.green_secondary
 
             btnBuy.setTextColor(
                 ContextCompat.getColor(
@@ -241,7 +254,12 @@ class RoundedTransformation(
             radius, radius // Bottom left radius in px
         )
         val path = Path()
-        val rect = RectF(margin.toFloat(), margin.toFloat(), (source.width - margin).toFloat(), (source.height - margin).toFloat())
+        val rect = RectF(
+            margin.toFloat(),
+            margin.toFloat(),
+            (source.width - margin).toFloat(),
+            (source.height - margin).toFloat()
+        )
         path.addRoundRect(rect, corners, Path.Direction.CW)
         canvas.drawPath(path, paint)
 

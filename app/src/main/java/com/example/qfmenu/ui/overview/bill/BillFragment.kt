@@ -1,5 +1,6 @@
 package com.example.qfmenu.ui.overview.bill
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,8 @@ import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.entity.CustomerDb
 import com.example.qfmenu.databinding.FragmentBillBinding
+import com.example.qfmenu.network.NetworkRetrofit
+import com.example.qfmenu.repository.CustomerRepository
 import com.example.qfmenu.util.BillAdapter
 import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.viewmodels.CustomerViewModel
@@ -44,15 +47,6 @@ class BillFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val saveStateViewModel: SaveStateViewModel by activityViewModels()
-    private val customerViewModel: CustomerViewModel by viewModels {
-        CustomerViewModelFactory(
-            (activity?.application as QrMenuApplication).database.customerDao(),
-            (activity?.application as QrMenuApplication).database.customerDishCrossRefDao(),
-            (activity?.application as QrMenuApplication).database.reviewDao(),
-            (activity?.application as QrMenuApplication).database.orderDao(),
-            saveStateViewModel.stateDishes
-        )
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,25 +65,46 @@ class BillFragment : Fragment() {
         return binding.root
     }
 
-    fun getBillLive(handler: (List<CustomerDb>) -> Unit) {
-        customerViewModel.getCustomersByCalendar(saveStateViewModel.stateCalendar).observe(this.viewLifecycleOwner) {
+    private fun getBillLive(customerViewModel: CustomerViewModel,handler: (List<CustomerDb>) -> Unit) {
+        val stateCalendar = saveStateViewModel.stateCalendar
+        customerViewModel.getCustomersByCalendar(stateCalendar).observe(this.viewLifecycleOwner) {
             handler(it)
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val customerDao = (activity?.application as QrMenuApplication).database.customerDao()
+        val customerDishCrossRefsDao = (activity?.application as QrMenuApplication).database.customerDishCrossRefDao()
+        val reviewDao = (activity?.application as QrMenuApplication).database.reviewDao()
+        val orderDao = (activity?.application as QrMenuApplication).database.orderDao()
+
+        val customerViewModel: CustomerViewModel by viewModels {
+            CustomerViewModelFactory(
+                customerDao,
+                customerDishCrossRefsDao,
+                reviewDao,
+                orderDao,
+                saveStateViewModel.stateDishes
+            )
+        }
+        val sharePref = requireActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val token =
+            sharePref.getString("token", "1|1TudhRqXy7ebTzelqlme0rD6uRAxlZVHDdROWKmW9f480231")!!
+        val networkRetrofit = NetworkRetrofit(token)
+        val customerRepository = CustomerRepository(networkRetrofit, customerDao, customerDishCrossRefsDao, orderDao)
+
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val width: Float = resources.displayMetrics.widthPixels / resources.displayMetrics.density
         val recyclerView = binding.recyclerViewBillList
         val spanCount = if (width < SCREEN_LARGE) 1 else 2
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
-        val billAdapter = BillAdapter(requireContext(), saveStateViewModel, customerViewModel)
+        val billAdapter = BillAdapter(requireContext(), saveStateViewModel, customerViewModel, customerRepository)
 
 
         recyclerView.layoutManager = GridLayoutManager(requireContext(), spanCount)
-        getBillLive {
+        getBillLive(customerViewModel) {
             billAdapter.submitList(it)
         }
 
@@ -100,8 +115,8 @@ class BillFragment : Fragment() {
         val textSearch = requireActivity().findViewById<TextView>(R.id.textSearch)
 
         icSearch.setOnClickListener {
-            getBillLive {
-                val filltered = it.filter { it.customerId.toString().contains(textSearch.text) }
+            getBillLive(customerViewModel) {
+                val filltered = it.filter { it1 -> it1.customerId.toString().contains(textSearch.text) }
                 billAdapter.submitList(filltered)
             }
         }
@@ -111,8 +126,8 @@ class BillFragment : Fragment() {
             if (it == R.id.optionTwo) {
                 isSearch = !isSearch
                 if (isSearch) {
-                    getBillLive {
-                        billAdapter.submitList(it)
+                    getBillLive(customerViewModel) { it1 ->
+                        billAdapter.submitList(it1)
                     }
                 }
                 searchView.visibility = if (isSearch) View.VISIBLE else View.GONE

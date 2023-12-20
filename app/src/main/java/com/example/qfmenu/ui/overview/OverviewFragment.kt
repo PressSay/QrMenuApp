@@ -1,6 +1,7 @@
 package com.example.qfmenu.ui.overview
 
 import android.app.AlertDialog
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,10 @@ import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.databinding.FragmentOverviewBinding
 import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.viewmodels.SaveStateViewModel
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.Calendar
 import java.util.regex.Pattern
@@ -58,6 +63,15 @@ class OverviewFragment : Fragment() {
         return binding.root
     }
 
+    val barArrayList = arrayListOf(
+        BarEntry(1f, 100f),
+        BarEntry(2f, 200f),
+        BarEntry(3f, 300f),
+        BarEntry(4f, 400f),
+        BarEntry(5f, 500f),
+        BarEntry(6f, 600f),
+        BarEntry(7f, 700f),
+    )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -87,6 +101,15 @@ class OverviewFragment : Fragment() {
         navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, 0, 0)
         navGlobal.impNav()
 
+        val barChart = binding.barChart
+        val barDataset = BarDataSet(barArrayList, "Overview")
+        val barData = BarData(barDataset)
+        barChart.data = barData
+        barDataset.colors = ColorTemplate.COLORFUL_COLORS.toList()
+        barDataset.valueTextColor = Color.BLACK
+        barDataset.valueTextSize = 16f
+        barChart.description.isEnabled = true
+
         sevenDayAgo.add(Calendar.DAY_OF_YEAR, -7)
         threeDayAgo.add(Calendar.DAY_OF_YEAR, -3)
         oneDayAgo.add(Calendar.DAY_OF_YEAR, -1)
@@ -110,7 +133,7 @@ class OverviewFragment : Fragment() {
                         android.R.string.ok
                     ) { _, _ -> }.show()
             } else {
-                saveStateViewModel.stateCalendar = editTextChooseDate.text.toString()
+                saveStateViewModel.stateCalendar = "%${editTextChooseDate.text.toString()}%"
                 AlertDialog.Builder(context)
                     .setTitle("Add Bill")
                     .setMessage("Your selection has been saved " + saveStateViewModel.stateCalendar)

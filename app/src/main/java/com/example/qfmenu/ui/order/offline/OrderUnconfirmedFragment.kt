@@ -1,5 +1,6 @@
 package com.example.qfmenu.ui.order.offline
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,8 @@ import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.entity.CustomerDb
 import com.example.qfmenu.databinding.FragmentOrderUnconfirmedBinding
+import com.example.qfmenu.network.NetworkRetrofit
+import com.example.qfmenu.repository.CustomerRepository
 import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.util.OrderUnconfirmedAdapter
 import com.example.qfmenu.viewmodels.CustomerViewModel
@@ -44,15 +47,8 @@ class OrderUnconfirmedFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val saveStateViewModel: SaveStateViewModel by activityViewModels()
-    private val customerViewModel: CustomerViewModel by viewModels {
-        CustomerViewModelFactory(
-            (activity?.application as QrMenuApplication).database.customerDao(),
-            (activity?.application as QrMenuApplication).database.customerDishCrossRefDao(),
-            (activity?.application as QrMenuApplication).database.reviewDao(),
-            (activity?.application as QrMenuApplication).database.orderDao(),
-            saveStateViewModel.stateDishes
-        )
-    }
+
+    private var detailTableStatus: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +70,27 @@ class OrderUnconfirmedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val customerDao = (activity?.application as QrMenuApplication).database.customerDao()
+        val customerDishCrossRefsDao = (activity?.application as QrMenuApplication).database.customerDishCrossRefDao()
+        val reviewDao = (activity?.application as QrMenuApplication).database.reviewDao()
+        val orderDao = (activity?.application as QrMenuApplication).database.orderDao()
+        val customerViewModel: CustomerViewModel by viewModels {
+            CustomerViewModelFactory(
+                customerDao,
+                customerDishCrossRefsDao,
+                reviewDao,
+                orderDao,
+                saveStateViewModel.stateDishes
+            )
+        }
+        detailTableStatus = saveStateViewModel.stateIsTableDetail
+
+        val sharePref = requireActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val token =
+            sharePref.getString("token", "1|1TudhRqXy7ebTzelqlme0rD6uRAxlZVHDdROWKmW9f480231")!!
+        val networkRetrofit = NetworkRetrofit(token)
+        val customerRepository = CustomerRepository(networkRetrofit, customerDao, customerDishCrossRefsDao, orderDao)
+
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
@@ -85,7 +102,8 @@ class OrderUnconfirmedFragment : Fragment() {
             requireContext(),
             saveStateViewModel,
             customerViewModel,
-            (activity?.application as QrMenuApplication).database.customerDishCrossRefDao()
+            customerDishCrossRefsDao,
+            customerRepository
         )
         var isSearch = false
         val icSearch = requireActivity().findViewById<AppCompatImageButton>(R.id.icSearch)
@@ -146,8 +164,16 @@ class OrderUnconfirmedFragment : Fragment() {
     }
 
     private fun getOrderLive(customerViewModel: CustomerViewModel, handler: (List<CustomerDb>) -> Unit) {
-        customerViewModel.customerList.observe(this.viewLifecycleOwner) {
-            handler(it)
+        if (detailTableStatus) {
+              saveStateViewModel.stateIsTableDetail = false
+            val tableId = saveStateViewModel.stateTableDb?.tableId ?: -1
+            customerViewModel.getCustomerListByTableId(tableId).observe(this.viewLifecycleOwner) {
+                handler(it)
+            }
+        } else {
+            customerViewModel.customerList.observe(this.viewLifecycleOwner) {
+                handler(it)
+            }
         }
     }
 

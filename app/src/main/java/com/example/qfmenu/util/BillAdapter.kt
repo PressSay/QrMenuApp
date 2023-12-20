@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qfmenu.R
 import com.example.qfmenu.database.entity.CustomerDb
+import com.example.qfmenu.repository.CustomerRepository
 import com.example.qfmenu.viewmodels.CustomerOrderQueue
 import com.example.qfmenu.viewmodels.CustomerViewModel
 import com.example.qfmenu.viewmodels.DishAmountDb
@@ -28,6 +29,7 @@ class BillAdapter(
     private val context: Context,
     private val saveStateViewModel: SaveStateViewModel,
     private val customerViewModel: CustomerViewModel,
+    private val customerRepository: CustomerRepository
 ) : ListAdapter<CustomerDb, BillAdapter.ItemViewHolder>(DiffCallback) {
 
     companion object {
@@ -86,7 +88,7 @@ class BillAdapter(
         }
         holder.titleView.text = item.customerId.toString()
         holder.btnTrash.setOnClickListener {
-            customerViewModel.deleteCustomer(item)
+            customerViewModel.deleteCustomer(item, customerRepository)
 //            dataset.removeAt(holder.adapterPosition)
 //            notifyItemRemoved(position)
         }

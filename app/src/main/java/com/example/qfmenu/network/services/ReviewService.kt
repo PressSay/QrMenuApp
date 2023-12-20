@@ -1,8 +1,7 @@
 package com.example.qfmenu.network.services
 
-import com.example.qfmenu.network.entity.RevCusInter
-import com.example.qfmenu.network.entity.RevDishInter
-import com.example.qfmenu.network.entity.Review
+import com.example.qfmenu.network.entity.RevBill
+import com.example.qfmenu.network.entity.RevDish
 import retrofit2.Response
 import retrofit2.http.DELETE
 import retrofit2.http.Field
@@ -15,50 +14,42 @@ import retrofit2.http.Path
 
 interface ReviewService {
 
-    @GET("/api/global/reviews")
-    suspend fun findAll(): Response<ArrayList<Review>>
+    @GET("/api/global/reviews/dish")
+    suspend fun findAllDish(): Response<ArrayList<RevDish>>
 
-    @GET("/api/global/reviews?dish=1")
-    suspend fun findAllDish(): Response<ArrayList<RevDishInter>>
+    @GET("/api/global/reviews/bill")
+    suspend fun findAllBill(): Response<ArrayList<RevBill>>
 
-    @GET("/api/global/reviews?customer=1")
-    suspend fun findAllCustomer(): Response<ArrayList<RevCusInter>>
+    @GET("/api/global/reviews/dish/{dishId}/{customerId}")
+    suspend fun findOneDish(@Path("dishId") dishId: String, @Path("customerId") customerId: String): Response<RevDish>
 
-    @GET("/api/global/reviews/{id}")
-    suspend fun findOne(@Path("id") id: String): Response<Review>
-
-    @GET("/api/global/reviews/{id}?dish=1")
-    suspend fun findOneDish(@Path("id") id: String): Response<RevDishInter>
-
-    @GET("/api/global/reviews/{id}?customer=1")
-    suspend fun findOneCustomer(@Path("id") id: String): Response<RevCusInter>
+    @GET("/api/global/reviews/bill/{customerId}")
+    suspend fun findOneBill(@Path("customerId") id: String): Response<RevBill>
 
     @FormUrlEncoded
-    @POST("/api/global/reviews")
-    suspend fun create(
-        @Field("forDish") forDish: String,
-        @Field("dishId") dishId: String,
-        @Field("customerId") customerId: String,
-        @Field("isGood") isGood: String,
-        @Field("description") description: String
-    ): Response<String>
+    @POST("/api/global/reviews/bill")
+    suspend fun createRevBill(@Field("customerId") customerId: String, @Field("star") star: String, @Field("description") description: String): Response<String>
+
+    @FormUrlEncoded
+    @POST("/api/global/reviews/dish")
+    suspend fun createRevDish(@Field("dishId") dishId: String, @Field("customerId") customerId: String, @Field("star") star: String, @Field("description") description: String): Response<String>
+
     @Headers("Accept: application/json")
     @FormUrlEncoded
-    @PUT("/api/global/reviews/{id}")
-    suspend fun update(
-        @Path("id") id: String,
-        @Field("description") description: String,
-        @Field("isGood") isGood: String
-    ): Response<Review>
-    @Headers("Accept: application/json")
-    @DELETE("/api/global/reviews/{id}")
-    suspend fun delete(@Path("id") id: String): Response<String>
+    @PUT("/api/global/reviews/bill/{customerId")
+    suspend fun updateRevBill(@Path("customerId") customerId: String, @Field("star") star: String, @Field("description") description: String): Response<String>
+
     @Headers("Accept: application/json")
     @FormUrlEncoded
-    @DELETE("/api/global/reviews")
-    suspend fun deleteAll(
-        @Field("dishId") dishId: String,
-        @Field("customerId") customerId: String,
-        @Field("forDish") forDish: String
-    ): Response<String>
+    @PUT("/api/global/reviews/dish/{dishId}/{customerId}")
+    suspend fun updateRevDish(@Path("dishId") dishId: String, @Path("customerId") customerId: String, @Field("star") star: String, @Field("description") description: String): Response<String>
+
+    @Headers("Accept: application/json")
+    @DELETE("/api/global/reviews/bill/{customerId}")
+    suspend fun deleteRevBill(@Path("customerId") customerId: String): Response<String>
+
+    @Headers("Accept: application/json")
+    @DELETE("/api/global/reviews/dish/{dishId}/{customerId}")
+    suspend fun deleteRevDish(@Path("dishId") dishId: String, @Path("customerId") customerId: String): Response<String>
+
 }

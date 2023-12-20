@@ -1,10 +1,7 @@
 package com.example.qfmenu.database.entity
 
-import androidx.room.Embedded
 import androidx.room.Entity
-import androidx.room.Junction
 import androidx.room.PrimaryKey
-import androidx.room.Relation
 
 @Entity
 data class DishDb(
@@ -16,23 +13,4 @@ data class DishDb(
     val cost: Int,
     val numberOfTimesCalled: Int = 0,
     val image: String = "Empty"
-)
-
-data class DishWithCustomers(
-    @Embedded val dishDb: DishDb,
-    @Relation(
-        parentColumn = "dishId",
-        entityColumn = "customerId",
-        associateBy = Junction(CustomerDishDb::class)
-    )
-    val customersDb: List<CustomerDb>
-)
-
-data class DishWithReviews(
-    @Embedded val dishDb: DishDb,
-    @Relation(
-        parentColumn = "dishId",
-        entityColumn = "dishCreatorId",
-    )
-    val reviewsDb: List<ReviewDb>
 )

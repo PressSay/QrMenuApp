@@ -44,7 +44,7 @@ class ConfirmDishFragment : Fragment() {
 
     private val saveStateViewModel: SaveStateViewModel by activityViewModels()
 
-    private val TAX = 5;
+    private val TAX = 5
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,9 +77,9 @@ class ConfirmDishFragment : Fragment() {
         val recyclerView = binding.recyclerViewEditConfirmDish
 
         dishConfirmTax.text = requireContext().getString(R.string.tax, "$TAX%")
-        var total = 0;
+        var total = 0
         saveStateViewModel.stateDishes.forEach {
-            total += (it.amount.toInt() * it.dishDb.cost)
+            total += (it.amount* it.dishDb.cost)
         }
         val totalCurrency = NumberFormat.getCurrencyInstance(Locale("vi", "VN")).format(total)
         dishConfirmTotal.text = requireContext().getString(R.string.total, totalCurrency)
@@ -135,10 +135,10 @@ class ConfirmDishFragment : Fragment() {
 
                     confirmDishAdapter.getDataset().forEach { dishAmountDb ->
                         val customerDishDb = CustomerDishDb(
-                            customerDb.customerId,
-                            dishAmountDb.dishDb.dishId,
-                            dishAmountDb.amount.toInt(),
-                            0
+                            customerId = customerDb.customerId,
+                            dishId = dishAmountDb.dishDb.dishId,
+                            amount = dishAmountDb.amount,
+                            promotion = 0
                         )
                         customerDishDbs.add(customerDishDb)
                     }
@@ -157,7 +157,7 @@ class ConfirmDishFragment : Fragment() {
                     saveStateViewModel.stateIsOffOnOrder = true
                     saveStateViewModel.setStateDishesDb(confirmDishAdapter.getDataset())
                     confirmDishAdapter.setDataset(saveStateViewModel.stateDishes.toMutableList())
-                    saveStateViewModel.stateDishesByCategories = mutableListOf()
+                    saveStateViewModel.stateDishesByCategories.clear()
                     findNavController().navigate(R.id.action_confirmDishFragment_to_dishMenuFragment)
                 }
             }

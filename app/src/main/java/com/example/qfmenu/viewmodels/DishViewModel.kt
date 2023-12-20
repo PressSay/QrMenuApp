@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.example.qfmenu.database.dao.CategoryDao
 import com.example.qfmenu.database.dao.DishDao
 import com.example.qfmenu.database.entity.DishDb
@@ -32,7 +33,6 @@ class DishViewModel(
 ) : ViewModel() {
 
     private var _selectedDishes: MutableList<DishAmountDb> = mutableListOf()
-    val selectedDishes: MutableList<DishAmountDb> = this._selectedDishes
 
     fun setSelectedDishes(selectedDishes: List<DishAmountDb>) {
         _selectedDishes.addAll(selectedDishes)
@@ -57,7 +57,8 @@ class DishViewModel(
         curUri: Uri?,
         context: Context,
         activityFrag: FragmentActivity,
-        networkRetrofit: NetworkRetrofit
+        networkRetrofit: NetworkRetrofit,
+        findNavController: NavController
     ) {
         viewModelScope.launch {
             if (curUri != null) {
@@ -77,11 +78,15 @@ class DishViewModel(
                         file.name,
                         file.asRequestBody("image/*".toMediaTypeOrNull())
                     ).build()
-                val response = networkRetrofit.image().create(requestBody)
-                if (response.isSuccessful)
-                    Log.d("Upload", response.body()?.source ?: "Empty")
-                dishDao.update(dishDb.copy(image = response.body()?.source ?: "Empty"))
-
+                try {
+                    val response = networkRetrofit.image().create(requestBody)
+                    if (response.isSuccessful)
+                        Log.d("Upload", response.body() ?: "Empty")
+                    dishDao.update(dishDb.copy(image = response.body() ?: "Empty"))
+                } catch (e: Exception) {
+                    Log.d("Upload", e.message ?: "Empty")
+                }
+                findNavController.popBackStack()
             }
         }
     }

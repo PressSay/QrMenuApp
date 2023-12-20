@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.qfmenu.R
 import com.example.qfmenu.database.dao.CustomerDishDao
 import com.example.qfmenu.database.entity.CustomerDb
+import com.example.qfmenu.repository.CustomerRepository
 import com.example.qfmenu.viewmodels.CustomerOrderQueue
 import com.example.qfmenu.viewmodels.CustomerViewModel
 import com.example.qfmenu.viewmodels.DishAmountDb
@@ -35,7 +36,8 @@ class OrderUnconfirmedAdapter(
     private val context: Context,
     private val saveStateViewModel: SaveStateViewModel,
     private val customerViewModel: CustomerViewModel,
-    private val customerCrossRefDao: CustomerDishDao
+    private val customerCrossRefDao: CustomerDishDao,
+    private val customerRepository: CustomerRepository
 ) : ListAdapter<CustomerDb, OrderUnconfirmedAdapter.ItemViewHolder>(DiffCallback) { // cần chuyển sang AdapterList
 
 
@@ -76,7 +78,6 @@ class OrderUnconfirmedAdapter(
             }
             saveStateViewModel.stateCustomerOrderQueuesPos[position] = position
 
-
             val customerDbCurrent =
                 async { customerViewModel.getCustomer(currentList[position].customerId) }.await()
             val dishesAmountDb = async {
@@ -87,7 +88,6 @@ class OrderUnconfirmedAdapter(
                     it.amount
                 )
             }
-//                    val tableId = async { customerViewModel.getOrder(currentList[position].customerId) }.await().tableId
 
             saveStateViewModel.stateCustomerOrderQueues.add(
                 CustomerOrderQueue(
@@ -113,9 +113,9 @@ class OrderUnconfirmedAdapter(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 saveStateViewModel.stateCustomerOrderQueues.removeIf { it.customerDb.customerId == customerDbCurrent.customerId }
             } else {
-                for (i in 0..<saveStateViewModel.stateCustomerOrderQueues.size) {
-                    if (saveStateViewModel.stateCustomerOrderQueues[i].customerDb.customerId == customerDbCurrent.customerId) {
-                        saveStateViewModel.stateCustomerOrderQueues.removeAt(i)
+                for (customerOrderQueue in saveStateViewModel.stateCustomerOrderQueues) {
+                    if (customerOrderQueue.customerDb.customerId == customerDbCurrent.customerId) {
+                        saveStateViewModel.stateCustomerOrderQueues.remove(customerOrderQueue)
                         break
                     }
                 }
@@ -214,7 +214,7 @@ class OrderUnconfirmedAdapter(
         }
 
         holder.btnTrash.setOnClickListener {
-            customerViewModel.deleteCustomer(currentList[holder.adapterPosition])
+            customerViewModel.deleteCustomer(currentList[holder.adapterPosition], customerRepository)
             notifyItemRemoved(holder.adapterPosition)
         }
 

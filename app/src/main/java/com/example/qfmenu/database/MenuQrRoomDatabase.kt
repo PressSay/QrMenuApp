@@ -22,8 +22,7 @@ import com.example.qfmenu.database.entity.DishDb
 import com.example.qfmenu.database.entity.InvestmentDb
 import com.example.qfmenu.database.entity.MenuDb
 import com.example.qfmenu.database.entity.OrderDb
-import com.example.qfmenu.database.entity.ReviewCustomerDb
-import com.example.qfmenu.database.entity.ReviewDb
+import com.example.qfmenu.database.entity.ReviewBillDb
 import com.example.qfmenu.database.entity.ReviewDishDb
 import com.example.qfmenu.database.entity.TableDb
 
@@ -34,10 +33,10 @@ import com.example.qfmenu.database.entity.TableDb
         CustomerDb::class,
         CustomerDishDb::class,
         DishDb::class,
-        InvestmentDb::class, MenuDb::class,
+        InvestmentDb::class,
+        MenuDb::class,
         OrderDb::class,
-        ReviewCustomerDb::class,
-        ReviewDb::class,
+        ReviewBillDb::class,
         ReviewDishDb::class,
         TableDb::class
     ],

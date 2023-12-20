@@ -11,6 +11,8 @@
     <string name="status_table_free">Trống</string>
     <string name="shop_name">Tên Shop:</string>
     <string name="address_shop">Địa Chỉ Shop:</string>
+    <string name="exp_edit_member">Kinh Nghiệm:</string>
+    <string name="level_edit_member">Cấp Độ:</string>
     <string name="enable_review">Bật Review:</string>
     <string name="amount_table">Số Lượng Bàn:</string>
     <string name="promotion_vip">Triết Khấu VIP:</string>
@@ -85,4 +87,5 @@
     <string name="exp_profile">Exp: %s</string>
     <string name="have_new_customer">Có đợn mới tại bàn %s</string>
     <string name="notification">Thông báo</string>
+    <string name="see_detail_order">Xem chi tiết đơn</string>
 </resources>

@@ -8,12 +8,10 @@ import com.example.qfmenu.database.dao.CustomerDao
 import com.example.qfmenu.database.dao.CustomerDishDao
 import com.example.qfmenu.database.dao.OrderDao
 import com.example.qfmenu.database.dao.ReviewDao
-import com.example.qfmenu.database.entity.CustomerAndOrderDb
 import com.example.qfmenu.database.entity.CustomerDb
 import com.example.qfmenu.database.entity.CustomerDishDb
 import com.example.qfmenu.database.entity.OrderDb
-import com.example.qfmenu.database.entity.ReviewCustomerDb
-import com.example.qfmenu.database.entity.ReviewDb
+import com.example.qfmenu.network.entity.Customer
 import com.example.qfmenu.repository.CustomerRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -26,19 +24,17 @@ class CustomerViewModel(
     private val orderDao: OrderDao,
     private val selectedDishes: List<DishAmountDb>,
 ) : ViewModel() {
-    val reviews get() = reviewDao.getReviewListLiveData()
-    fun getReview(reviewId: Long): LiveData<ReviewDb> {
-        return reviewDao.getReviewLiveData(reviewId)
-    }
-
     fun getCustomerDishCrossRefDao(): CustomerDishDao {
         return customerDishDao
     }
 
     private var _customerForCreate: CustomerDb? = null
-    val customerForCreate get() = _customerForCreate!!
 
     val customerList get() = customerDao.getCustomersUnConfirmed()
+
+    fun getCustomerListByTableId(tableId: Long): LiveData<List<CustomerDb>> {
+        return customerDao.getCustomersByTableId(tableId)
+    }
 
     suspend fun getOrder(customerId: Long): OrderDb {
         return orderDao.getOrderCustomerOwner(customerId)
@@ -54,44 +50,6 @@ class CustomerViewModel(
 
     fun createCustomer(customerDb: CustomerDb) {
         _customerForCreate = customerDb
-    }
-
-    fun insertReview(reviewDb: ReviewDb) {
-        viewModelScope.launch {
-            reviewDao.insert(reviewDb)
-        }
-    }
-
-//    fun insertReviewDishCrossRef(
-//        customerDishes: List<CustomerDishDb>,
-//        reviewsDb: List<ReviewDb>
-//    ) {
-//        viewModelScope.launch {
-//            customerDishes.forEachIndexed { index, it ->
-//                customerDishDao.update(
-//                    CustomerDishDb(
-//                        it.customerId,
-//                        it.dishId,
-//                        reviewsDb[index].reviewId,
-//                        it.amount,
-//                        it.promotion
-//                    )
-//                )
-//                reviewDao.insert(reviewsDb[index])
-//            }
-//        }
-//    }
-
-    fun insertReviewCustomer(customerDb: CustomerDb, reviewDb: ReviewDb) {
-        viewModelScope.launch {
-            reviewDao.insertReviewCustomerCrossRef(
-                ReviewCustomerDb(
-                    reviewDb.reviewId,
-                    customerDb.customerId
-                )
-            )
-            reviewDao.insert(reviewDb)
-        }
     }
 
     fun insertCustomer(
@@ -118,67 +76,46 @@ class CustomerViewModel(
             selectedDishes.forEach { dishAmountDb ->
                 customerDishDao.insert(
                     CustomerDishDb(
-                        customerIdCreated,
-                        dishAmountDb.dishDb.dishId,
-                        dishAmountDb.amount,
-                        0
+                        customerId = customerIdCreated,
+                        dishId = dishAmountDb.dishDb.dishId,
+                        amount = dishAmountDb.amount,
+                        promotion = 0
                     )
                 )
             }
-            customerRepository.createCustomer(customerDb.copy(customerId = customerIdCreated))
+            try {
+                customerRepository.createCustomer(customerDb.copy(customerId = customerIdCreated))
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
 
     }
 
-    fun updateOrder(customerDb: CustomerDb, orderDb: OrderDb) {
+    fun deleteCustomer(customerDb: CustomerDb, customerRepository: CustomerRepository) {
         viewModelScope.launch {
-            val customerAndOrder =
-                async(Dispatchers.IO) { customerDao.getCustomerAndOrder(customerDb.customerId) }.await()
-            orderDao.update(
-                customerAndOrder.orderDb
-            )
-
-        }
-    }
-
-    fun deleteCustomerDish(customerDishDb: CustomerDishDb) {
-        viewModelScope.launch {
-            customerDishDao.delete(customerDishDb)
-        }
-    }
-
-    fun deleteCustomer(customerDb: CustomerDb) {
-        viewModelScope.launch {
-
-            async(Dispatchers.IO) { customerDao.getCustomerDishCrossRefs(customerDb.customerId) }.await()
-                .forEach { customerDishCrossRef ->
-                    customerDishDao.delete(customerDishCrossRef)
-                }
-
-            val orderDeleteDb =
-                async(Dispatchers.IO) { customerDao.getCustomerAndOrder(customerDb.customerId) }.await().orderDb
-
-            orderDao.delete(orderDeleteDb)
-            customerDao.delete(customerDb)
-
-            val reviewCustomerCrossRef =
-                async(Dispatchers.IO) { reviewDao.getCustomerReview(customerDb.customerId) }.await()
-            reviewDao.updateReviewCustomerCrossRef(
-                ReviewCustomerDb(
-                    reviewCustomerCrossRef?.reviewId ?: -1,
-                    -1
-                )
-            )
-
+//
+//            async(Dispatchers.IO) { customerDao.getCustomerDishCrossRefs(customerDb.customerId) }.await()
+//                .forEach { customerDishCrossRef ->
+//                    customerDishDao.delete(customerDishCrossRef)
+//                }
+//
+//            val orderDeleteDb =
+//                async(Dispatchers.IO) { customerDao.getCustomerAndOrder(customerDb.customerId) }.await().orderDb
+//
+//            orderDao.delete(orderDeleteDb)
+//            customerDao.delete(customerDb)
+            try {
+                customerRepository.deleteCustomerNet(customerDb.customerId)
+                customerRepository.deleteCustomer(customerDb)
+            } catch (e: Exception) {
+                customerRepository.deleteCustomer(customerDb)
+            }
         }
     }
 
     suspend fun getCustomer(customerId: Long): CustomerDb {
         return customerDao.getCustomer(customerId)!!
-    }
-
-    suspend fun getAllCustomerAndOrder(): List<CustomerAndOrderDb> {
-        return customerDao.getAllCustomerAndOrder()
     }
 
 }

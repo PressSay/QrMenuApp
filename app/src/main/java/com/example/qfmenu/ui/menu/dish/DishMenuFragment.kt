@@ -1,7 +1,6 @@
 package com.example.qfmenu.ui.menu.dish
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +19,7 @@ import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
+import com.example.qfmenu.database.dao.CategoryDao
 import com.example.qfmenu.database.dao.MenuDao
 import com.example.qfmenu.database.entity.CustomerDishDb
 import com.example.qfmenu.database.entity.MenuDb
@@ -83,26 +83,40 @@ class DishMenuFragment : Fragment() {
 
     private fun getMenu(
         menuDao: MenuDao,
+        categoryDao: CategoryDao,
         menuDb: LiveData<MenuDb>,
         handlerFun: (List<DishAmountDb>) -> Unit
     ) {
         menuDb.observe(this.viewLifecycleOwner) { menuDb ->
             if (menuDb != null) {
-                menuDao.getMenuWithCategoriesLiveData(menuId = menuDb.menuId)
-                    .observe(this.viewLifecycleOwner) { menuWithCategories ->
-                        if (menuWithCategories != null) {
-                            val categories = menuWithCategories.categoriesDb
-                            if (categories.isNotEmpty()) {
-                                val categoryDb =
-                                    categories[saveStateViewModel.stateCategoryPosition]
-                                binding.itemMenuCategoryBtn.text = categoryDb.name
-                                dishViewModel.getDishesAmountDbLiveData(categoryDb.categoryId)
-                                    .observe(this.viewLifecycleOwner) { dishAmountDbs ->
-                                        handlerFun(dishAmountDbs)
-                                    }
+                if (saveStateViewModel.stateCategoryPosition == 0L) {
+                    menuDao.getMenuWithCategoriesLiveData(menuId = menuDb.menuId)
+                        .observe(this.viewLifecycleOwner) { menuWithCategories ->
+                            if (menuWithCategories != null) {
+                                val categories = menuWithCategories.categoriesDb
+                                if (categories.isNotEmpty()) {
+                                    saveStateViewModel.stateCategoryPosition =
+                                        categories[0].categoryId
+                                    val categoryDb = categories[0]
+                                    binding.itemMenuCategoryBtn.text = categoryDb.name
+                                    dishViewModel.getDishesAmountDbLiveData(categoryDb.categoryId)
+                                        .observe(this.viewLifecycleOwner) { dishAmountDbs ->
+                                            handlerFun(dishAmountDbs)
+                                        }
+                                }
                             }
                         }
+                } else {
+                    val categoryDbLiveData =
+                        categoryDao.getCategoryLiveData(saveStateViewModel.stateCategoryPosition)
+                    categoryDbLiveData.observe(this.viewLifecycleOwner) { categoryDb ->
+                        binding.itemMenuCategoryBtn.text = categoryDb.name
+                        dishViewModel.getDishesAmountDbLiveData(categoryDb.categoryId)
+                            .observe(this.viewLifecycleOwner) { dishAmountDbs ->
+                                handlerFun(dishAmountDbs)
+                            }
                     }
+                }
             }
         }
     }
@@ -118,12 +132,12 @@ class DishMenuFragment : Fragment() {
         val btnBuy = binding.itemMenuOrderBtn
         val titleMenu = binding.titleMenuOrder
         val menuDao = (activity?.application as QrMenuApplication).database.menuDao()
+        val categoryDao = (activity?.application as QrMenuApplication).database.categoryDao()
         val menuUsed = menuDao.getMenuUsedLiveData()
-        val menuUsedLiveData = menuDao.getMenuUsedLiveData()
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val navHostDetail =
             requireActivity().findViewById<FragmentContainerView>(R.id.nav_host_detail)
-        val categoryPos = saveStateViewModel.stateCategoryPosition
+
         val dishMenuAdapter =
             DishMenuAdapter(requireContext(), btnBuy, saveStateViewModel)
         var isSearch = false
@@ -149,17 +163,18 @@ class DishMenuFragment : Fragment() {
         recyclerView.adapter = dishMenuAdapter
         btnBuy.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
-                if (saveStateViewModel.stateDishesByCategories.size == 0) {
-                    saveStateViewModel.stateDishesByCategories.add(
-                        mutableListOf()
-                    )
-                }
+                val categoryPos = saveStateViewModel.stateCategoryPosition
+                saveStateViewModel.stateDishesByCategories.remove(categoryPos)
                 saveStateViewModel.stateDishesByCategories[categoryPos] =
                     dishMenuAdapter.listSelected
 
                 val dishesDb = mutableListOf<DishAmountDb>()
-                saveStateViewModel.stateDishesByCategories.forEach {
-                    dishesDb.addAll(it)
+
+                // add all dish from stateDishesByCategories to dishesDb
+                saveStateViewModel.stateDishesByCategories.values.forEach { listDishAmountDb ->
+                    listDishAmountDb.forEach { dishAmountDb ->
+                        dishesDb.addAll(listOf(dishAmountDb))
+                    }
                 }
 
                 saveStateViewModel.setStateDishesDb(dishesDb)
@@ -179,10 +194,10 @@ class DishMenuFragment : Fragment() {
 
                     saveStateViewModel.stateDishes.forEach { dishAmountDb ->
                         val customerDishDb = CustomerDishDb(
-                            saveStateViewModel.stateCustomerDb.customerId,
-                            dishAmountDb.dishDb.dishId,
-                            dishAmountDb.amount.toInt(),
-                            0
+                            customerId = saveStateViewModel.stateCustomerDb.customerId,
+                            dishId = dishAmountDb.dishDb.dishId,
+                            amount = dishAmountDb.amount.toInt(),
+                            promotion = 0
                         )
                         customerDishCrossRefList.forEach {
                             if (it.dishId == dishAmountDb.dishDb.dishId) {
@@ -193,10 +208,10 @@ class DishMenuFragment : Fragment() {
 
                     dishesDb.forEach { dishAmountDb ->
                         val customerDishDb = CustomerDishDb(
-                            saveStateViewModel.stateCustomerDb.customerId,
-                            dishAmountDb.dishDb.dishId,
-                            dishAmountDb.amount.toInt(),
-                            0
+                            customerId = saveStateViewModel.stateCustomerDb.customerId,
+                            dishId = dishAmountDb.dishDb.dishId,
+                            amount = dishAmountDb.amount.toInt(),
+                            promotion = 0
                         )
                         customerDishCrossRefDao.insert(customerDishDb)
                     }
@@ -207,7 +222,7 @@ class DishMenuFragment : Fragment() {
         }
 
         icSearchBtn.setOnClickListener {
-            getMenu(menuDao, menuUsed) { dishAmountDbs ->
+            getMenu(menuDao, categoryDao, menuUsed) { dishAmountDbs ->
                 val filtered =
                     dishAmountDbs.filter {
                         it.dishDb.name.contains(
@@ -222,41 +237,37 @@ class DishMenuFragment : Fragment() {
                 }
             }
         }
-        getMenu(menuDao, menuUsed) {
+        getMenu(menuDao, categoryDao, menuUsed) {
             dishMenuAdapter.submitList(it)
         }
         val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
         val navGlobal =
-            NavGlobal(navBar, findNavController(), slidingPaneLayout, saveStateViewModel, searchView) {
+            NavGlobal(
+                navBar,
+                findNavController(),
+                slidingPaneLayout,
+                saveStateViewModel,
+                searchView
+            ) {
                 if (it == R.id.optionOne) {
                     isSearch = !isSearch
                     if (isSearch) {
-                        if (categoryPos < saveStateViewModel.stateDishesByCategories.size) {
-                            Log.d("CategoryPos", "GreaterThan")
-                            saveStateViewModel.stateDishesByCategories[categoryPos] =
-                                dishMenuAdapter.listSelected
-                        } else {
-                            Log.d("CategoryPos", "LessThan")
-                            saveStateViewModel.stateDishesByCategories.add(
-                                dishMenuAdapter.listSelected
-                            )
-                        }
-                        getMenu(menuDao, menuUsed) {
-                            dishMenuAdapter.submitList(it)
+                        val categoryPos = saveStateViewModel.stateCategoryPosition
+                        saveStateViewModel.stateDishesByCategories.remove(categoryPos)
+                        saveStateViewModel.stateDishesByCategories[categoryPos] =
+                            dishMenuAdapter.listSelected
+                        getMenu(menuDao, categoryDao, menuUsed) { it1 ->
+                            dishMenuAdapter.submitList(it1)
                         }
                     }
                     searchView.visibility =
                         if (isSearch) View.VISIBLE else View.GONE
                 }
                 if (it == R.id.optionTwo) {
-                    if (categoryPos < saveStateViewModel.stateDishesByCategories.size) {
-                        saveStateViewModel.stateDishesByCategories[categoryPos] =
-                            dishMenuAdapter.listSelected
-                    } else {
-                        saveStateViewModel.stateDishesByCategories.add(
-                            dishMenuAdapter.listSelected
-                        )
-                    }
+                    val categoryPos = saveStateViewModel.stateCategoryPosition
+                    saveStateViewModel.stateDishesByCategories.remove(categoryPos)
+                    saveStateViewModel.stateDishesByCategories[categoryPos] =
+                        dishMenuAdapter.listSelected
                     findNavController().navigate(R.id.action_dishMenuFragment_to_categoryFragment)
                 }
             }

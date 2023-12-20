@@ -184,23 +184,29 @@ class DetailDishFragment : Fragment() {
                         description = dishDescriptionEdit.text.toString(),
                         cost = dishEditCost.text.toString().toInt()
                     )
-                    CoroutineScope(Dispatchers.Main).launch {
-                        menuRepository.updateDishNet(newDishDb)
-                        dishViewModel.updateDish(newDishDb)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        try {
+                            menuRepository.updateDishNet(newDishDb)
+                            dishViewModel.updateDish(newDishDb)
+                        } catch (e: Exception) {
+                            dishViewModel.updateDish(newDishDb)
+                        }
                     }
+
                     if (imageViewUpload.drawable != null) {
                         dishViewModel.updateDishWithImg(
                             newDishDb,
                             curUri,
                             requireContext(),
                             requireActivity(),
-                            networkRetrofit
+                            networkRetrofit,
+                            findNavController()
                         )
                         Log.d("Uri", curUri.toString())
                     } else {
-                        Log.d("Uri", "null")
+                        findNavController().popBackStack()
                     }
-                    findNavController().popBackStack()
+
                 }
             }
         }

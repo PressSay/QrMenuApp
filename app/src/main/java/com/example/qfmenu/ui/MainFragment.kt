@@ -94,7 +94,7 @@ class MainFragment : Fragment() {
     private val saveStateViewModel: SaveStateViewModel by activityViewModels()
 
 
-    private fun formatNumRev(number: Int): String {
+    private fun formatNumRev(number: Long): String {
         return if (number > 1000000000) {
             "${number / 1000000000}B"
         } else if (number > 1000000) {
@@ -173,10 +173,13 @@ class MainFragment : Fragment() {
             navBar.menu.findItem(R.id.homeMenu).isVisible = false
         }
 
-        reviewDao.countRev().observe(this.viewLifecycleOwner) {
-            if (it != null) {
-                val formatted = formatNumRev(it)
-                totalReview.text = formatted
+        reviewDao.countRevBill().observe(this.viewLifecycleOwner) { countBill ->
+            reviewDao.countRevDish().observe((this.viewLifecycleOwner)) { countDish ->
+                if (countBill != null && countDish != null) {
+                    val countRev = countBill + countDish
+                    val formatted = formatNumRev(countRev)
+                    totalReview.text = formatted
+                }
             }
         }
 
@@ -197,7 +200,7 @@ class MainFragment : Fragment() {
             saveStateViewModel.stateIsOffOnOrder = false
             saveStateViewModel.setStateDishesDb(listOf())
             saveStateViewModel.stateCategoryPosition = 0
-            saveStateViewModel.stateDishesByCategories = mutableListOf()
+            saveStateViewModel.stateDishesByCategories.clear()
             if (width < SCREEN_LARGE) {
                 saveStateViewModel.isOpenSlide = !saveStateViewModel.isOpenSlide
                 slidingPaneLayout.openPane()
@@ -211,7 +214,7 @@ class MainFragment : Fragment() {
             saveStateViewModel.stateIsOffOnOrder = false
             saveStateViewModel.setStateDishesDb(listOf())
             saveStateViewModel.stateCategoryPosition = 0
-            saveStateViewModel.stateDishesByCategories = mutableListOf()
+            saveStateViewModel.stateDishesByCategories.clear()
             if (width < SCREEN_LARGE) {
                 saveStateViewModel.isOpenSlide = !saveStateViewModel.isOpenSlide
                 slidingPaneLayout.openPane()
@@ -235,7 +238,7 @@ class MainFragment : Fragment() {
             myNavHostFragment1.navController.navigate(R.id.orderUnconfirmedFragment)
             saveStateViewModel.stateIsOffOnOrder = true
             saveStateViewModel.setStateDishesDb(listOf())
-            saveStateViewModel.stateDishesByCategories = mutableListOf()
+            saveStateViewModel.stateDishesByCategories.clear()
             if (width < SCREEN_LARGE) {
                 saveStateViewModel.isOpenSlide = !saveStateViewModel.isOpenSlide
                 slidingPaneLayout.openPane()
@@ -247,7 +250,7 @@ class MainFragment : Fragment() {
             popToStartDestination(myNavHostFragment1.navController)
             myNavHostFragment1.navController.navigate(R.id.onlineOrderFragment)
             saveStateViewModel.setStateDishesDb(listOf())
-            saveStateViewModel.stateDishesByCategories = mutableListOf()
+            saveStateViewModel.stateDishesByCategories.clear()
             if (width < SCREEN_LARGE) {
                 saveStateViewModel.isOpenSlide = !saveStateViewModel.isOpenSlide
                 slidingPaneLayout.openPane()
@@ -322,7 +325,7 @@ class MainFragment : Fragment() {
 
     }
 
-    fun showNotification(title: String, message: String) {
+    private fun showNotification(title: String, message: String) {
         val mNotificationManager = requireContext().getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             val channel = NotificationChannel("YOUR_CHANNEL_ID",

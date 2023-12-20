@@ -11,6 +11,7 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface UserService {
@@ -49,12 +50,13 @@ interface UserService {
     ) : Response<User>
     @Headers("Accept: application/json")
     @FormUrlEncoded
-    @GET("/api/global/staffs/{id}")
+    @PUT("/api/global/staffs/{id}")
     suspend fun update(
         @Path("id") id: String,
         @Field("name") name: String,
         @Field("email") email: String,
         @Field("level") level: Int,
+        @Field("exp") exp: Int,
         @Field("phoneNumber") phoneNumber: String,
         @Field("address") address: String
     ) : Response<User>

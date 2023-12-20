@@ -127,8 +127,12 @@ class ConfigMenuFragment : Fragment() {
                         MenuDb(name = menuSubmitString.text.toString(), isUsed = false)
                     }
                     CoroutineScope(Dispatchers.IO).launch {
-                        menuRepository.createMenu(menuDb)
-                        menuViewModel.insertMenu(menuDb)
+                        try {
+                            menuRepository.createMenu(menuDb)
+                            menuViewModel.insertMenu(menuDb)
+                        } catch (e: Exception) {
+                            menuViewModel.insertMenu(menuDb)
+                        }
                     }
                 }
             }

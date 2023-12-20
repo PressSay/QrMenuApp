@@ -1,5 +1,6 @@
 package com.example.qfmenu.ui.table.config
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,8 @@ import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.entity.TableDb
 import com.example.qfmenu.databinding.FragmentConfigTableBinding
+import com.example.qfmenu.network.NetworkRetrofit
+import com.example.qfmenu.repository.TableRepository
 import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -59,18 +62,28 @@ class ConfigTableFragment : Fragment() {
         return binding.root
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val tableDao = (activity?.application as QrMenuApplication).database.tableDao()
+        val sharePref = requireActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val token = sharePref.getString("token", "") ?: ""
+        val networkRetrofit = NetworkRetrofit(token)
+        val tableRepository = TableRepository(networkRetrofit, tableDao)
+
         val slidingPaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val width = resources.displayMetrics.widthPixels / resources.displayMetrics.density
         val btnLock = binding.lockTableBtn
         val btnUnlock = binding.unlockTableBtn
+        val btnDetailTable = binding.seeDetailTableBtn
+
+        btnDetailTable.setOnClickListener {
+            saveStateViewModel.stateIsTableDetail = true
+            findNavController().navigate(R.id.action_configTableFragment_to_orderUnconfirmedFragment)
+        }
 
 
-        val tableDao = (activity?.application as QrMenuApplication).database.tableDao()
         val tableDb = saveStateViewModel.stateTableDb!!
 
         btnLock.setOnClickListener {
@@ -79,7 +92,12 @@ class ConfigTableFragment : Fragment() {
                     tableDb.tableId,
                     requireContext().getString(R.string.lock)
                 )
-                tableDao.update(tableDb = newTableDb)
+                try {
+                    tableDao.update(tableDb = newTableDb)
+                    tableRepository.updateTable(tableDb.tableId.toString(), requireContext().getString(R.string.lock))
+                } catch (e: Exception) {
+                    tableDao.update(tableDb = newTableDb)
+                }
                 findNavController().popBackStack()
             }
         }
@@ -90,7 +108,12 @@ class ConfigTableFragment : Fragment() {
                     tableDb.tableId,
                     requireContext().getString(R.string.status_table_free)
                 )
-                tableDao.update(tableDb = newTableDb)
+                try {
+                    tableDao.update(tableDb = newTableDb)
+                    tableRepository.updateTable(tableDb.tableId.toString(), requireContext().getString(R.string.status_table_free))
+                } catch (e: Exception) {
+                    tableDao.update(tableDb = newTableDb)
+                }
                 findNavController().popBackStack()
             }
         }

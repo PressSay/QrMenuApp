@@ -19,8 +19,6 @@ import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.entity.DishDb
-import com.example.qfmenu.database.entity.ReviewDb
-import com.example.qfmenu.database.entity.ReviewDishDb
 import com.example.qfmenu.databinding.FragmentReviewDishBinding
 import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.viewmodels.SaveStateViewModel
@@ -135,22 +133,12 @@ class ReviewDishFragment : Fragment() {
             if (it == R.id.optionTwo) {
                 Log.d("DishReview", "True")
                 if (editInputDishReview.text?.isNotBlank() == true) {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        val reviewDao =
-                            (activity?.application as QrMenuApplication).database.reviewDao()
-                        val reviewDb = ReviewDb(
-                            isThumbUp = stateThumpUp,
-                            description = editInputDishReview.text.toString()
-                        )
-                        val reviewId = reviewDao.insert(reviewDb)
-                        reviewDao.insertReviewDishCrossRef(
-                            ReviewDishDb(
-                                dishId = saveStateViewModel.stateDishDb.dishId,
-                                reviewId = reviewId
-                            )
-                        )
-                        findNavController().popBackStack()
-                    }
+//                    CoroutineScope(Dispatchers.Main).launch {
+//                        val reviewDao =
+//                            (activity?.application as QrMenuApplication).database.reviewDao()
+//
+                    findNavController().popBackStack()
+//                    }
                 } else {
                     AlertDialog.Builder(context)
                         .setTitle("Input Invalid")

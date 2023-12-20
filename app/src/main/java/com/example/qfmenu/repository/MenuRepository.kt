@@ -20,8 +20,6 @@ class MenuRepository(
     private val categoryDao: CategoryDao,
     private val dishDao: DishDao,
 ) {
-    suspend fun createMenuDb(menu: Menu) {}
-
     suspend fun createMenu(menuDb: MenuDb) {
         networkRetrofit.menu().create(
             menuDb.name,
@@ -177,12 +175,11 @@ class MenuRepository(
         val menuSr = menuListNet.body()!!
         if (menuSr.isNotEmpty() && isSync && lastKey >= menuSr.last().menuId) {
             // through server
-            var i = 0
-            while (i < menuSr.size) {
-                val menu = menuSr[i++]
-                val menuDb = menuDbList.firstOrNull { menuDb ->
-                    menuDb.menuId == menu.menuId
-                }
+            for (menu in menuSr) {
+//                val menuDb = menuDbList.firstOrNull { menuDb ->
+//                    menuDb.menuId == menu.menuId
+//                }
+                val menuDb = menuDao.getMenu(menu.menuId)
                 try {
                     if (menuDb == null) {
                         deleteMenuNet(menu)
@@ -194,8 +191,7 @@ class MenuRepository(
                 }
             }
             // foreach through local data, delete if not exist in server
-            for (i in menuDbList.indices) {
-                val menuDb = menuDbList[i]
+            for (menuDb in menuDbList) {
                 val menuNet = networkRetrofit.menu().findOne(menuDb.menuId.toString())
                 if (!menuNet.isSuccessful) {
                     this.deleteMenu(menuDb)
@@ -208,7 +204,7 @@ class MenuRepository(
         }
         if (menuSr.isNotEmpty() && (!isSync || lastKey < menuSr.last().menuId)) {
             for (menuDb in menuDbList) {
-                if (!isSync) {
+                if (!isSync && lastKey > menuSr.last().menuId) {
                     this.createMenu(menuDb)
                 }
                 this.deleteMenu(menuDb)
@@ -234,8 +230,7 @@ class MenuRepository(
         if (!isMenuUpdate && categorySr.isNotEmpty() && isSync && lastKey >= categorySr.last().categoryId) {
             // foreach through local data
             val categoryDbList = categoryDao.getCategories()
-            for (i in categoryDbList.indices) {
-                val categoryDb = categoryDbList[i]
+            for (categoryDb in categoryDbList) {
                 val categoryNet =
                     networkRetrofit.category().findOne(categoryDb.categoryId.toString())
                 if (!categoryNet.isSuccessful) {
@@ -246,8 +241,7 @@ class MenuRepository(
                 }
             }
             // foreach through server data
-            for (i in categorySr.indices) {
-                val category = categorySr[i]
+            for (category in categorySr) {
                 val categoryDb = categoryDao.getCategory(category.categoryId)
                 if (categoryDb == null) {
                     this.deleteCategoryNet(category)
@@ -259,7 +253,7 @@ class MenuRepository(
         if (categorySr.isNotEmpty() && (isMenuUpdate || !isSync || lastKey < categorySr.last().categoryId)) {
             val categoryDbList = categoryDao.getCategories()
             for (categoryDb in categoryDbList) {
-                if (!isSync) {
+                if (!isSync && lastKey > categorySr.last().categoryId) {
                     this.createCategory(categoryDb)
                 }
                 this.deleteCategory(categoryDb)
@@ -285,8 +279,7 @@ class MenuRepository(
         if (!isCategoryUpdate && dishSr.isNotEmpty() && isSync && lastKey >= dishSr.last().dishId) {
             val dishDbList = dishDao.getDishes()
             // foreach through local data
-            for (i in dishDbList.indices) {
-                val dishDb = dishDbList[i]
+            for (dishDb in dishDbList) {
                 val dishNet = networkRetrofit.dish().findOne(dishDb.dishId.toString())
                 if (!dishNet.isSuccessful) {
                     dishDao.delete(dishDb)
@@ -296,8 +289,7 @@ class MenuRepository(
                 }
             }
             // foreach through server data
-            for (i in dishSr.indices) {
-                val dish = dishSr[i]
+            for (dish in dishSr) {
                 val dishDb = dishDao.getDish(dish.dishId)
                 if (dishDb == null) {
                     this.deleteDishNet(dish)
@@ -310,7 +302,7 @@ class MenuRepository(
             val dishDbList = dishDao.getDishes()
 //                this.createListDish(dishDbList)
             for (dishDb in dishDbList) {
-                if (!isSync) {
+                if (!isSync && lastKey > dishSr.last().dishId) {
                     this.createDish(dishDb)
                 }
                 this.deleteDish(dishDb)

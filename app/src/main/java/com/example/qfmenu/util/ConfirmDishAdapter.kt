@@ -72,22 +72,20 @@ class ConfirmDishAdapter(
         holder.cost.text = costVND
         holder.amount.text = item.amount.toString()
         holder.btnTrash.setOnClickListener {
-            if (saveStateViewModel.stateIsOffOnOrder) {
-                CoroutineScope(Dispatchers.IO).launch {
+            CoroutineScope(Dispatchers.IO).launch {
+                if (saveStateViewModel.stateIsOffOnOrder) {
+
                     val customerDishDb = CustomerDishDb(
-                        saveStateViewModel.stateCustomerDb.customerId,
-                        item.dishDb.dishId,
-                        item.amount.toInt(),
-                        0,
+                        customerId = saveStateViewModel.stateCustomerDb.customerId,
+                        dishId = item.dishDb.dishId,
+                        amount = item.amount,
+                        promotion = 0,
                     )
                     customerDishDao.delete(customerDishDb)
                 }
-            }
-            saveStateViewModel.stateDishesByCategories.forEachIndexed { index1, it ->
-                it.forEachIndexed { index2, dishAmountDb ->
-                    if (dishAmountDb.dishDb.dishId == item.dishDb.dishId) {
-                        saveStateViewModel.stateDishesByCategories[index1].removeAt(index2)
-                    }
+
+                saveStateViewModel.stateDishesByCategories.forEach { ele1 ->
+                        ele1.value.remove(item)
                 }
             }
 

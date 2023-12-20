@@ -148,7 +148,10 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-
+            <com.github.mikephil.charting.charts.BarChart
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/barChart"/>
 
         </LinearLayout>
 

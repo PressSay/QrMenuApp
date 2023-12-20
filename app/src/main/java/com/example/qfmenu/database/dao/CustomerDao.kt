@@ -12,8 +12,6 @@ import com.example.qfmenu.database.entity.CustomerAndOrderDb
 import com.example.qfmenu.database.entity.CustomerDb
 import com.example.qfmenu.database.entity.CustomerDishDb
 import com.example.qfmenu.database.entity.CustomerWithDishes
-import com.example.qfmenu.database.entity.ReviewCustomerDb
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CustomerDao {
@@ -28,13 +26,13 @@ interface CustomerDao {
     @Query("SELECT * FROM CustomerDb")
     suspend fun getAllCustomer(): List<CustomerDb>
 
-    @Query("SELECT * FROM CustomerDb")
-    suspend fun getAllCustomerAndOrder(): List<CustomerAndOrderDb>
+    @Query("SELECT * FROM CustomerDb JOIN OrderDb ON CustomerDb.customerId = OrderDb.customerOwnerId WHERE OrderDb.tableId = :tableId")
+    fun getCustomersByTableId(tableId: Long): LiveData<List<CustomerDb>>
 
     @Query("SELECT * FROM CustomerDb JOIN OrderDb ON CustomerDb.customerId = OrderDb.customerOwnerId WHERE OrderDb.status = 'normal'")
     fun getCustomersUnConfirmed(): LiveData<List<CustomerDb>>
 
-    @Query("SELECT * FROM CustomerDb WHERE created = :calendarPaid")
+    @Query("SELECT * FROM CustomerDb WHERE created LIKE :calendarPaid")
     fun getCustomersByCalendar(calendarPaid: String): LiveData<List<CustomerDb>>
 
     @Query("SELECT * FROM CustomerDb ORDER BY customerId DESC LIMIT 1")
@@ -42,9 +40,6 @@ interface CustomerDao {
 
     @Query("SELECT * FROM CustomerDishDb WHERE customerId = :customerId")
     suspend fun getCustomerDishCrossRefs(customerId: Long): List<CustomerDishDb>
-
-    @Query("SELECT * FROM ReviewCustomerDb WHERE customerId = :customerId")
-    fun getReviewCustomerCrossRefs(customerId: Long): Flow<ReviewCustomerDb>
 
     @Query("SELECT * FROM CustomerDb WHERE customerId = :customerId LIMIT 1")
     suspend fun getCustomer(customerId: Long): CustomerDb?

@@ -1,6 +1,7 @@
 package com.example.qfmenu.ui.shop
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,6 +20,8 @@ import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.database.entity.TableDb
 import com.example.qfmenu.databinding.FragmentConfigShopBinding
+import com.example.qfmenu.network.NetworkRetrofit
+import com.example.qfmenu.repository.TableRepository
 import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -68,7 +71,11 @@ class ConfigShopFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        val tableDao = (activity?.application as QrMenuApplication).database.tableDao()
+        val sharePref = requireActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val token = sharePref.getString("token", "") ?: ""
+        val networkRetrofit = NetworkRetrofit(token)
+        val tableRepository = TableRepository(networkRetrofit, tableDao)
 //        val scrollView = binding.scrollViewOfConfig
         val width = resources.displayMetrics.widthPixels / resources.displayMetrics.density
         val slidePaneLayout =
@@ -91,6 +98,7 @@ class ConfigShopFragment : Fragment() {
         val promotionBill = binding.promotionBill
         var isEnableReview = true
         val isEnableReviewArray = arrayOf("Enable", "Disable")
+
         val ad: ArrayAdapter<String> = ArrayAdapter<String>(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
@@ -143,12 +151,19 @@ class ConfigShopFragment : Fragment() {
                     async { tableDao.getTables() }.await().forEach {
                         tableDao.delete(it)
                     }
+
                     for (i in 1..numberOfTable.text.toString().toInt()) {
                         val tableDb = TableDb(
                             tableId = i.toLong(),
                             requireContext().getString(R.string.status_table_free)
                         )
                         tableDao.insert(tableDb)
+                    }
+
+                    try {
+                        tableRepository.createTable(numberOfTable.text.toString().toInt())
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
                 }
             }

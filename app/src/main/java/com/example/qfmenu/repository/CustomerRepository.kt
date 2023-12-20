@@ -19,39 +19,6 @@ class CustomerRepository(
     private val customerDishDao: CustomerDishDao,
     private val orderDao: OrderDao
 ) {
-    suspend fun createCustomerDb(customer: Customer) {
-        customerDao.insert(
-            CustomerDb(
-                customerId = customer.customerId,
-                accountCreatorId = customer.userId,
-                dateExpireCode = customer.dateExpireCode,
-                name = customer.name,
-                code = customer.code,
-                phone = customer.phoneNumber,
-                address = customer.address,
-                created = customer.created_at.split(" ")[0]
-            )
-        )
-        orderDao.insert(
-            OrderDb(
-                orderId = customer.order.customerId,
-                customerOwnerId = customer.order.customerId,
-                tableId = customer.order.nameTable.toLong(),
-                status = customer.order.status,
-                payments = customer.order.payments,
-                promotion = customer.order.promotion
-            )
-        )
-        customerDishDao.insertAll(customer.customerDishCrossRefs.map { customerDish ->
-            CustomerDishDb(
-                customerId = customer.customerId,
-                dishId = customerDish.dishId,
-                amount = customerDish.amount,
-                promotion = customerDish.promotion
-            )
-        })
-    }
-
     suspend fun createCustomer(customerDb: CustomerDb) {
         val orderDb = orderDao.getOrderCustomerOwner(customerDb.customerId)
         val dishes = customerDishDao.getListByCustomerId(customerDb.customerId)
@@ -65,8 +32,7 @@ class CustomerRepository(
             arrDish.put(jsonDish)
         }
 
-
-        val reponse = networkRetrofit.customer().create(
+        val response = networkRetrofit.customer().create(
             userId = customerDb.accountCreatorId,
             name = customerDb.name,
             code = customerDb.code,
@@ -76,11 +42,11 @@ class CustomerRepository(
             promotion = orderDb.promotion,
             statusOrder = orderDb.status,
             payments = orderDb.payments,
-            tableId = orderDb.tableId.toString()
+            tableId = orderDb.tableId.toString(),
+            created = customerDb.created
         )
-        Log.d("CustomerRepository", arrDish.toString() + " " + reponse.code())
+        Log.d("CustomerRepository", arrDish.toString() + " " + response.code())
     }
-
 
     suspend fun updateCustomerNet(customerDb: CustomerDb) {
         val orderDb = orderDao.getOrderCustomerOwner(customerDb.customerId)
@@ -110,7 +76,7 @@ class CustomerRepository(
         Log.d("CustomerRepository", arrDish.toString() + " " + response.code())
     }
 
-    suspend fun updateCustomer(customerNC: Customer) {
+    private suspend fun updateCustomer(customerNC: Customer) {
         customerDao.update(
             CustomerDb(
                 customerId = customerNC.customerId,
@@ -120,7 +86,8 @@ class CustomerRepository(
                 code = customerNC.code,
                 phone = customerNC.phoneNumber,
                 address = customerNC.address,
-                created = customerNC.created_at.split(" ")[0]
+//                created = customerNC.created_at.split(" ")[0]
+                created = customerNC.created_at
             )
         )
         orderDao.update(
@@ -145,8 +112,8 @@ class CustomerRepository(
         )
     }
 
-    suspend fun deleteCustomerNet(customer: Customer) {
-        networkRetrofit.customer().delete(customer.customerId.toString())
+    suspend fun deleteCustomerNet(customerId: Long) {
+        networkRetrofit.customer().delete(customerId.toString())
     }
 
     suspend fun deleteCustomer(customerDb: CustomerDb) {
@@ -155,7 +122,7 @@ class CustomerRepository(
         customerDishDao.deleteAll(customerDishDao.getListByCustomerId(customerDb.customerId))
     }
 
-    suspend fun resetKey() {
+    private suspend fun resetKey() {
         if (customerDao.getLastCustomer() == null) {
             customerDao.resetKey()
         }
@@ -181,7 +148,7 @@ class CustomerRepository(
                 try {
                     val customerDb = customerDao.getCustomer(customer.customerId)
                     if (customerDb == null) {
-                        deleteCustomerNet(customer)
+                        deleteCustomerNet(customer.customerId)
                     } else {
                         updateCustomerNet(customerDb)
                     }
@@ -190,8 +157,7 @@ class CustomerRepository(
                 }
             }
             // through all customer in local
-            for (i in customerDbList.indices) {
-                val customerDb = customerDbList[i]
+            for (customerDb in customerDbList) {
                 val customerNetCur =
                     networkRetrofit.customer().findOne(customerDb.customerId.toString())
                 if (!customerNetCur.isSuccessful) {
@@ -221,7 +187,8 @@ class CustomerRepository(
                     code = customerIntegration.code,
                     phone = customerIntegration.phoneNumber,
                     address = customerIntegration.address,
-                    created = customerIntegration.created_at.split(" ")[0]
+//                    created = customerIntegration.created_at.split(" ")[0]
+                    created = customerIntegration.created_at
                 )
             })
             orderDao.insertAll(customerSr.map { customerIntegration ->

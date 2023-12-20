@@ -1,5 +1,6 @@
 package com.example.qfmenu.ui.review.store.list
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,8 +15,10 @@ import com.example.qfmenu.QrMenuApplication
 import com.example.qfmenu.R
 import com.example.qfmenu.SCREEN_LARGE
 import com.example.qfmenu.databinding.FragmentReviewStoreBinding
+import com.example.qfmenu.network.NetworkRetrofit
+import com.example.qfmenu.repository.ReviewRepository
 import com.example.qfmenu.util.NavGlobal
-import com.example.qfmenu.util.StoDisReviewAdapter
+import com.example.qfmenu.util.RevBillAdapter
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -57,6 +60,12 @@ class ReviewStoreFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val reviewDao = (activity?.application as QrMenuApplication).database.reviewDao()
+        val sharePref = requireActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val token = sharePref.getString("token", "") ?: ""
+        val networkRetrofit = NetworkRetrofit(token)
+        val reviewRepository = ReviewRepository(networkRetrofit,  reviewDao)
+
         val recyclerViewReviewStoreList = binding.recyclerViewReviewStoreList
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
         val width: Float = resources.displayMetrics.widthPixels / resources.displayMetrics.density
@@ -64,32 +73,25 @@ class ReviewStoreFragment : Fragment() {
         val slidePaneLayout =
             requireActivity().findViewById<SlidingPaneLayout>(R.id.sliding_pane_layout)
         val searchView = requireActivity().findViewById<LinearLayout>(R.id.searchView)
-        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel, searchView) {
-            if (it == R.id.optionOne) {
-            }
-            if (it == R.id.optionTwo) {
-                findNavController().navigate(R.id.action_reviewStoreFragment_to_satisfactionFragment)
-            }
-        }
+        val navGlobal = NavGlobal(navBar, findNavController(), slidePaneLayout, saveStateViewModel, searchView) {}
         navGlobal.setIconNav(R.drawable.ic_arrow_back, R.drawable.ic_home, R.drawable.ic_thumb_down, R.drawable.ic_plus)
-        navGlobal.setVisibleNav(true, width < SCREEN_LARGE, true, optTwo = true)
+        navGlobal.setVisibleNav(true, width < SCREEN_LARGE, false, optTwo = false)
         navGlobal.impNav()
 
-        val reviewDao = (activity?.application as QrMenuApplication).database.reviewDao()
 
-        val stoDisReviewAdapter = StoDisReviewAdapter(
-        true, reviewDao, saveStateViewModel, requireContext()
+
+
+        val revReviewAdapter = RevBillAdapter(
+        true, reviewDao, saveStateViewModel, reviewRepository, requireContext()
         )
-
-
-
+        
         searchView.visibility = View.GONE
         recyclerViewReviewStoreList.layoutManager = GridLayoutManager(requireContext(), spanCount)
-        recyclerViewReviewStoreList.adapter = stoDisReviewAdapter
+        recyclerViewReviewStoreList.adapter = revReviewAdapter
 
-        reviewDao.getReviewCustomerCrossRefs().observe(this.viewLifecycleOwner) {
+        reviewDao.getRevBillArrLiveData().observe(this.viewLifecycleOwner) {
             it.let {
-                stoDisReviewAdapter.submitList(it)
+                revReviewAdapter.submitList(it)
             }
         }
     }

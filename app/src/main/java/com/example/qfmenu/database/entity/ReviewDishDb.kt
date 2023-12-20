@@ -2,9 +2,11 @@ package com.example.qfmenu.database.entity
 
 import androidx.room.Entity
 
-@Entity(primaryKeys = ["dishId", "reviewId"])
+
+@Entity(primaryKeys = ["customerId", "dishId"])
 data class ReviewDishDb(
+    val customerId: Long,
     val dishId: Long,
-    val reviewId: Long,
-    val customerId: Long = -1,
+    val isThumbUp: Int? = null,
+    val description: String? = null,
 )

@@ -11,5 +11,5 @@ interface ImageService {
     @POST("/api/global/images")
     suspend fun create(
         @Body requestBody: RequestBody
-    ): Response<Image>
+    ): Response<String>
 }

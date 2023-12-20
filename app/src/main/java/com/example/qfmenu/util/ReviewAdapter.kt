@@ -83,7 +83,7 @@ class ReviewAdapter(
                 .navigate(R.id.action_reviewFragment_to_reviewDetailFragment)
         }
         CoroutineScope(Dispatchers.Main).launch {
-            val numRev = reviewDao.countDshRev(item.dishId)
+            val numRev = reviewDao.countRevDish(item.dishId)
             holder.numRev.text = buildString {
                 append(formatNumRev(numRev))
                 append(" reviews")
@@ -91,7 +91,7 @@ class ReviewAdapter(
         }
     }
 
-    private fun formatNumRev(number: Int): String {
+    private fun formatNumRev(number: Long): String {
         if (number > 1000000000) {
             return "${number / 1000000000}B"
         } else if (number > 1000000) {

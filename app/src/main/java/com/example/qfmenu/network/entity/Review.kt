@@ -1,29 +1,14 @@
 package com.example.qfmenu.network.entity
 
-data class Review(
-    val description: String,
-    val reviewId: Int,
-    val star: Int
-)
-
-data class RevCusInter (
-    val reviewCustomer: ReviewCustomer,
-    val review: Review
-)
-
-data class RevDishInter(
-    val reviewDish: ReviewDish,
-    val review: Review
-)
-
-
-data class ReviewCustomer(
-    val reviewId: Long,
+data class RevBill(
     val customerId: Long,
+    val star: Int,
+    val description: String
 )
 
-data class ReviewDish(
-    val reviewId: Long,
+data class RevDish (
+    val customerId: Long,
     val dishId: Long,
-    val customerId: Long,
+    val description: String,
+    val star: Int
 )

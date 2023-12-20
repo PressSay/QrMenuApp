@@ -133,6 +133,76 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_gravity="start"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/level_edit_member"
+                            android:layout_marginEnd="8dp"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/green_primary"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/exp_edit_member"
+                            android:layout_marginStart="8dp"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/green_primary"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/levelAccount"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:inputType="number"
+                        android:background="@drawable/shape_rounded_border"
+                        android:padding="4dp"
+                        android:textColor="@color/green_secondary"
+                        tools:ignore="NestedWeights" />
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/expAccount"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:inputType="number"
+                        android:background="@drawable/shape_rounded_border"
+                        android:padding="4dp"
+                        android:textColor="@color/green_secondary"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -160,7 +230,7 @@
                         android:id="@+id/memberUpload"/>
 
                     <androidx.appcompat.widget.AppCompatButton
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="8dp"
                         android:layout_width="wrap_content"
                         android:layout_height="49dp"
                         android:text="@string/delete_user"

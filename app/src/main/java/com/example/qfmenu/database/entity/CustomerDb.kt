@@ -18,10 +18,13 @@ data class CustomerDb(
     val phone: String,
     val address: String,
     val created: String = String.format(
-        "%04d-%02d-%02d",
+        "%04d-%02d-%02d %02d:%02d:%02d",
         Calendar.getInstance().get(Calendar.YEAR),
         Calendar.getInstance().get(Calendar.MONTH),
-        Calendar.getInstance().get(Calendar.DATE)
+        Calendar.getInstance().get(Calendar.DATE),
+        Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
+        Calendar.getInstance().get(Calendar.MINUTE),
+        Calendar.getInstance().get(Calendar.SECOND),
     )
 )
 

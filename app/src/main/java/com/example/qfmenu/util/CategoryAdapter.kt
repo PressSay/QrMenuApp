@@ -44,18 +44,18 @@ class CategoryAdapter(
         val item = currentList[position]
         holder.btnCategory.text = item.name
         holder.btnCategory.setOnClickListener {
-            saveStateViewModel.stateCategoryPosition = holder.adapterPosition
-            val categoryPos = holder.adapterPosition
-            if (categoryPos < saveStateViewModel.stateDishesByCategories.size) {
-
-            } else {
-                for (i in (1..categoryPos)) {
-                    saveStateViewModel.stateDishesByCategories.add(
-                        mutableListOf()
-                    )
-                }
-                Log.d("ForEach", "true")
-            }
+            saveStateViewModel.stateCategoryPosition = item.categoryId
+//            val categoryPos = item.categoryId
+//            if (categoryPos < saveStateViewModel.stateDishesByCategories.size) {
+//
+//            } else {
+//                for (i in (1..categoryPos)) {
+//                    saveStateViewModel.stateDishesByCategories.add(
+//                        mutableListOf()
+//                    )
+//                }
+//                Log.d("ForEach", "true")
+//            }
 
             holder.view.findNavController().popBackStack()
         }

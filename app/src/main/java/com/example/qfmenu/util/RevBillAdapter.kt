@@ -13,30 +13,30 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.qfmenu.R
 import com.example.qfmenu.database.dao.ReviewDao
-import com.example.qfmenu.database.entity.ReviewCustomerDb
-import com.example.qfmenu.database.entity.ReviewDb
-import com.example.qfmenu.database.entity.ReviewDishDb
+import com.example.qfmenu.database.entity.ReviewBillDb
+import com.example.qfmenu.network.entity.RevBill
+import com.example.qfmenu.repository.ReviewRepository
 import com.example.qfmenu.viewmodels.SaveStateViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-
-class StoDisReviewAdapter(
+class RevBillAdapter(
     private val isStore: Boolean,
     private val reviewDao: ReviewDao,
     private val saveStateViewModel: SaveStateViewModel,
+    private val reviewRepository: ReviewRepository,
     private val context: Context,
-) : ListAdapter<ReviewDb, StoDisReviewAdapter.ItemViewHolder>(DiffCallback) {
+) : ListAdapter<ReviewBillDb, RevBillAdapter.ItemViewHolder>(DiffCallback) {
 
     companion object {
-        private val DiffCallback = object : DiffUtil.ItemCallback<ReviewDb>() {
-            override fun areItemsTheSame(oldItem: ReviewDb, newItem: ReviewDb): Boolean {
+        private val DiffCallback = object : DiffUtil.ItemCallback<ReviewBillDb>() {
+            override fun areItemsTheSame(oldItem: ReviewBillDb, newItem: ReviewBillDb): Boolean {
                 return oldItem === newItem
             }
 
-            override fun areContentsTheSame(oldItem: ReviewDb, newItem: ReviewDb): Boolean {
-                return oldItem.reviewId == newItem.reviewId
+            override fun areContentsTheSame(oldItem: ReviewBillDb, newItem: ReviewBillDb): Boolean {
+                return oldItem.customerId == newItem.customerId
             }
         }
     }
@@ -65,22 +65,12 @@ class StoDisReviewAdapter(
         holder.btnTrash.setOnClickListener {
             GlobalScope.launch {
                 val reviewDb = currentList[position]
-                if (!isStore) {
-                    val dishDb = saveStateViewModel.stateDishDb
-                    val reviewDishDb = ReviewDishDb(
-                        dishId = dishDb.dishId,
-                        reviewId = reviewDb.reviewId
-                    )
-                    reviewDao.deleteReviewDishCrossRef(reviewDishDb)
-                } else {
-                    val customerDb = saveStateViewModel.stateCustomerDb
-                    val reviewCustomerDb = ReviewCustomerDb(
-                        reviewDb.reviewId,
-                        customerDb.customerId
-                    )
-                    reviewDao.deleteReviewCustomerCrossRef(reviewCustomerDb)
+                try {
+                    reviewDao.deleteRevBill(reviewDb)
+                    reviewRepository.deleteRevBillNet(RevBill(reviewDb.customerId, -1, ""))
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-                reviewDao.delete(reviewDb)
             }
 //            dataset.removeAt(holder.adapterPosition)
 //            notifyItemRemoved(holder.adapterPosition)

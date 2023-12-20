@@ -27,6 +27,7 @@ import com.example.qfmenu.database.entity.DishDb
 import com.example.qfmenu.databinding.FragmentConfigDishBinding
 import com.example.qfmenu.network.NetworkRetrofit
 import com.example.qfmenu.repository.MenuRepository
+import com.example.qfmenu.repository.TableRepository
 import com.example.qfmenu.util.ConfigDishAdapter
 import com.example.qfmenu.util.NavGlobal
 import com.example.qfmenu.viewmodels.DishViewModel
@@ -83,6 +84,7 @@ class ConfigDishFragment : Fragment() {
         val menuDao = (activity?.application as QrMenuApplication).database.menuDao()
         val categoryDao = (activity?.application as QrMenuApplication).database.categoryDao()
         val dishDao = (activity?.application as QrMenuApplication).database.dishDao()
+        val tableDao  = (activity?.application as QrMenuApplication).database.tableDao()
         val dishViewModel: DishViewModel by viewModels {
             DishViewModelFactory(
                 dishDao,
@@ -93,6 +95,7 @@ class ConfigDishFragment : Fragment() {
         val token = sharePref.getString("token", "") ?: ""
         val networkRetrofit = NetworkRetrofit(token)
         val menuRepository = MenuRepository(networkRetrofit, menuDao, categoryDao, dishDao)
+
 
         val recyclerView = binding.recyclerViewEditCreateDish
         val navBar = requireActivity().findViewById<BottomNavigationView>(R.id.navBar)
@@ -176,8 +179,12 @@ class ConfigDishFragment : Fragment() {
                             categoryId = saveStateViewModel.stateCategoryDb.categoryId
                         )
                         CoroutineScope(Dispatchers.IO).launch {
-                            menuRepository.createDish(dishDb)
-                            dishViewModel.insertDish(dishDb)
+                            try {
+                                menuRepository.createDish(dishDb)
+                                dishViewModel.insertDish(dishDb)
+                            } catch (e: Exception) {
+                                dishViewModel.insertDish(dishDb)
+                            }
                         }
                     }
                     Log.d("optionTwo", "optionTwo")

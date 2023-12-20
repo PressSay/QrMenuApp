@@ -159,7 +159,7 @@ class TableOrderFragment : Fragment() {
             NavGlobal(navBar, findNavController(), slidingPaneLayout, saveStateViewModel, searchView) {
                 if (it == R.id.homeMenu) {
                     saveStateViewModel.setStateDishesDb(listOf())
-                    saveStateViewModel.stateDishesByCategories = mutableListOf()
+                    saveStateViewModel.stateDishesByCategories.clear()
                 }
                 if (it == R.id.optionTwo) {
                     isSearch = !isSearch

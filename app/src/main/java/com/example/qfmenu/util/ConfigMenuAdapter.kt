@@ -83,10 +83,15 @@ class ConfigMenuAdapter(
 //            notifyItemChanged(this.selectedLocation)
 //            notifyItemChanged(holder.adapterPosition)
             CoroutineScope(Dispatchers.IO).launch {
-                menuRepository.updateMenuNet(currentList[selectedP])
-                menuRepository.updateMenuNet(currentList[adapterP])
-                menuViewModel.updateMenu(currentList[selectedP])
-                menuViewModel.updateMenu(currentList[adapterP])
+                try {
+                    menuRepository.updateMenuNet(currentList[selectedP])
+                    menuRepository.updateMenuNet(currentList[adapterP])
+                    menuViewModel.updateMenu(currentList[selectedP])
+                    menuViewModel.updateMenu(currentList[adapterP])
+                } catch (e: Exception) {
+                    menuViewModel.updateMenu(currentList[selectedP])
+                    menuViewModel.updateMenu(currentList[adapterP])
+                }
             }
             this.selectedLocation = holder.adapterPosition
         }

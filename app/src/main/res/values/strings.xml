@@ -19,6 +19,8 @@
     <string name="shop_name">Shop name:</string>
     <string name="shop_name_input">Shop Name: %s</string>
     <string name="address_shop">Address shop:</string>
+    <string name="exp_edit_member">Exp:</string>
+    <string name="level_edit_member">Level:</string>
     <string name="address_shop_input">Address Shop: %s</string>
     <string name="enable_review">Enable Review:</string>
     <string name="amount_table">Amount Table:</string>
@@ -89,4 +91,5 @@
     <string name="exp_profile">Exp: %s</string>
     <string name="have_new_customer">Have new customer at table %s</string>
     <string name="notification">Notification</string>
+    <string name="see_detail_order">See detail order</string>
 </resources>

@@ -26,6 +26,7 @@ class StaffRepository(
             name = accountDb.name,
             email = accountDb.email,
             level = accountDb.level,
+            exp = accountDb.exp,
             address = accountDb.address,
             phoneNumber = accountDb.phoneNumber,
         )

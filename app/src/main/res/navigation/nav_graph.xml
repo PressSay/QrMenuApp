@@ -48,8 +48,8 @@
         android:label="fragment_config_table"
         tools:layout="@layout/fragment_config_table">
         <action
-            android:id="@+id/action_tableOrderFragment_to_confirmDishFragment"
-            app:destination="@id/ConfirmDishFragment" />
+            android:id="@+id/action_configTableFragment_to_orderUnconfirmedFragment"
+            app:destination="@id/orderUnconfirmedFragment" />
     </fragment>
     <fragment
         android:id="@+id/tableOrderFragment"
