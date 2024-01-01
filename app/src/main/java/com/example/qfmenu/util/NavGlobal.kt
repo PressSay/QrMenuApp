@@ -30,7 +30,7 @@ class NavGlobal(
             if (it.itemId == R.id.homeMenu) {
                 slidePaneLayout.closePane()
                 navBar.visibility = View.GONE
-                saveStateViewModel.isOpenSlide = !saveStateViewModel.isOpenSlide
+                saveStateViewModel.isOpenSlide = false
                 searchView.visibility = View.GONE
             }
             option (it.itemId)

@@ -26,7 +26,7 @@ interface CustomerDao {
     @Query("SELECT * FROM CustomerDb")
     suspend fun getAllCustomer(): List<CustomerDb>
 
-    @Query("SELECT * FROM CustomerDb JOIN OrderDb ON CustomerDb.customerId = OrderDb.customerOwnerId WHERE OrderDb.tableId = :tableId")
+    @Query("SELECT * FROM CustomerDb JOIN OrderDb ON CustomerDb.customerId = OrderDb.customerOwnerId WHERE OrderDb.tableId = :tableId AND OrderDb.status = 'normal'")
     fun getCustomersByTableId(tableId: Long): LiveData<List<CustomerDb>>
 
     @Query("SELECT * FROM CustomerDb JOIN OrderDb ON CustomerDb.customerId = OrderDb.customerOwnerId WHERE OrderDb.status = 'normal'")

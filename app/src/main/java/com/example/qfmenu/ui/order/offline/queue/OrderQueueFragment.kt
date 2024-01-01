@@ -148,7 +148,7 @@ class OrderQueueFragment : Fragment() {
             val navGlobal =
                 NavGlobal(navBar, findNavController(), slidingPaneLayout, saveStateViewModel, searchView) {
                     if (it == R.id.backToHome) {
-                        saveStateViewModel.isOpenSlide = !saveStateViewModel.isOpenSlide
+                        saveStateViewModel.isOpenSlide = false
                         saveStateViewModel.stateCustomerOrderQueues = mutableListOf()
                     }
                     if (it == R.id.optionOne) {

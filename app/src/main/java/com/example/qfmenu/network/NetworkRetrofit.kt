@@ -18,9 +18,10 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 class NetworkRetrofit(private val token: String = "") {
     companion object {
         const val BASE_URL =
-            "http://10.0.2.2"
+//            "http://10.0.2.2"
+            "http://192.168.1.6"
         const val BASE_URL_SOCKET =
-            "ws://10.0.2.2:6001/app/qrmenuKey"
+            "ws://192.168.1.6:6001/app/qrmenuKey"
     }
 
     private val retrofitBuilder = Retrofit.Builder()
